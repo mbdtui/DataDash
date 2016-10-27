@@ -7,12 +7,19 @@
 
 // To run: node ad-auth-test.js
 
+var config = require('config');
 var ActiveDirectory = require('activedirectory');
-var config = { url: 'ldap://ad.domain.com',
-               baseDN: 'dc=ad, dc=domain,dc=com',
-               username: 'datadash@ad.domain.com',
-               password: 'test1234#' }
-var ad = new ActiveDirectory(config);
+
+var Acti
+
+var ActiveDirectory-config = {
+  url: 'ldaps://' + 'ad.domain.com',
+  baseDN: 'dc=ad, dc=domain,dc=com',
+  username: 'datadash@ad.domain.com',
+  password: 'test1234#'
+}
+
+var ad = new ActiveDirectory(ad-config);
 
 var username = 'myuser@ad.domain.com';
 var password = 'myPassword';
