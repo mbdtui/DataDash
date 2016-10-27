@@ -1,0 +1,25 @@
+{
+  "name": "data-dash",
+  "version": "0.0.1",
+  "description": "Liberty Mutual Capstone",
+  "main": "ad-auth-test.js",
+  "dependencies": {
+    "activedirectory": "^0.7.2",
+    "config": "^1.21.0",
+    "mongodb": "^2.2.11"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hozier/DataDash.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hozier/DataDash/issues"
+  },
+  "homepage": "https://github.com/hozier/DataDash#readme"
+}
