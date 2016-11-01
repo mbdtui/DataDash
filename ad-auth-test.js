@@ -10,16 +10,18 @@
 var config = require('config');
 var ActiveDirectory = require('activedirectory');
 
-var Acti
-
-var ActiveDirectory-config = {
-  url: 'ldaps://' + 'ad.domain.com',
-  baseDN: 'dc=ad, dc=domain,dc=com',
-  username: 'datadash@ad.domain.com',
-  password: 'test1234#'
+// Build config for the ActiveDirectory module
+// TODO Add error handling that informs the user that there was an error in the config
+// TODO config.get() will throw an exception for undefined keys to help catch typos and missing values
+// TODO Altively use config.has() on each value.
+var ActiveDirectoryModuleConfig = {
+  url: config.get('AD.url'),
+  baseDN: config.get('AD.baseDN'),
+  username: config.get('AD.username'),
+  password: config.get('AD.password')
 }
 
-var ad = new ActiveDirectory(ad-config);
+var ad = new ActiveDirectory(ActiveDirectoryModuleConfig);
 
 var username = 'myuser@ad.domain.com';
 var password = 'myPassword';

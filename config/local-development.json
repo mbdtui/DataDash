@@ -1,0 +1,13 @@
+// This file will override the values in default.json when $NODE_ENV = development, which is the default.
+// You should use this to specify parameters for running this in dev
+{
+  "AD": {
+    "url": "ldaps://ad.domain.com",
+    "baseDN": "dc=ad, dc=domain,dc=com",
+    "username": "datadash@ad.domain.com",
+    "password": "",
+    "developer-group": "data-dash-dev",
+    "admin-group": "data-dash-admin",
+    "manager-group": "data-dash-manager"
+  }
+}

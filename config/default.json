@@ -1,13 +1,11 @@
 {
-  "DataDash": {
-    "AD": {
-      "url": "ad.domain.com",
-      "baseDNs": ["ad", "domain", "com"],
-      "username": "datadash@ad.domain.com",
-      "password": "",
-      "developer-group": "data-dash-dev",
-      "admin-group": "data-dash-admin",
-      "manager-group": "data-dash-manager"
-    }
+  "AD": {
+    "url": "ldaps://ad.domain.com",
+    "baseDN": "dc=ad, dc=domain,dc=com",
+    "username": "datadash@ad.domain.com",
+    "password": "",
+    "developer-group": "data-dash-dev",
+    "admin-group": "data-dash-admin",
+    "manager-group": "data-dash-manager"
   }
 }
