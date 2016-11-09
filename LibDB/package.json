@@ -1,0 +1,8 @@
+{
+	"name": "postgresql_app",
+	"version": "0.0.1",
+	"description": "A testing app that connects to PostgreSQL database",
+	"dependencies": {
+		"pg": "latest"
+	}
+}
