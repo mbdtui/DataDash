@@ -1,10 +1,9 @@
 var pg = require('pg');
 
 /*
-	1. PostgreSQL is required to install prior to running this program.
-	Change the setting in the PostgreSQL_config object if needed.
-	2. Clone and run another NodeJS app to populate the database from the log files.
-	https://github.com/ThienDinh/PostgreSqlApp.git
+	The database is already populated on remote server.
+	Make a new query call with the statement:
+	client.query('SQL query statement');
 */
 
 var PostgreSQL_config = {
