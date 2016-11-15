@@ -1,18 +1,20 @@
-var pg = require('pg');
 
 /*
-	The database is already populated on remote server.
-	Make a new query call with the statement:
-	client.query('SQL query statement');
+	- PostgreSQL server, which need to be downloaded and installed, is required to be running prior to running this program.
+	- Use 'LibDBLoader.js' in the directory 'lib_mockDB_loader' to load data into the database before calling this accessor.
+	- Make a new query call with the statement:
+		client.query('SQL query statement');
+	- The result is a JSON object.
 */
+
+var pg = require('pg');
 
 var PostgreSQL_config = {
 	user: 'postgres',
 	password: 'abc12345',
 	database: 'postgres',
-	host: '104.215.89.153',
+	host: 'localhost',
 	port: 5432,
-	idleTimeoutMillis: 500
 };
 
 var client = new pg.Client(PostgreSQL_config);
@@ -25,11 +27,15 @@ client.connect(function (err) {
 		console.log(err);
 		return;
 	}
-	testQuery1();
+	else{		
+		testQuery1(function() {
+			client.end();
+		});
+	}
 });
 
 // Test modified sample query.
-function testQuery1() {
+function testQuery1(cb) {
 	client.query("SELECT run_stts_cd, b.STEP_NME, b.PRMTR_TXT, a.run_nme, a.grp_nbr, a.run_order_nbr, a.run_stts_cd, a.run_start_dtm, a.run_end_dtm,a.run_end_dtm - a.run_start_dtm As run_time_diff, b.STEP_NME"+
 			" FROM c_driver_step_detail a, c_driver_step b" +
 			" WHERE a.DRVR_STEP_ID = b.DRVR_STEP_ID AND a.app_nme = 'EDW' and a.RUN_NME = 'S_2_O_CL_FA_ISO_NRT'"+
