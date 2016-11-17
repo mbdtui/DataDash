@@ -1,0 +1,25 @@
+{
+  "name": "datadash-server",
+  "version": "0.0.1",
+  "description": "Macro execution and data viewing dashboard",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mbdtui/DataDash.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mbdtui/DataDash/issues"
+  },
+  "homepage": "https://github.com/mbdtui/DataDash#readme",
+  "dependencies": {
+    "activedirectory": "^0.7.2",
+    "config": "^1.24.0",
+    "mongodb": "^2.2.11",
+    "pg": "^6.1.0"
+  }
+}
