@@ -1,0 +1,135 @@
+body {
+  background-color: white;
+  padding: 0px 100px;
+  padding-right: 15%;
+  padding-left: 15%;
+}
+
+
+#home_page_navbar {
+  text-align:left;
+}
+
+#LM-login{
+  max-width: 100%;
+
+  margin-top: 30px;
+  margin-bottom: 130px;
+}
+
+.log-in-page{
+  background-color: #002664;
+}
+
+.log-in label{
+  color: white;
+}
+
+.log-in-btn{
+  background-color: #EEEEEE;
+  color: black;
+  max-width: 30%;
+  margin-top: 20px;
+}
+
+
+#logo{
+  width: 40%;
+  height: 40%;
+}
+
+.top-right-menu{
+  text-align: right;
+}
+
+.top-dropdown{
+  padding-top: 30px;
+}
+
+.top-dropdown a{
+  color: black !important;
+}
+
+
+.main-buttons{
+  text-align: center;
+}
+
+.main-buttons a{
+  background-color: #EEEEEE;
+  color: black;
+}
+
+.main-buttons:hover a{
+  background-color: #EEEEEE;
+  color: black;
+}
+
+.main-btn{
+  min-width: 33%;
+}
+
+.active-btn{
+  background-color: #003E7E !important;
+  border-color: #003E7E !important;
+  color: white !important;
+}
+
+.active-btn:hover {
+  background-color: #003E7E !important;
+  border-color: #003E7E !important;
+  color: white !important;
+}
+.view-options-rows{
+  padding-top: 20px;
+}
+
+.row-name{
+  text-align: center;
+}
+
+.bootstrap-select>.dropdown-toggle.bs-placeholder {
+  background-color: white !important;
+  color: black !important;
+  border-color: #003E7E;
+}
+
+.bootstrap-select>.dropdown-toggle.bs-placeholder:hover {
+  background-color: white !important;
+  color: black !important;
+  border-color: #003E7E;
+}
+
+.btn-default:focus, .btn-default.focus {
+  color: #ffffff;
+  background-color: #003E7E;
+  border-color: #003E7E;
+}
+.btn-default {
+  color: #ffffff;
+  background-color: #003E7E;
+  border-color: #003E7E;
+}
+
+.options:hover{
+  background-color: white !important;
+  border-color: white !important;
+  color: black !important;
+  border-color: #003E7E !important;
+}
+
+.go-btn{
+  background-color: #EEEEEE;
+  color: black;
+  min-width: 33%;
+}
+
+
+#nav-item {
+  text-align: center;
+  display: inline;
+}
+
+.bypass-check{
+  margin-bottom: 10px;
+}
