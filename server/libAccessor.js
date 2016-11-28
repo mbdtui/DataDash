@@ -18,9 +18,6 @@ var PostgreSQL_config = {
 };
 
 var client = new pg.Client(PostgreSQL_config);
-
-// disconnect client when all queries are finished.
-client.on('drain', client.end.bind(client)); 
 // open connection to database.
 client.connect(function (err) {
 	if (err) {
@@ -49,7 +46,8 @@ function testQuery1(cb) {
 					console.log('Query results:');
 					for(var i=0; i < result.rows.length; i++) {
 						console.log(JSON.stringify(result.rows[i])+'\n');
-					}					
+					}
+					cb();				
 				}
 			});
 }
