@@ -78,7 +78,7 @@ function createTables(cb) {
 const number_of_columns_of_DriverSchedule = 16;
 function createDriverSchedule(cb) {
 	client.query("create table c_driver_schedule (" + 
-		"audt_id decimal(18,0),"+
+		"audt_id decimal(18,0) primary key,"+
 		"app_nme varchar(25),"+
 		"run_nme varchar(25),"+
 		"run_nbr integer,"+
@@ -108,7 +108,7 @@ function createDriverSchedule(cb) {
 const number_of_columns_of_DriverStep = 19;
 function createDriverStep(cb) {
 	client.query('create table c_driver_step ('+
-		'drvr_step_id decimal(18, 0),'+
+		'drvr_step_id decimal(18, 0) primary key,'+
 		'app_nme varchar(25) not null,'+
 		'run_nme varchar(25) not null,'+
 		'grp_nbr integer not null,'+
@@ -141,7 +141,7 @@ function createDriverStep(cb) {
 const number_of_columns_of_DriverStepDetail = 15;
 function createDriverStepDetail(cb) {
 	client.query('create table c_driver_step_detail ('+
-		'drvr_step_dtl_id decimal(18,0),'+
+		'drvr_step_dtl_id decimal(18,0) primary key,'+
 		'audt_id decimal(18,0),'+
 		'drvr_step_id decimal(18,0),'+
 		'app_nme varchar(25) not null,'+
@@ -170,7 +170,7 @@ function createDriverStepDetail(cb) {
 const number_of_columns_of_AppRunDependency = 9;
 function createAppRunDependency(cb) {
 	client.query('create table c_app_run_dependency ('+
-		'run_app_dpndnc_id decimal(18,0),'+
+		'run_app_dpndnc_id decimal(18,0) primary key,'+
 		'app_nme varchar(25) not null,'+
 		'run_nme varchar(25) not null,'+
 		'dependant_app_nme varchar(25) not null,'+
@@ -222,10 +222,10 @@ function createDriverStepDetailH(cb) {
 // Load all tables.
 function loadTables(cb) {
 	loadTable('c_driver_step', function() {
-		loadTable('c_driver_step_detail', function() {
-			loadTable('c_driver_step_detail_h', function() {
-				loadTable('c_app_run_dependency', function() {
-					loadTable('c_driver_schedule', function() {
+		loadTable('c_driver_schedule', function() {
+			loadTable('c_app_run_dependency', function() {
+				loadTable('c_driver_step_detail', function() {
+					loadTable('c_driver_step_detail_h', function() {
 						cb();
 					});
 				});
@@ -297,16 +297,6 @@ function loadTable(table_name, cb) {
 					default:
 						break;
 				}
-				// var result = joinArray(arr, ',');
-				// var line = result.result;
-				// if(result.isUnusual) {
-				// 	return;					
-				// }
-				/*
-					Potential solution: there are 3 values that can be converted into integer.
-					From the two 'y/n', we can go backward and forward.
-					Also, after the path, must be the command, which is only one command, and the rest is parameters.
-				*/
 				var query = formulateInsertQuery(table_name, arr);
 				queries.push(query);
 	});
@@ -330,6 +320,7 @@ function loadTable(table_name, cb) {
 				client.query(query, function(error, result) {
 					if(error) {
 						console.log('Fail: ' + query);
+						console.log('\tError: ' + error);
 					}
 					else {
 						// console.log('Success: ' + query);
@@ -380,30 +371,6 @@ function joinArray(arr, delimiter) {
 	// console.log(join);
 	// result.result = join;
 	return join;
-}
-
-// Convert elements of the array of types of those elements.
-function toNumberTypeArray(arr) {
-	var t_arr = [];
-	var counter = 0;
-	var unusual = false;
-	for(var i = 0; i < arr.length; i++) {
-		var n = NaN;
-		if(Number(arr[i]) === Number.parseInt(arr[i])) {
-			counter = counter + 1;
-			n = Number(arr[i]);
-		}
-		t_arr.push(n);
-	}
-	// Print lines that have unusual structure, which does not have exact 4 columns of integer types.
-	if (counter !== 4) {
-		console.log(t_arr.toString());
-		unusual= true;
-	}
-	return {
-		result: t_arr,
-		isUnusual: unusual
-	};
 }
 
 
