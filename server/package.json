@@ -2,7 +2,7 @@
   "name": "datadash-server",
   "version": "0.0.1",
   "description": "Macro execution and data viewing dashboard",
-  "main": "app.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -21,6 +21,9 @@
     "config": "^1.24.0",
     "express": "^4.14.0",
     "mongodb": "^2.2.11",
-    "pg": "^6.1.0"
+    "pg": "^6.1.0",
+    "body-parser": "^1.15.0",
+    "cookie-parser": "^1.4.3",
+    "express-jsonschema": "^1.1.0"
   }
 }
