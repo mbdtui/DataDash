@@ -9,6 +9,11 @@
 
 var pg = require('pg');
 
+var resetPostgreDB = require('./lib_mockDB_loader/LibDBLoader.js').loadMockDB;
+
+// Reset database.
+resetPostgreDB('./lib_mockDB_loader/LibDataLogs');
+
 var PostgreSQL_config = {
 	user: 'postgres',
 	password: 'abc12345',
@@ -17,6 +22,7 @@ var PostgreSQL_config = {
 	port: 5432,
 };
 
+// Create a client to connect to the database.
 var client = new pg.Client(PostgreSQL_config);
 
 // Callback receive results from the query.
@@ -47,7 +53,7 @@ function executeQuery(query_string, cb){
 
 // Interface for the table 'c_driver_schedule'.
 var driver_schedule = {
-	delete_all_entries: function(run_name, cb) {},
+	delete_all_entries_by_runname: function(run_name, cb) {},
 	update_schedule_starttime_by_runname_auditid: function(run_name, audit_id, schedule_start_time, cb) {},
 	update_status_code_by_runname_auditid: function(run_name, audit_id, status_code, cb) {},
 	update_valuation_enddate_by_runname_auditid: function(run_name, audit_id, valuation_end_date, cb) {},
@@ -57,16 +63,34 @@ var driver_schedule = {
 	update_historical_sla_date_time_by_runname: function(run_name, date, time, cb) {}
 };
 
+
 // Interface for the table 'c_driver_step'.
 var driver_step = {
-	delete_all_entries_by_runname: function(run_name, cb){},
-	delete_all_entries_by_runname_groupnumber: function(run_name, group_number, cb){},
-	delete_all_entries_by_runname_driverstepid: function(run_name, driver_step_id, cb){},
-	update_active_step_indicator_by_driverstepid: function(driver_step_id, active_step_indicator, cb){},
+	delete_all_entries_by_runname: function(run_name, cb){
+		executeQuery('DELETE FROM c_driver_step WHERE run_nme=\'' + run_name + '\' RETURNING *;', cb);
+	},
+	delete_all_entries_by_runname_groupnumber: function(run_name, group_number, cb){
+		executeQuery('DELETE FROM c_driver_step WHERE run_nme=\'' + run_name + '\' AND grp_nbr=\'' + group_number + '\' RETURNING *;', cb);
+	},
+	delete_all_entries_by_runname_driverstepid: function(run_name, driver_step_id, cb){
+		executeQuery('DELETE FROM c_driver_step WHERE run_nme=\'' + run_name + '\' AND drvr_step_id=\'' + driver_step_id + '\' RETURNING *;', cb);
+	},
+	update_active_step_indicator_by_driverstepid: function(driver_step_id, active_step_indicator, cb){
+		// executeQuery('')
+	},
 	update_active_step_indicator_by_runname_driverstepid: function(run_name, driver_step_id, active_step_indicator, cb){},
 	update_active_step_indicator_by_runname: function(run_name, active_step_indicator, cb){},
 	update_active_step_indicator_by_runname_groupnumber: function(run_name, group_number, active_step_indicator, cb){},
 };
+
+// driver_step.delete_all_entries_by_runname('V_2_O', function(err, result) {
+// 	if(err) {
+// 		console.log('Error occurs!');
+// 	}
+// 	else {
+// 		console.log(JSON.stringify(result));
+// 	}
+// });
 
 // Interface for the table 'c_driver_step_detail'.
 var driver_step_detail = {

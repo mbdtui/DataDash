@@ -20,12 +20,16 @@ var PostgreSQL_config = {
 };
 
 // Load Liberty Mutual Mock Database into PostgreSQL database server.
-loadMockDB();
+// loadMockDB();
 
 
-function loadMockDB() {
-	// open connection to database.
-	var client = new pg.Client(PostgreSQL_config);
+// open connection to database.
+var client = null;
+var datalogDir = null;
+
+function loadMockDB(dir) {
+	client = new pg.Client(PostgreSQL_config);
+	datalogDir = dir;
 	client.connect(function (err) {
 		if (err) {
 			console.log(err);
@@ -48,9 +52,8 @@ function loadMockDB() {
 				});
 			});
 		});
-	});	
+	});
 }
-
 
 //Drop all tables.
 function dropTables(cb) {
@@ -245,7 +248,7 @@ function loadTables(cb) {
 function loadTable(table_name, cb) {
 	// Open file to read.
 	const rl = readline.createInterface({
-		input: fs.createReadStream('./libdatalogs/' + table_name + '.txt'),
+		input: fs.createReadStream(datalogDir + '/' + table_name + '.txt'),
 		output: process.stdout,
 		terminal: false
 	});
