@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import Login from './components/login';
 import Update from './components/update_page';
 import View from './components/view_page';
+import Delete from './components/delete_page';
 import MacroOptions from './components/macro_options';
 import Header from './components/header';
 import ViewHistory from './components/history';
