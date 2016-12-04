@@ -9,12 +9,12 @@ export default class History extends React.Component{
       <div className="container-fluid">
         <div className="row">
           <div className="col-lg-12">
-            
-            
+
+
             <div className="col-lg-12">
               <h2>View History of Macros</h2>
             </div>
-            
+
             <div className="col-lg-12">
               <div className="pending-table">
                 <table className="sortable">
@@ -61,11 +61,17 @@ export default class History extends React.Component{
                   <td>Approved</td>
                 </tr>
                 </table>
-              </div>            
+              </div>
             </div>
 
             <div className="col-lg-12">
-              <center><a href="\update_page.html" role="button" className="btn btn-secondary btn-lg go-btn">Go Back</a></center>
+              <center>
+                <Link to={"/m/view/"}>
+                  <button className="btn btn-secondary btn-lg go-btn">
+                    Go Back
+                  </button>
+                </Link>
+              </center>
             </div>
 
           </div>
