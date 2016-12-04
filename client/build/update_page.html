@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <title>Digital Dash</title>
+
+  <!-- Bootstrap -->
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/bootstrap-slate-theme.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/custom.css">
+  <!-- Custom CSS goes here -->
+
+  <!--Fonts-->
+
+
+</head>
+<body>
+  <!-- Custom HTML goes here -->
+  <div id="wrapper">
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-lg-12">
+            <nav class="navbar navbar-light bg-faded" id="home_page_navbar">
+              <div class="col-lg-9">
+                <img  id="logo" src="img\LibertyMutual.png" alt="Liberty Mutual Logo">
+              </div>
+
+              <div class="col-lg-3 top-right-menu">
+                <ul class="nav navbar-nav navbar-right">
+                  <li class="dropdown top-dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i id="user_icon"></i>Bob Norton <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                    <!-- Don't think we need these because they are future requirements
+                      <li><a href="#">Account Settings</a></li>
+                      <li><a href="#">Change Environment</a></li>
+                      <li><a href="#">Add Driver Rows</a></li>
+                      <li><a href="#">View Metadata and Statistics</a></li>
+                      -->
+                      <li><a href="\view_pending_page.html">View Pending Macros</a></li>
+                      <li><a href="\view_history_page.html">View History</a></li>
+                      <li><a href="\login.html">Log Out</a></li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+            </nav>
+            <!--  Main Content GOES HERE -->
+            <div class="col-lg-12">
+              <div class="row main-buttons">
+                <div id="main_buttons">
+                  <a href="view_page.html" role="button" class="btn btn-secondary btn-lg main-btn">View</a>
+                    <a href="update_page.html" role="button" class="btn btn-primary btn-lg main-btn active-btn">Update</a>
+                    <a href="#" role="button" class="btn btn-secondary btn-lg main-btn">Delete</a>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-12 view-options-rows">
+                <div class="col-lg-6 row-name">
+                  <h3> Table: </h3>
+                </div>
+                <div class="col-lg-6">
+                  <select class="selectpicker options" data-width="75%" title="Select a table">
+                    <option>Driver Step</option>
+                    <option>Driver Step Detail </option>
+                    <option>Driver Schedule</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-lg-12 view-options-rows">
+                <div class="col-lg-6 row-name">
+                  <h3> Run Name: </h3>
+                </div>
+                <div class="col-lg-6">
+                  <select class="selectpicker options" data-width="75%" title="Select a Run Name">
+                    <option>Driver Step</option>
+                    <option>Driver Step Detail </option>
+                    <option>Driver Schedule</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-lg-12 view-options-rows">
+                <div class="col-lg-6 row-name">
+                  <h3> Group Number: </h3>
+                </div>
+                <div class="col-lg-6">
+                  <select class="selectpicker options" data-width="75%" title="Select a Group Number">
+                    <option>Driver Step</option>
+                    <option>Driver Step Detail </option>
+                    <option>Driver Schedule</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-lg-12 view-options-rows">
+                <div class="col-lg-6 row-name">
+                  <h3> Step ID: </h3>
+                </div>
+                <div class="col-lg-6">
+                  <select class="selectpicker options" data-width="75%" title="Select a Step ID">
+                    <option>Driver Step</option>
+                    <option>Driver Step Detail </option>
+                    <option>Driver Schedule</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-lg-12 view-options-rows">
+                <div class="col-lg-6 row-name">
+                  <h3> Driver Step ID: </h3>
+                </div>
+                <div class="col-lg-6">
+                  <select class="selectpicker options" data-width="75%" title="Select a Driver Step ID">
+                    <option>Driver Step</option>
+                    <option>Driver Step Detail </option>
+                    <option>Driver Schedule</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-lg-12">
+              <center><p>Note: This change will be peer reviewed before executed. To bypass peer review check the box below. </p>
+                <form class="bypass-check" action="demo_form.asp" method="get">
+                   <input type="checkbox" name="bypass-peer-review" value="Bypass Peer Review">Bypass Peer Review<br>
+</form>
+                 </center>
+              </div>
+              <div class="col-lg-12">
+              <center><a href="#" role="button" class="btn btn-secondary btn-lg go-btn">Go</a></center>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="js/jquery.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/css/bootstrap-select.min.css">
+
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/js/bootstrap-select.min.js"></script>
+
+  <!-- (Optional) Latest compiled and minified JavaScript translation files -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/js/i18n/defaults-*.min.js"></script>
+
+</body>
+</html>
