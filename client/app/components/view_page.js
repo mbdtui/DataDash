@@ -16,7 +16,7 @@ export default class View extends React.Component{
                       <h3> Table: </h3>
                     </div>
                     <div className="col-lg-6">
-                      <select className="selectpicker options" data-width="75%" title="Select a table">
+                      <select className="selectpicker options btn btn-default" data-width="75%" title="Select a table">
                         <option>Driver Step</option>
                         <option>Driver Step Detail </option>
                         <option>Driver Schedule</option>
@@ -28,7 +28,7 @@ export default class View extends React.Component{
                       <h3> Run Name: </h3>
                     </div>
                     <div className="col-lg-6">
-                      <select className="selectpicker options" data-width="75%" title="Select a Run Name">
+                      <select className="selectpicker options btn btn-default" data-width="75%" title="Select a Run Name">
                         <option>Driver Step</option>
                         <option>Driver Step Detail </option>
                         <option>Driver Schedule</option>
@@ -40,7 +40,7 @@ export default class View extends React.Component{
                       <h3> Group Number: </h3>
                     </div>
                     <div className="col-lg-6">
-                      <select className="selectpicker options" data-width="75%" title="Select a Group Number">
+                      <select className="selectpicker options btn btn-default" data-width="75%" title="Select a Group Number">
                         <option>Driver Step</option>
                         <option>Driver Step Detail </option>
                         <option>Driver Schedule</option>
@@ -52,7 +52,7 @@ export default class View extends React.Component{
                       <h3> Step ID: </h3>
                     </div>
                     <div className="col-lg-6">
-                      <select className="selectpicker options" data-width="75%" title="Select a Step ID">
+                      <select className="selectpicker options btn btn-default" data-width="75%" title="Select a Step ID">
                         <option>Driver Step</option>
                         <option>Driver Step Detail </option>
                         <option>Driver Schedule</option>
@@ -64,7 +64,7 @@ export default class View extends React.Component{
                       <h3> Driver Step ID: </h3>
                     </div>
                     <div className="col-lg-6">
-                      <select className="selectpicker options" data-width="75%" title="Select a Driver Step ID">
+                      <select className="selectpicker options btn btn-default" data-width="75%" title="Select a Driver Step ID">
                         <option>Driver Step</option>
                         <option>Driver Step Detail </option>
                         <option>Driver Schedule</option>
