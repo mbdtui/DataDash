@@ -25,7 +25,7 @@ export default class Login extends React.Component{
                   </div>
                   <div className="col-lg-12 view-options-rows">
                     <div className="col-lg-6 row-name">
-                      <h3> Run Name: </h3>
+                      <h3> Update: </h3>
                     </div>
                     <div className="col-lg-6">
                       <select className="selectpicker options" data-width="75%" title="Select a Run Name">
@@ -40,46 +40,48 @@ export default class Login extends React.Component{
                       <h3> Group Number: </h3>
                     </div>
                     <div className="col-lg-6">
-                      <select className="selectpicker options" data-width="75%" title="Select a Group Number">
-                        <option>Driver Step</option>
-                        <option>Driver Step Detail </option>
-                        <option>Driver Schedule</option>
-                      </select>
+                      <div className="input-group">
+                        <span className="input-group" id="basic-addon1"></span>
+                        <input type="text" class="form-control" placeholder="Username" aria-describedby="basic-addon1" />
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  <div className="col-lg-12 view-options-rows">
-                    <div className="col-lg-6 row-name">
-                      <h3> Step ID: </h3>
+                    <div className="col-lg-12 view-options-rows">
+                      <div className="col-lg-6 row-name">
+                        <h3> By: </h3>
+                      </div>
+                      <div className="col-lg-6">
+                        <select className="selectpicker options" data-width="75%" title="Select a Step ID">
+                          <option>Driver Step</option>
+                          <option>Driver Step Detail </option>
+                          <option>Driver Schedule</option>
+                        </select>
+                      </div>
                     </div>
-                    <div className="col-lg-6">
-                      <select className="selectpicker options" data-width="75%" title="Select a Step ID">
-                        <option>Driver Step</option>
-                        <option>Driver Step Detail </option>
-                        <option>Driver Schedule</option>
-                      </select>
+                    <div className="col-lg-12 view-options-rows">
+                      <div className="col-lg-6 row-name">
+
+                      </div>
+                      <div className="col-lg-6">
+                        <div className="input-group">
+                          <span className="input-group" id="basic-addon1"></span>
+                          <input type="text" class="form-control" placeholder="Username" aria-describedby="basic-addon1" />
+                          </div>
+                          <div className="input-group">
+                            <span className="input-group" id="basic-addon1"></span>
+                            <input type="text" class="form-control" placeholder="Username" aria-describedby="basic-addon1" />
+                            </div>
+                      </div>
                     </div>
-                  </div>
-                  <div className="col-lg-12 view-options-rows">
-                    <div className="col-lg-6 row-name">
-                      <h3> Driver Step ID: </h3>
-                    </div>
-                    <div className="col-lg-6">
-                      <select className="selectpicker options" data-width="75%" title="Select a Driver Step ID">
-                        <option>Driver Step</option>
-                        <option>Driver Step Detail </option>
-                        <option>Driver Schedule</option>
-                      </select>
-                    </div>
+                    <div className="col-lg-12">
+                      <center><p>Note: This change will be peer reviewed before executed. To bypass peer review check the box below. </p>
+                      <form className="bypass-check" action="demo_form.asp" method="get">
+                        <input type="checkbox" name="bypass-peer-review" value="Bypass Peer Review"/>Bypass Peer Review<br/>
+                      </form>
+                    </center>
                   </div>
                   <div className="col-lg-12">
-                  <center><p>Note: This change will be peer reviewed before executed. To bypass peer review check the box below. </p>
-                    <form className="bypass-check" action="demo_form.asp" method="get">
-                       <input type="checkbox" name="bypass-peer-review" value="Bypass Peer Review"/>Bypass Peer Review<br/>
-                    </form>
-                     </center>
-                  </div>
-                  <div className="col-lg-12">
-                  <center><a href="#" role="button" className="btn btn-secondary btn-lg go-btn">Go</a></center>
+                    <center><a href="#" role="button" className="btn btn-secondary btn-lg go-btn">Go</a></center>
                   </div>
                 </div>
               </div>
