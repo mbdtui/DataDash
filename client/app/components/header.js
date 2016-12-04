@@ -1,0 +1,39 @@
+import React from 'react';
+import {Link} from 'react-router';
+
+export default class Header extends React.Component{
+//consider putting col-lg-12 and header divs in app.js component
+  render(){
+    return(
+      <div className="col-lg-12">
+        <div className="header">
+          <nav className="navbar navbar-light bg-faded" id="home_page_navbar">
+            <div className="col-lg-9">
+              <img  id="logo" src="\img\LibertyMutual.png" alt="Liberty Mutual Logo"/>
+            </div>
+            <div className="col-lg-3 top-right-menu">
+              <ul className="nav navbar-nav navbar-right">
+                <li className="dropdown top-dropdown">
+                  <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i id="user_icon"></i>Bob Norton <span className="caret"></span></a>
+                  <ul className="dropdown-menu">
+                    <li><a href="#">Account Settings</a></li>
+                    <li><a href="#">Change Environment</a></li>
+                    <li><a href="#">Add Driver Rows</a></li>
+                    <li><a href="#">View Metadata and Statistics</a></li>
+                    <li><a href="#">View Pending Macros</a></li>
+                    <li><a href="#">View History</a></li>
+                    <li>
+                      <Link to={""}>
+                        Log Out
+                      </Link>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </nav>
+        </div>
+      </div>
+    );
+  }
+}
