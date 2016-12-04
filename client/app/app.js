@@ -12,7 +12,7 @@ import { IndexRoute, Router, Route, hashHistory, IndexRedirect } from 'react-rou
 class LoginPage extends React.Component {
   render() {
     return (
-        <Login/>
+      <Login/>
     );
   }
 }
@@ -28,7 +28,7 @@ class UpdatePage extends React.Component {
 class ViewPage extends React.Component {
   render() {
     return (
-        <View/>
+      <View/>
     );
   }
 }
@@ -36,7 +36,7 @@ class ViewPage extends React.Component {
 class DeletePage extends React.Component {
   render() {
     return (
-        <Delete/>
+      <Delete/>
     );
   }
 }
@@ -44,7 +44,7 @@ class DeletePage extends React.Component {
 class PendingPage extends React.Component {
   render() {
     return (
-        <ViewPending/>
+      <ViewPending/>
     );
   }
 }
@@ -52,7 +52,7 @@ class PendingPage extends React.Component {
 class HistoryPage extends React.Component {
   render() {
     return (
-        <ViewHistory/>
+      <ViewHistory/>
     );
   }
 }

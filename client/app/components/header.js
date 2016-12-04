@@ -9,7 +9,9 @@ export default class Header extends React.Component{
         <div className="header">
           <nav className="navbar navbar-light bg-faded" id="home_page_navbar">
             <div className="col-lg-9">
-              <img  id="logo" src="\img\LibertyMutual.png" alt="Liberty Mutual Logo"/>
+              <Link to={"/m/view/"}>
+                <img  id="logo" src="\img\LibertyMutual.png" alt="Liberty Mutual Logo"/>
+              </Link>
             </div>
             <div className="col-lg-3 top-right-menu">
               <ul className="nav navbar-nav navbar-right">
