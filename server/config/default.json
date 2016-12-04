@@ -1,11 +1,16 @@
 {
   "AD": {
+    // LDAP information
     "url": "ldaps://ad.domain.com",
     "baseDN": "dc=ad, dc=domain,dc=com",
+
+    // The username and password specified here are what are used for user and group lookup operations.
     "username": "datadash@ad.domain.com",
     "password": "",
-    "developer-group": "data-dash-dev",
+
+    // Specify what ActiveDirectory groups correspond to what DataDash user groups.
     "admin-group": "data-dash-admin",
+    "developer-group": "data-dash-dev",
     "manager-group": "data-dash-manager"
   }
 }

@@ -1,6 +1,6 @@
+// Changes to this file will not be tracked in git
 {
   "AD": {
-    "use-local-auth": "TRUE",
     "url": "ldaps://ad.domain.com",
     "baseDN": "dc=ad, dc=domain,dc=com",
     "username": "datadash@ad.domain.com",
