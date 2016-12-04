@@ -10,7 +10,6 @@ export default class History extends React.Component{
         <div className="row">
           <div className="col-lg-12">
             
-            <!--  Main Content GOES HERE -->
             
             <div className="col-lg-12">
               <h2>View History of Macros</h2>
