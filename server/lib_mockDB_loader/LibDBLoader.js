@@ -19,31 +19,38 @@ var PostgreSQL_config = {
 	port: 5432,
 };
 
-// open connection to database.
-var client = new pg.Client(PostgreSQL_config);
-client.connect(function (err) {
-	if (err) {
-		console.log(err);
-		return;
-	}	
-	/*
-		Execute functions. Uncomment the function call to run them.
-		dropTables() drops all the tables in the database.
-		createTables() creates all the tables, which are empty, in the database.
-		loadTables() loads data log into the empty tables in the database.
-	*/
-	dropTables(function() {
-		console.log();
-		createTables(function() {
+// Load Liberty Mutual Mock Database into PostgreSQL database server.
+loadMockDB();
+
+
+function loadMockDB() {
+	// open connection to database.
+	var client = new pg.Client(PostgreSQL_config);
+	client.connect(function (err) {
+		if (err) {
+			console.log(err);
+			return;
+		}	
+		/*
+			Execute functions. Uncomment the function call to run them.
+			dropTables() drops all the tables in the database.
+			createTables() creates all the tables, which are empty, in the database.
+			loadTables() loads data log into the empty tables in the database.
+		*/
+		dropTables(function() {
 			console.log();
-			loadTables(function() {
+			createTables(function() {
 				console.log();
-				console.log('Finished loading data log into the Liberty Mutual mock database.');
-				client.end();
+				loadTables(function() {
+					console.log();
+					console.log('Finished loading data log into the Liberty Mutual mock database.');
+					client.end();
+				});
 			});
 		});
-	});
-});
+	});	
+}
+
 
 //Drop all tables.
 function dropTables(cb) {
@@ -373,6 +380,4 @@ function joinArray(arr, delimiter) {
 	return join;
 }
 
-
-
-
+exports.loadMockDB = loadMockDB;
