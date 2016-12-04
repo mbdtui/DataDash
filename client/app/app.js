@@ -9,7 +9,6 @@ import ViewHistory from './components/history';
 import ViewPending from './components/pending';
 import { IndexRoute, Router, Route, hashHistory, IndexRedirect } from 'react-router';
 
-
 class LoginPage extends React.Component {
   render() {
     return (

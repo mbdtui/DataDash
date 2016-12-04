@@ -5,7 +5,7 @@ export default class History extends React.Component{
   render(){
     return(
       <p>
-        History Page 
+        History Page
       </p>
 
     );

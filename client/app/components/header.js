@@ -16,14 +16,18 @@ export default class Header extends React.Component{
                 <li className="dropdown top-dropdown">
                   <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i id="user_icon"></i>Bob Norton <span className="caret"></span></a>
                   <ul className="dropdown-menu">
-                    <li><a href="#">Account Settings</a></li>
-                    <li><a href="#">Change Environment</a></li>
-                    <li><a href="#">Add Driver Rows</a></li>
-                    <li><a href="#">View Metadata and Statistics</a></li>
-                    <li><a href="#">View Pending Macros</a></li>
-                    <li><a href="#">View History</a></li>
+                  <li>
+                    <Link to={"/pending/"}>
+                      View Pending Macros
+                    </Link>
+                  </li>
                     <li>
-                      <Link to={""}>
+                      <Link to={"/history/"}>
+                        View History
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to={"/login/"}>
                         Log Out
                       </Link>
                     </li>
