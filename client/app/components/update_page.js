@@ -42,7 +42,7 @@ export default class Update extends React.Component{
                     <div className="col-lg-6">
                       <div className="input-group">
                         <span className="input-group" id="basic-addon1"></span>
-                        <input type="text" class="form-control" placeholder="Username" aria-describedby="basic-addon1" />
+                        <input type="text" className="form-control" placeholder="Username" aria-describedby="basic-addon1" />
                         </div>
                       </div>
                     </div>
@@ -65,11 +65,11 @@ export default class Update extends React.Component{
                       <div className="col-lg-6">
                         <div className="input-group">
                           <span className="input-group" id="basic-addon1"></span>
-                          <input type="text" class="form-control" placeholder="Username" aria-describedby="basic-addon1" />
+                          <input type="text" className="form-control" placeholder="Username" aria-describedby="basic-addon1" />
                           </div>
                           <div className="input-group">
                             <span className="input-group" id="basic-addon1"></span>
-                            <input type="text" class="form-control" placeholder="Username" aria-describedby="basic-addon1" />
+                            <input type="text" className="form-control" placeholder="Username" aria-describedby="basic-addon1" />
                             </div>
                       </div>
                     </div>
