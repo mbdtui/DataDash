@@ -33,6 +33,14 @@ class ViewPage extends React.Component {
   }
 }
 
+class DeletePage extends React.Component {
+  render() {
+    return (
+        <Delete/>
+    );
+  }
+}
+
 class PendingPage extends React.Component {
   render() {
     return (
@@ -83,7 +91,7 @@ ReactDOM.render((
         <IndexRedirect to="/m/view" component={ViewPage} />
         <Route path="view" component={ViewPage} />
         <Route path="update" component={UpdatePage} />
-        //Delete Route
+        <Route path="delete" component={DeletePage} />
       </Route>
       <Route path="pending" component={PendingPage} />
       <Route path="history" component={HistoryPage} />
