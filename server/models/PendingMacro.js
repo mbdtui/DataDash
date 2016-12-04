@@ -1,25 +1,22 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var journalEntrySchema = new Schema({
+var pendingMacroSchema = new Schema({
   macroID: String,
   macroName: String,
   macroGroup: String,
   author: String,
-  reviewer: String,
   params: Array,
   emergency: Boolean,
-  created_at: Date,
-  approved_at: Date
+  created_at: Date
 });
 
-journalEntrySchema.pre('save', function(next) {
+pendingMacroSchema.pre('save', function(next) {
   var currentDate = new Date();
   if (!this.created_at) this.created_at = currentDate;
-  else this.approved_at = currentDate;
   next();
 });
 
-var JournalEntry = mongoose.model('JournalEntry', journalEntrySchema);
+var PendingMacro = mongoose.model('PendingMacro', pendingMacroSchema);
 
-module.exports = JournalEntry;
+module.exports = PendingMacro;
