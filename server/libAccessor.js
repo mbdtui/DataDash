@@ -63,7 +63,6 @@ var driver_schedule = {
 	update_historical_sla_date_time_by_runname: function(run_name, date, time, cb) {}
 };
 
-
 // Interface for the table 'c_driver_step'.
 var driver_step = {
 	delete_all_entries_by_runname: function(run_name, cb){
@@ -83,7 +82,7 @@ var driver_step = {
 	update_active_step_indicator_by_runname_groupnumber: function(run_name, group_number, active_step_indicator, cb){},
 };
 
-// driver_step.delete_all_entries_by_runname('V_2_O', function(err, result) {
+// driver_step.delete_all_entries_by_runname('V_2_O_B', function(err, result) {
 // 	if(err) {
 // 		console.log('Error occurs!');
 // 	}
@@ -97,7 +96,6 @@ var driver_step_detail = {
 	delete_all_entries_by_runname: function(run_name, cb){},
 	update_run_status_code_by_runname_groupnumber: function(run_name, group_number, run_status_code, cb){},
 	update_run_status_code_by_runname_driverstepdetail_id: function(run_name, driver_step_detail_id, run_status_code, cb){},
-
 };
 
 exports.driver_schedule = driver_schedule;

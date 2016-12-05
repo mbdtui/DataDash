@@ -34,7 +34,7 @@ function loadMockDB(dir) {
 		if (err) {
 			console.log(err);
 			return;
-		}	
+		}
 		/*
 			Execute functions. Uncomment the function call to run them.
 			dropTables() drops all the tables in the database.
@@ -48,7 +48,29 @@ function loadMockDB(dir) {
 				loadTables(function() {
 					console.log();
 					console.log('Finished loading data log into the Liberty Mutual mock database.');
-					client.end();
+					// Add TRIGGER to the loaded DB.
+					client.query(
+						"CREATE OR REPLACE FUNCTION process_driver_step_detail() RETURNS TRIGGER AS $driver_step_detail_audit$"+
+						"	BEGIN" +
+						"		IF (TG_OP = 'DELETE') THEN" +
+						"			INSERT INTO c_driver_step_detail_h SELECT OLD.*, now();" +
+						"			RETURN OLD;" +
+						"		ELIF (TG_OP = 'UPDATE') THEN" +
+						"			INSERT INTO c_driver_step_detail_h SELECT NEW.*, now();" +
+						"			RETURN NEW;" +
+						"		ELIF (TG_OP = 'INSERT') THEN" +
+						"			INSERT INTO c_driver_step_detail_h SELECT NEW.*, now();" +
+						"			RETURN NEW;" +
+						"		END IF;" +
+						"		RETURN NULL;" +
+						"	END;" +
+						"$driver_step_detail_audit$ LANGUAGE plpgsql;" +
+						"CREATE TRIGGER driver_step_detail_audit" +
+						"	AFTER INSERT OR UPDATE OR DELETE ON c_driver_step_detail" +
+						"	FOR EACH ROW EXECUTE PROCEDURE process_driver_step_detail();"
+						, function(err, result) {
+						client.end();
+					});
 				});
 			});
 		});
