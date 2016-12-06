@@ -95,11 +95,17 @@ var driver_step = {
 		executeQuery('DELETE FROM c_driver_step WHERE run_nme=\'' + run_name + '\' AND drvr_step_id=\'' + driver_step_id + '\' RETURNING *;', cb);
 	},
 	update_active_step_indicator_by_driverstepid: function(driver_step_id, active_step_indicator, cb){
-		// executeQuery('')
+		executeQuery('UPDATE c_driver_step SET actv_step_ind = ' + active_step_indicator +' WHERE drvr_step_id = ' + driver_step_id + ';');
 	},
-	update_active_step_indicator_by_runname_driverstepid: function(run_name, driver_step_id, active_step_indicator, cb){},
-	update_active_step_indicator_by_runname: function(run_name, active_step_indicator, cb){},
-	update_active_step_indicator_by_runname_groupnumber: function(run_name, group_number, active_step_indicator, cb){},
+	update_active_step_indicator_by_runname_driverstepid: function(run_name, driver_step_id, active_step_indicator, cb){
+		executeQuery('UPDATE c_driver_step SET actv_step_ind = ' + active_step_indicator +' WHERE drvr_step_id = ' + driver_step_id + ' AND run_nme=\'' + run_name + '\';');
+	},
+	update_active_step_indicator_by_runname: function(run_name, active_step_indicator, cb){
+		executeQuery('UPDATE c_driver_step SET actv_step_ind = ' + active_step_indicator +' WHERE run_nme = \'' + run_name + '\';');
+	},
+	update_active_step_indicator_by_runname_groupnumber: function(run_name, group_number, active_step_indicator, cb){
+		executeQuery('UPDATE c_driver_step SET actv_step_ind = ' + active_step_indicator +' WHERE run_nme = \'' + run_name + '\' AND grp_nbr=' + group_number + ';');
+	},
 };
 
 // driver_schedule.update_sla_date_time_by_runname('ARMS_TO_ODS_SETUP','2016-12-4', '11:11:11', function(err, result){
