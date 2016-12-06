@@ -128,9 +128,15 @@ var driver_step = {
 
 // Interface for the table 'c_driver_step_detail'.
 var driver_step_detail = {
-	delete_all_entries_by_runname: function(run_name, cb){},
-	update_run_status_code_by_runname_groupnumber: function(run_name, group_number, run_status_code, cb){},
-	update_run_status_code_by_runname_driverstepdetail_id: function(run_name, driver_step_detail_id, run_status_code, cb){},
+	delete_all_entries_by_runname: function(run_name, cb){		
+		executeQuery('DELETE FROM c_driver_step_detail WHERE run_nme=\'' + run_name + '\' RETURNING *;', cb);
+	},
+	update_run_status_code_by_runname_groupnumber: function(run_name, group_number, run_status_code, cb){
+		executeQuery('UPDATE c_driver_step_detail SET run_stts_cd = ' + run_status_code +' WHERE run_nme = \'' + run_name + '\' AND grp_nbr=' + group_number + ';');
+	},
+	update_run_status_code_by_runname_driverstepdetail_id: function(run_name, driver_step_detail_id, run_status_code, cb){
+		executeQuery('UPDATE c_driver_step_detail SET run_stts_cd = ' + run_status_code +' WHERE run_nme = \'' + run_name + '\' AND drvr_step_dtl_id' + driver_step_detail_id + ';');
+	},
 };
 
 exports.driver_schedule = driver_schedule;
