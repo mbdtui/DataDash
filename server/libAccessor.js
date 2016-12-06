@@ -12,7 +12,7 @@ var pg = require('pg');
 var resetPostgreDB = require('./lib_mockDB_loader/LibDBLoader.js').loadMockDB;
 
 // Reset database.
-// resetPostgreDB('./lib_mockDB_loader/LibDataLogs');
+resetPostgreDB('./lib_mockDB_loader/LibDataLogs');
 
 var PostgreSQL_config = {
 	user: 'postgres',
@@ -140,7 +140,7 @@ function viewRunStatusCode(app_name, run_name, run_status_code, cb) {
 			" WHERE a.DRVR_STEP_ID = b.DRVR_STEP_ID AND a.app_nme = '" + 
 			app_name + "' and a.RUN_NME = '" + run_name + "'";
 	if(run_status_code === null) {
-		query += " AND a.run_stts_cd = '" + run_status_code+ "'",
+		query += " AND a.run_stts_cd = '" + run_status_code+ "'";
 	}
 	query += " order by a.run_nme, a.grp_nbr, a.run_order_nbr;";
 
@@ -151,6 +151,7 @@ function viewRunStatusCode(app_name, run_name, run_status_code, cb) {
 exports.driver_schedule = driver_schedule;
 exports.driver_step = driver_schedule;
 exports.driver_step_detail = driver_schedule;
+exports.viewRunStatusCode = viewRunStatusCode;
 
 // driver_schedule.update_historical_sla_date_time_by_runname('ARMS_TO_ODS_SETUP','2016-12-4', '11:11:11', function(err, result){
 // 	if(err) {
