@@ -12,7 +12,7 @@ var pg = require('pg');
 var resetPostgreDB = require('./lib_mockDB_loader/LibDBLoader.js').loadMockDB;
 
 // Reset database.
-resetPostgreDB('./lib_mockDB_loader/LibDataLogs');
+// resetPostgreDB('./lib_mockDB_loader/LibDataLogs');
 
 var PostgreSQL_config = {
 	user: 'postgres',
@@ -92,24 +92,65 @@ var driver_step = {
 		executeQuery('DELETE FROM c_driver_step WHERE run_nme=\'' + run_name + '\' RETURNING *;', cb);
 	},
 	delete_all_entries_by_runname_groupnumber: function(run_name, group_number, cb){
-		executeQuery('DELETE FROM c_driver_step WHERE run_nme=\'' + run_name + '\' AND grp_nbr=\'' + group_number + '\' RETURNING *;', cb);
+		executeQuery('DELETE FROM c_driver_step WHERE run_nme=\'' + run_name +
+			'\' AND grp_nbr=\'' + group_number + '\' RETURNING *;', cb);
 	},
 	delete_all_entries_by_runname_driverstepid: function(run_name, driver_step_id, cb){
-		executeQuery('DELETE FROM c_driver_step WHERE run_nme=\'' + run_name + '\' AND drvr_step_id=\'' + driver_step_id + '\' RETURNING *;', cb);
+		executeQuery('DELETE FROM c_driver_step WHERE run_nme=\'' + run_name +
+			'\' AND drvr_step_id=\'' + driver_step_id + '\' RETURNING *;', cb);
 	},
 	update_active_step_indicator_by_driverstepid: function(driver_step_id, active_step_indicator, cb){
-		executeQuery('UPDATE c_driver_step SET actv_step_ind = ' + active_step_indicator +' WHERE drvr_step_id = ' + driver_step_id + ';');
+		executeQuery('UPDATE c_driver_step SET actv_step_ind = ' + active_step_indicator +
+			' WHERE drvr_step_id = ' + driver_step_id + ';', cb);
 	},
 	update_active_step_indicator_by_runname_driverstepid: function(run_name, driver_step_id, active_step_indicator, cb){
-		executeQuery('UPDATE c_driver_step SET actv_step_ind = ' + active_step_indicator +' WHERE drvr_step_id = ' + driver_step_id + ' AND run_nme=\'' + run_name + '\';');
+		executeQuery('UPDATE c_driver_step SET actv_step_ind = ' + active_step_indicator +
+			' WHERE drvr_step_id = ' + driver_step_id + ' AND run_nme=\'' + run_name + '\';', cb);
 	},
 	update_active_step_indicator_by_runname: function(run_name, active_step_indicator, cb){
-		executeQuery('UPDATE c_driver_step SET actv_step_ind = ' + active_step_indicator +' WHERE run_nme = \'' + run_name + '\';');
+		executeQuery('UPDATE c_driver_step SET actv_step_ind = ' + active_step_indicator +
+			' WHERE run_nme = \'' + run_name + '\';', cb);
 	},
 	update_active_step_indicator_by_runname_groupnumber: function(run_name, group_number, active_step_indicator, cb){
-		executeQuery('UPDATE c_driver_step SET actv_step_ind = ' + active_step_indicator +' WHERE run_nme = \'' + run_name + '\' AND grp_nbr=' + group_number + ';');
+		executeQuery('UPDATE c_driver_step SET actv_step_ind = ' + active_step_indicator +
+			' WHERE run_nme = \'' + run_name + '\' AND grp_nbr=' + group_number + ';', cb);
 	},
 };
+
+
+// Interface for the table 'c_driver_step_detail'.
+var driver_step_detail = {
+	delete_all_entries_by_runname: function(run_name, cb){		
+		executeQuery('DELETE FROM c_driver_step_detail WHERE run_nme=\'' + run_name + '\' RETURNING *;', cb);
+	},
+	update_run_status_code_by_runname_groupnumber: function(run_name, group_number, run_status_code, cb){
+		executeQuery('UPDATE c_driver_step_detail SET run_stts_cd = ' + run_status_code +
+			' WHERE run_nme = \'' + run_name + '\' AND grp_nbr=' + group_number + ';', cb);
+	},
+	update_run_status_code_by_runname_driverstepdetail_id: function(run_name, driver_step_detail_id, run_status_code, cb){
+		executeQuery('UPDATE c_driver_step_detail SET run_stts_cd = ' + run_status_code +
+			' WHERE run_nme = \'' + run_name + '\' AND drvr_step_dtl_id' + driver_step_detail_id + ';', cb);
+	},
+};
+
+// Test modified sample query.
+function viewRunStatusCode(app_name, run_name, run_status_code, cb) {
+	var query = "SELECT run_stts_cd, b.STEP_NME, b.PRMTR_TXT, a.run_nme, a.grp_nbr, a.run_order_nbr, a.run_stts_cd, a.run_start_dtm, a.run_end_dtm,a.run_end_dtm - a.run_start_dtm As run_time_diff, b.STEP_NME"+
+			" FROM c_driver_step_detail a, c_driver_step b" +
+			" WHERE a.DRVR_STEP_ID = b.DRVR_STEP_ID AND a.app_nme = '" + 
+			app_name + "' and a.RUN_NME = '" + run_name + "'";
+	if(run_status_code === null) {
+		query += " AND a.run_stts_cd = '" + run_status_code+ "'",
+	}
+	query += " order by a.run_nme, a.grp_nbr, a.run_order_nbr;";
+
+	executeQuery(query, cb);
+}
+
+
+exports.driver_schedule = driver_schedule;
+exports.driver_step = driver_schedule;
+exports.driver_step_detail = driver_schedule;
 
 // driver_schedule.update_historical_sla_date_time_by_runname('ARMS_TO_ODS_SETUP','2016-12-4', '11:11:11', function(err, result){
 // 	if(err) {
@@ -128,48 +169,6 @@ var driver_step = {
 // 		console.log(JSON.stringify(result));
 // 	}
 // });
-
-// Interface for the table 'c_driver_step_detail'.
-var driver_step_detail = {
-	delete_all_entries_by_runname: function(run_name, cb){		
-		executeQuery('DELETE FROM c_driver_step_detail WHERE run_nme=\'' + run_name + '\' RETURNING *;', cb);
-	},
-	update_run_status_code_by_runname_groupnumber: function(run_name, group_number, run_status_code, cb){
-		executeQuery('UPDATE c_driver_step_detail SET run_stts_cd = ' + run_status_code +' WHERE run_nme = \'' + run_name + '\' AND grp_nbr=' + group_number + ';');
-	},
-	update_run_status_code_by_runname_driverstepdetail_id: function(run_name, driver_step_detail_id, run_status_code, cb){
-		executeQuery('UPDATE c_driver_step_detail SET run_stts_cd = ' + run_status_code +' WHERE run_nme = \'' + run_name + '\' AND drvr_step_dtl_id' + driver_step_detail_id + ';');
-	},
-};
-
-exports.driver_schedule = driver_schedule;
-exports.driver_step = driver_schedule;
-exports.driver_step_detail = driver_schedule;
-
-
-// Test modified sample query.
-function viewRunStatusCode(app_name, run_name, run_status_code, cb) {
-	var query = "SELECT run_stts_cd, b.STEP_NME, b.PRMTR_TXT, a.run_nme, a.grp_nbr, a.run_order_nbr, a.run_stts_cd, a.run_start_dtm, a.run_end_dtm,a.run_end_dtm - a.run_start_dtm As run_time_diff, b.STEP_NME"+
-			" FROM c_driver_step_detail a, c_driver_step b" +
-			" WHERE a.DRVR_STEP_ID = b.DRVR_STEP_ID AND a.app_nme = '" + app_name + "' and a.RUN_NME = '" + run_name + "'";
-	if(run_status_code === null) {
-		query += " AND a.run_stts_cd = '" + run_status_code+ "'",
-	}
-	query += " order by a.run_nme, a.grp_nbr, a.run_order_nbr;";
-
-	client.query(query, function(err, result) {
-				if(err) {
-					console.log("Query error!");
-				}
-				else {
-					console.log('Query results:');
-					for(var i=0; i < result.rows.length; i++) {
-						console.log(JSON.stringify(result.rows[i])+'\n');
-					}
-					cb();				
-				}
-			});
-}
 
 // "SELECT run_stts_cd, b.STEP_NME, b.PRMTR_TXT, a.run_nme, a.grp_nbr, a.run_order_nbr, a.run_stts_cd, a.run_start_dtm, a.run_end_dtm,a.run_end_dtm - a.run_start_dtm As run_time_diff, b.STEP_NME"+
 // 			" FROM c_driver_step_detail a, c_driver_step b" +
