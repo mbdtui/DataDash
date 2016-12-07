@@ -1,5 +1,5 @@
 #!/bin/sh 
-for dir in ./* ; 
+for dir in ./* ;
 do
   #  echo $dir
   if [ -f "$dir" ]
@@ -9,14 +9,14 @@ do
   for dir2 in "$dir"/*;
   do
   if [ -f "$dir2" ]
-  then 
+  then
     continue
   fi
     #    echo $di2
     for testFile in "$dir2"/*.js;
     do
-      if ! [ -e "$testFile" ] 
-      then 
+      if ! [ -e "$testFile" ]
+      then
         continue
       fi
       node "$testFile"
