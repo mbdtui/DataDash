@@ -20,17 +20,21 @@ var PostgreSQL_config = {
 };
 
 // Load Liberty Mutual Mock Database into PostgreSQL database server.
-loadMockDB();
+// loadMockDB();
 
 
-function loadMockDB() {
-	// open connection to database.
-	var client = new pg.Client(PostgreSQL_config);
+// open connection to database.
+var client = null;
+var datalogDir = null;
+
+function loadMockDB(dir) {
+	client = new pg.Client(PostgreSQL_config);
+	datalogDir = dir;
 	client.connect(function (err) {
 		if (err) {
 			console.log(err);
 			return;
-		}	
+		}
 		/*
 			Execute functions. Uncomment the function call to run them.
 			dropTables() drops all the tables in the database.
@@ -48,13 +52,19 @@ function loadMockDB() {
 				});
 			});
 		});
-	});	
+	});
 }
-
 
 //Drop all tables.
 function dropTables(cb) {
-	client.query('drop table if exists c_driver_schedule cascade; drop table if exists c_driver_step cascade; drop table if exists c_driver_step_detail cascade; drop table if exists c_app_run_dependency cascade; drop table if exists c_driver_step_detail_h cascade;', function(err, result) {
+	client.query('drop table if exists c_driver_schedule cascade;'+
+		' drop table if exists c_driver_schedule_h cascade;'+
+		' drop table if exists c_driver_step cascade;'+
+		' drop table if exists c_driver_step_h cascade;'+
+		' drop table if exists c_driver_step_detail cascade;'+
+		' drop table if exists c_driver_step_detail_h cascade;'+
+		' drop table if exists c_app_run_dependency cascade;'+
+		' drop table if exists c_app_run_dependency_h cascade;', function(err, result) {
 		// console.log('Result of dropTables(): ' + result);
 		if(err) {
 			console.log("Error dropping tables" + err);
@@ -68,19 +78,27 @@ function dropTables(cb) {
 
 // Create all necessary tables.
 function createTables(cb) {
-	createDriverSchedule(function() {
-		createDriverStep(function() {
-			createDriverStepDetail(function() {
-				createAppRunDependency(function () {
-					createDriverStepDetailH(function () {
-						cb();
+	createDriverScheduleH(function() {
+		createDriverStepH(function() {
+			createDriverStepDetailH(function() {
+				createAppRunDependencyH(function () {
+					createDriverStepDetail(function () {
+						createDriverSchedule(function() {
+							createDriverStep(function() {
+								createAppRunDependency(function(){
+									cb();
+								});
+							});
+						});
 					})
 				});
 			});
 		});
 	});
 }
+function recreateDriverSchedule(client, cb) {
 
+}
 // Table C_DRIVER_SCHEDULE.
 const number_of_columns_of_DriverSchedule = 16;
 function createDriverSchedule(cb) {
@@ -100,12 +118,58 @@ function createDriverSchedule(cb) {
 		"lst_mdfd_dtm time,"+
 		"app_run_id decimal(18,0),"+
 		"sla_date date,"+
-		"sla_time time);", function(err, result) {
+		"sla_time time);"+
+		"CREATE OR REPLACE FUNCTION process_c_driver_schedule() RETURNS TRIGGER AS $c_driver_schedule_h$"+
+						" BEGIN" +
+						" IF (TG_OP = 'DELETE') THEN" +
+						" INSERT INTO c_driver_schedule_h SELECT OLD.*, now();" +
+						" RETURN OLD;" +
+						" ELSIF (TG_OP = 'UPDATE') THEN" +
+						" INSERT INTO c_driver_schedule_h SELECT OLD.*, now();" +
+						" RETURN OLD;" +
+						" END IF;" +
+						" RETURN NULL;" +
+						" END;" +
+						"$c_driver_schedule_h$ LANGUAGE plpgsql;" +
+						"CREATE TRIGGER c_driver_schedule_h" +
+						" AFTER UPDATE OR DELETE ON c_driver_schedule" +
+						" FOR EACH ROW EXECUTE PROCEDURE process_c_driver_schedule();", function(err, result) {
 		if(err) {
 			console.log('C_DRIVER_SCHEDULE creation failed!' + err);
 		}
 		else {
 			console.log('C_DRIVER_SCHEDULE creation succeded!');
+			cb();
+		}
+	});	
+}
+
+// Table C_DRIVER_SCHEDULE_H.
+const number_of_columns_of_DriverScheduleH = 17;
+function createDriverScheduleH(cb) {
+	client.query("create table c_driver_schedule_h (" + 
+		"audt_id decimal(18,0),"+
+		"app_nme varchar(25),"+
+		"run_nme varchar(25),"+
+		"run_nbr integer,"+
+		"re_run_nbr integer,"+
+		"schdl_start_dtm time,"+
+		"stts_cd varchar(40),"+
+		"vlutn_start_dtm time,"+
+		"vlutn_end_dtm time,"+
+		"run_start_dtm time,"+
+		"run_end_dtm time,"+
+		"crt_dtm time,"+
+		"lst_mdfd_dtm time,"+
+		"app_run_id decimal(18,0),"+
+		"sla_date date,"+
+		"sla_time time,"+
+		"hist_dtm time);", function(err, result) {
+		if(err) {
+			console.log('C_DRIVER_SCHEDULE_H creation failed!' + err);
+		}
+		else {
+			console.log('C_DRIVER_SCHEDULE_H creation succeded!');
 			cb();
 		}
 	});	
@@ -133,12 +197,61 @@ function createDriverStep(cb) {
 		'crt_dtm timestamp,'+
 		'lst_mdfd_dtm timestamp,'+
 		'app_run_id decimal(18,0),'+
-		'actv_step_ind varchar(2));', function(err, result) {
+		'actv_step_ind varchar(2));'+
+		"CREATE OR REPLACE FUNCTION process_c_driver_step() RETURNS TRIGGER AS $c_driver_step_h$"+
+						" BEGIN" +
+						" IF (TG_OP = 'DELETE') THEN" +
+						" INSERT INTO c_driver_step_h SELECT OLD.*, now();" +
+						" RETURN OLD;" +
+						" ELSIF (TG_OP = 'UPDATE') THEN" +
+						" INSERT INTO c_driver_step_h SELECT OLD.*, now();" +
+						" RETURN NEW;" +
+						" END IF;" +
+						" RETURN NULL;" +
+						" END;" +
+						"$c_driver_step_h$ LANGUAGE plpgsql;" +
+						"CREATE TRIGGER c_driver_step_h" +
+						" AFTER UPDATE OR DELETE ON c_driver_step" +
+						" FOR EACH ROW EXECUTE PROCEDURE process_c_driver_step();", function(err, result) {
 		if(err) {
 			console.log('C_DRIVER_STEP creation failed!' + err);
 		}
 		else {
 			console.log('C_DRIVER_STEP creation succeded!');
+			cb();
+		}
+	});
+}
+
+// Table C_DRIVER_STEP_H.
+const number_of_columns_of_DriverStepH = 20;
+function createDriverStepH(cb) {
+	client.query('create table c_driver_step_h ('+
+		'drvr_step_id decimal(18, 0),'+
+		'app_nme varchar(25) not null,'+
+		'run_nme varchar(25) not null,'+
+		'grp_nbr integer not null,'+
+		'grp_nme varchar(80),'+
+		'run_order_nbr smallint not null,'+
+		'path_txt varchar(80) null,'+
+		'cmd_txt varchar(80) null,'+
+		'prmtr_txt varchar(256),'+
+		'grp_cncrrncy_ind varchar(2),'+
+		'step_cncrrncy_ind varchar(2),'+
+		'notify_txt varchar(128),'+
+		'step_typ_cd varchar(40),'+
+		'step_nme varchar(128),'+
+		'err_prcs_nbr smallint,'+
+		'crt_dtm timestamp,'+
+		'lst_mdfd_dtm timestamp,'+
+		'app_run_id decimal(18,0),'+
+		'actv_step_ind varchar(2),'+
+		'hist_dtm time);', function(err, result) {
+		if(err) {
+			console.log('C_DRIVER_STEP_H creation failed!' + err);
+		}
+		else {
+			console.log('C_DRIVER_STEP_H creation succeded!');
 			cb();
 		}
 	});
@@ -162,7 +275,22 @@ function createDriverStepDetail(cb) {
 		'run_start_dtm timestamp,'+
 		'run_end_dtm timestamp,'+
 		'crt_dtm timestamp,'+
-		'lst_mdfd_dtm timestamp);', function (err, result) {
+		'lst_mdfd_dtm timestamp);'+
+		"CREATE OR REPLACE FUNCTION process_c_driver_step_detail() RETURNS TRIGGER AS $c_driver_step_detail_h$"+
+						" BEGIN" +
+						" IF (TG_OP = 'DELETE') THEN" +
+						" INSERT INTO c_driver_step_detail_h SELECT OLD.*, now();" +
+						" RETURN OLD;" +
+						" ELSIF (TG_OP = 'UPDATE') THEN" +
+						" INSERT INTO c_driver_step_detail_h SELECT OLD.*, now();" +
+						" RETURN NEW;" +
+						" END IF;" +
+						" RETURN NULL;" +
+						" END;" +
+						"$c_driver_step_detail_h$ LANGUAGE plpgsql;" +
+						"CREATE TRIGGER c_driver_step_detail_h" +
+						" AFTER UPDATE OR DELETE ON c_driver_step_detail" +
+						" FOR EACH ROW EXECUTE PROCEDURE process_c_driver_step_detail();", function (err, result) {
 		if(err) {
 			console.log('C_DRIVER_STEP_DETAIL creation failed!' + err);
 		}
@@ -171,29 +299,6 @@ function createDriverStepDetail(cb) {
 			cb();
 		}
 	});	
-}
-
-// Table C_APP_RUN_DEPENDENCY.
-const number_of_columns_of_AppRunDependency = 9;
-function createAppRunDependency(cb) {
-	client.query('create table c_app_run_dependency ('+
-		'run_app_dpndnc_id decimal(18,0) primary key,'+
-		'app_nme varchar(25) not null,'+
-		'run_nme varchar(25) not null,'+
-		'dependant_app_nme varchar(25) not null,'+
-		'dependant_run_nme varchar(25) not null,'+
-		'crt_dtm timestamp,'+
-		'lst_mdfd_dtm timestamp,'+
-		'app_run_id decimal(18,0),'+
-		'dependant_app_run_id decimal(18,0));', function(err, result){
-		if(err) {
-			console.log('C_APP_RUN_DEPENDENCY creation failed!' + err);
-		}
-		else {
-			console.log('C_APP_RUN_DEPENDENCY creation succeded!');
-			cb();
-		}
-	});
 }
 
 // Table C_DRIVER_STEP_DETAIL_H.
@@ -226,6 +331,69 @@ function createDriverStepDetailH(cb) {
 	});	
 }
 
+// Table C_APP_RUN_DEPENDENCY.
+const number_of_columns_of_AppRunDependency = 9;
+function createAppRunDependency(cb) {
+	client.query('create table c_app_run_dependency ('+
+		'run_app_dpndnc_id decimal(18,0) primary key,'+
+		'app_nme varchar(25) not null,'+
+		'run_nme varchar(25) not null,'+
+		'dependant_app_nme varchar(25) not null,'+
+		'dependant_run_nme varchar(25) not null,'+
+		'crt_dtm timestamp,'+
+		'lst_mdfd_dtm timestamp,'+
+		'app_run_id decimal(18,0),'+
+		'dependant_app_run_id decimal(18,0));'+
+		"CREATE OR REPLACE FUNCTION process_c_app_run_dependency() RETURNS TRIGGER AS $c_app_run_dependency_h$"+
+						" BEGIN" +
+						" IF (TG_OP = 'DELETE') THEN" +
+						" INSERT INTO c_app_run_dependency_h SELECT OLD.*, now();" +
+						" RETURN OLD;" +
+						" ELSIF (TG_OP = 'UPDATE') THEN" +
+						" INSERT INTO c_app_run_dependency_h SELECT OLD.*, now();" +
+						" RETURN NEW;" +
+						" END IF;" +
+						" RETURN NULL;" +
+						" END;" +
+						"$c_app_run_dependency_h$ LANGUAGE plpgsql;" +
+						"CREATE TRIGGER c_app_run_dependency_h" +
+						" AFTER UPDATE OR DELETE ON c_app_run_dependency" +
+						" FOR EACH ROW EXECUTE PROCEDURE process_c_app_run_dependency();", function(err, result){
+		if(err) {
+			console.log('C_APP_RUN_DEPENDENCY creation failed!' + err);
+		}
+		else {
+			console.log('C_APP_RUN_DEPENDENCY creation succeded!');
+			cb();
+		}
+	});
+}
+
+// Table C_APP_RUN_DEPENDENCY_H.
+const number_of_columns_of_AppRunDependencyH = 10;
+function createAppRunDependencyH(cb) {
+	client.query('create table c_app_run_dependency_h ('+
+		'run_app_dpndnc_id decimal(18,0),'+
+		'app_nme varchar(25) not null,'+
+		'run_nme varchar(25) not null,'+
+		'dependant_app_nme varchar(25) not null,'+
+		'dependant_run_nme varchar(25) not null,'+
+		'crt_dtm timestamp,'+
+		'lst_mdfd_dtm timestamp,'+
+		'app_run_id decimal(18,0),'+
+		'dependant_app_run_id decimal(18,0),'+
+		'hist_dtm time);', function(err, result){
+		if(err) {
+			console.log('C_APP_RUN_DEPENDENCY_H creation failed!' + err);
+		}
+		else {
+			console.log('C_APP_RUN_DEPENDENCY_H creation succeded!');
+			cb();
+		}
+	});
+}
+
+
 // Load all tables.
 function loadTables(cb) {
 	loadTable('c_driver_step', function() {
@@ -241,11 +409,15 @@ function loadTables(cb) {
 	});
 }
 
-// Load the requested table from data log file into the database.
 function loadTable(table_name, cb) {
+	reloadTable(datalogDir, table_name, cb);
+}
+
+// Load the requested table from data log file into the database.
+function reloadTable(datalogDir, table_name, cb) {
 	// Open file to read.
 	const rl = readline.createInterface({
-		input: fs.createReadStream('./libdatalogs/' + table_name + '.txt'),
+		input: fs.createReadStream(datalogDir + '/' + table_name + '.txt'),
 		output: process.stdout,
 		terminal: false
 	});
@@ -380,4 +552,59 @@ function joinArray(arr, delimiter) {
 	return join;
 }
 
+function reloadDriverSchedule(dir){
+	client = new pg.Client(PostgreSQL_config);
+	client.connect((err) => {
+		if(err) {
+
+		}else{
+			client.query('drop table if exists c_driver_schedule cascade;', (err, result) => {
+				createDriverSchedule(() => {
+					reloadTable(dir, 'c_driver_schedule', () => {
+						console.log('Reloading c_driver_schedule done!');
+						client.end();
+					});
+				});
+			});			
+		}
+	});
+}
+
+function reloadDriverStep(dir){
+	client = new pg.Client(PostgreSQL_config);
+	client.connect((err) => {
+		if(err) {
+
+		}else{
+			client.query('drop table if exists c_driver_step cascade;', (err, result) => {
+				createDriverStep(() => {
+					reloadTable(dir, 'c_driver_step', () => {
+						console.log('Reloading c_driver_step done!');
+						client.end();
+					});
+				});
+			});			
+		}
+	});
+}
+function reloadDriverStepDetail(dir){
+	client = new pg.Client(PostgreSQL_config);
+	client.connect((err) => {
+		if(err) {
+
+		}else{
+			client.query('drop table if exists c_driver_step_detail cascade;', (err, result) => {
+				createDriverStepDetail(() => {
+					reloadTable(dir, 'c_driver_step_detail', () => {
+						console.log('Reloading c_driver_step_detail done!');
+						client.end();
+					});
+				});
+			});			
+		}
+	});
+}
 exports.loadMockDB = loadMockDB;
+exports.reloadDriverSchedule= reloadDriverSchedule;
+exports.reloadDriverStep = reloadDriverStep;
+exports.reloadDriverStepDetail = reloadDriverStepDetail;
