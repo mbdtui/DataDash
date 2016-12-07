@@ -96,7 +96,9 @@ function createTables(cb) {
 		});
 	});
 }
+function recreateDriverSchedule(client, cb) {
 
+}
 // Table C_DRIVER_SCHEDULE.
 const number_of_columns_of_DriverSchedule = 16;
 function createDriverSchedule(cb) {
@@ -407,8 +409,12 @@ function loadTables(cb) {
 	});
 }
 
-// Load the requested table from data log file into the database.
 function loadTable(table_name, cb) {
+	reloadTable(datalogDir, table_name, cb);
+}
+
+// Load the requested table from data log file into the database.
+function reloadTable(datalogDir, table_name, cb) {
 	// Open file to read.
 	const rl = readline.createInterface({
 		input: fs.createReadStream(datalogDir + '/' + table_name + '.txt'),
@@ -546,4 +552,59 @@ function joinArray(arr, delimiter) {
 	return join;
 }
 
+function reloadDriverSchedule(dir){
+	client = new pg.Client(PostgreSQL_config);
+	client.connect((err) => {
+		if(err) {
+
+		}else{
+			client.query('drop table if exists c_driver_schedule cascade;', (err, result) => {
+				createDriverSchedule(() => {
+					reloadTable(dir, 'c_driver_schedule', () => {
+						console.log('Reloading c_driver_schedule done!');
+						client.end();
+					});
+				});
+			});			
+		}
+	});
+}
+
+function reloadDriverStep(dir){
+	client = new pg.Client(PostgreSQL_config);
+	client.connect((err) => {
+		if(err) {
+
+		}else{
+			client.query('drop table if exists c_driver_step cascade;', (err, result) => {
+				createDriverStep(() => {
+					reloadTable(dir, 'c_driver_step', () => {
+						console.log('Reloading c_driver_step done!');
+						client.end();
+					});
+				});
+			});			
+		}
+	});
+}
+function reloadDriverStepDetail(dir){
+	client = new pg.Client(PostgreSQL_config);
+	client.connect((err) => {
+		if(err) {
+
+		}else{
+			client.query('drop table if exists c_driver_step_detail cascade;', (err, result) => {
+				createDriverStepDetail(() => {
+					reloadTable(dir, 'c_driver_step_detail', () => {
+						console.log('Reloading c_driver_step_detail done!');
+						client.end();
+					});
+				});
+			});			
+		}
+	});
+}
 exports.loadMockDB = loadMockDB;
+exports.reloadDriverSchedule= reloadDriverSchedule;
+exports.reloadDriverStep = reloadDriverStep;
+exports.reloadDriverStepDetail = reloadDriverStepDetail;
