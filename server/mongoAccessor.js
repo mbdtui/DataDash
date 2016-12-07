@@ -20,7 +20,7 @@ exports.createJournalEntry = function(_macroID, _macroName, _macroGroup, _author
     macroName : _macroName,
     macroGroup: _macroGroup,
     author : _author,
-    reviewwer : _reviewer,
+    reviewer : _reviewer,
     params : _params,
     emergency : _emergency
   });
@@ -59,7 +59,7 @@ exports.deleteJournalEntry = function(query){
       console.err("delete failed");
       System.exit(-1);
     }
-    
+
   });
 }
 
