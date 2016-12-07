@@ -19,7 +19,7 @@ var PostgreSQL_config = {
 	password: 'abc12345',
 	database: 'postgres',
 	host: 'localhost',
-	port: 5432,
+	port: 5433,
 };
 
 // Create a client to connect to the database.
@@ -33,8 +33,8 @@ function executeQuery(query_string, cb){
 			console.log(err);
 			cb(err, null);
 		}
-		else{		
-			client.query(query_string, function(err, result) {				
+		else{
+			client.query(query_string, function(err, result) {
 				client.end();
 				if(err) {
 					console.log("Query error!");
@@ -43,7 +43,7 @@ function executeQuery(query_string, cb){
 					console.log('Query results:');
 					for(var i=0; i < result.rows.length; i++) {
 						console.log(JSON.stringify(result.rows[i])+'\n');
-					}			
+					}
 				}
 				cb(err, result);
 			});
@@ -94,9 +94,18 @@ var driver_step = {
 
 // Interface for the table 'c_driver_step_detail'.
 var driver_step_detail = {
-	delete_all_entries_by_runname: function(run_name, cb){},
-	update_run_status_code_by_runname_groupnumber: function(run_name, group_number, run_status_code, cb){},
-	update_run_status_code_by_runname_driverstepdetail_id: function(run_name, driver_step_detail_id, run_status_code, cb){},
+	delete_all_entries_by_runname: function(run_name, cb){
+		var query = require('pg-query');
+		executeQuery('DELETE FROM c_driver_step_detail WHERE run_name = $1', [run_name]);
+	},
+	update_run_status_code_by_runname_groupnumber: function(run_name, group_number, run_status_code, cb){
+		var query = require('pg-query');
+		executeQuery('UPDATE c_driver_step_detail SET run_status_code = $1 WHERE run_name = $2 AND group_number = $3', [run_status_code, run_name, group_number]);
+	},
+	update_run_status_code_by_runname_driverstepdetail_id: function(run_name, driver_step_detail_id, run_status_code, cb){
+		var query = require('pg-query');
+		executeQuery('UPDATE c_driver_step_detail SET run_status_code = $1 WHERE run_name = $2 AND driver_step_detail_id = $3', [run_status_code, run_name, driver_step_detail_id]);
+	},
 
 };
 
@@ -121,7 +130,7 @@ function testQuery1(a, cb) {
 					for(var i=0; i < result.rows.length; i++) {
 						console.log(JSON.stringify(result.rows[i])+'\n');
 					}
-					cb();				
+					cb();
 				}
 			});
 }
