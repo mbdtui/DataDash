@@ -8,16 +8,7 @@ var executeQuery = libAccessor.executeQuery;
 
 const util = require('util');
 
-// driver_schedule.update_historical_sla_date_time_by_runname('ARMS_TO_ODS_SETUP','2016-12-4', '11:11:11', function(err, result){
-// 	if(err) {
-// 		console.log(err);
-// 	}
-// 	else {
-// 		console.log(JSON.stringify(result));
-// 	}
-// });
-// LibDBLoader.loadMockDB();
-
+/** TESTS FOR DRIVER SCHEDULE **/
 function test_driver_schedule_update_schedule_starttime_by_runname_auditid(cb){
 	console.log('*** Test driver_schedule.update_schedule_starttime_by_runname_auditid: function(run_name, audit_id, schedule_start_time, cb)');
 	var run_nme = 'nice_csat_ref';
@@ -38,13 +29,13 @@ function test_driver_schedule_update_schedule_starttime_by_runname_auditid(cb){
 
 				var new_schdl_start_dtm = result.rows[0].schdl_start_dtm;
 
+				console.log('\n\t Old value=' + old_schdl_start_dtm +
+						'\n\t Expected value=' + expected_schdl_start_dtm +
+						'\n\t New value=' + new_schdl_start_dtm);
 				if(new_schdl_start_dtm === expected_schdl_start_dtm){
 					console.log('===> PASSED');
 				} else {
-					console.log('===> FAILED'+
-						'\n\t Old value=' + old_schdl_start_dtm +
-						'\n\t Expected value=' + expected_schdl_start_dtm +
-						'\n\t New value=' + new_schdl_start_dtm);
+					console.log('===> FAILED');
 				}
 				console.log();
 			});
@@ -53,6 +44,7 @@ function test_driver_schedule_update_schedule_starttime_by_runname_auditid(cb){
 	});
 }
 
+/** TESTS FOR DRIVER STEP **/
 function test_driver_step_delete_all_entries_by_runname(cb){
 	console.log('*** Test driver_step.delete_all_entries_by_runname: function(run_name, cb)');
 	var run_name = 'V_2_O';
@@ -68,17 +60,16 @@ function test_driver_step_delete_all_entries_by_runname(cb){
 
 			driver_step.delete_all_entries_by_runname(run_name, function(err, result) {
 
-				console.log(JSON.stringify(result));
 				executeQuery("select count(*) from c_driver_step;", function(err, result) {
-					
+
 					var number_of_rows_after_deletion = result.rows[0].count;
+					console.log('\n\tNumber of rows before deletion: ' + number_of_rows_before_deletion +
+							'\n\tNumber of rows must be deleted: ' + number_of_rows_must_be_deleted +
+							'\n\tNumber of rows after deletion: ' + number_of_rows_after_deletion);
 					if (number_of_rows_after_deletion == (number_of_rows_before_deletion - number_of_rows_must_be_deleted)){
 						console.log('===> PASSED');
 					}else{
-						console.log('===> FAILED'+
-							'\n\tNumber of rows before deletion: ' + number_of_rows_before_deletion +
-							'\n\tNumber of rows must be deleted: ' + number_of_rows_must_be_deleted +
-							'\n\tNumber of rows after deletion: ' + number_of_rows_after_deletion);
+						console.log('===> FAILED');
 					}
 					console.log();
 					cb();
@@ -88,15 +79,25 @@ function test_driver_step_delete_all_entries_by_runname(cb){
 	});
 }
 
+/** TESTS FOR DRIVER STEP DETAILS **/
 
+/** Reset for each tables. */
 // LibDBLoader.reloadDriverSchedule('../lib_mockDB_loader/LibDataLogs');
 // LibDBLoader.reloadDriverStep('../lib_mockDB_loader/LibDataLogs');
 // LibDBLoader.reloadDriverStepDetail('../lib_mockDB_loader/LibDataLogs');
+
+// Reset all tables.
 // LibDBLoader.loadMockDB('../lib_mockDB_loader/LibDataLogs');
+
 // Call tests.
-test_driver_step_delete_all_entries_by_runname(()=>{
-	test_driver_schedule_update_schedule_starttime_by_runname_auditid(
-		function(){}
-	)
-});
+function testAll(){
+	test_driver_step_delete_all_entries_by_runname(()=>{
+	test_driver_schedule_update_schedule_starttime_by_runname_auditid(()=>{
+
+	})
+	});	
+}
+
+testAll();
+
 

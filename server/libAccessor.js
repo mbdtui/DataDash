@@ -89,9 +89,7 @@ var driver_schedule = {
 // Interface for the table 'c_driver_step'.
 var driver_step = {
 	delete_all_entries_by_runname: function(run_name, cb){
-		console.log('in');
 		var q = util.format("DELETE FROM c_driver_step WHERE run_nme='%s' RETURNING *;", run_name);
-		console.log("+++++++++++++++++++++++"+q);
 		executeQuery(q, cb);
 	},
 	delete_all_entries_by_runname_groupnumber: function(run_name, group_number, cb){
@@ -151,8 +149,8 @@ function viewRunStatusCode(app_name, run_name, run_status_code, cb) {
 }
 
 exports.driver_schedule = driver_schedule;
-exports.driver_step = driver_schedule;
-exports.driver_step_detail = driver_schedule;
+exports.driver_step = driver_step;
+exports.driver_step_detail = driver_step_detail;
 exports.viewRunStatusCode = viewRunStatusCode;
 
 exports.executeQuery = executeQuery;
