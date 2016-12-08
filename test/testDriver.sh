@@ -1,4 +1,5 @@
 #!/bin/sh 
+errorLog="./test/logs/error_$(date +%m_%d_%H_%M_%S).log"
 for dir in ./test/* ; 
 do
   #  echo $dir
@@ -13,13 +14,20 @@ do
     continue
   fi
     #    echo $di2
-    for testFile in "$dir2"/*.js;
+    for testFile in "$dir2"/test*.js;
     do
       if ! [ -e "$testFile" ] 
       then 
         continue
       fi
-      node "$testFile"
+      node "$testFile" 1> /dev/null 2>> $errorLog   
+      if [ $? -eq 0 ]
+      then
+        echo "${testFile:6}...Passed"
+      else
+        echo "--------------------------------" >> $errorLog
+        echo "${testFile:6}...Fail"
+      fi
     done
   done
 done
