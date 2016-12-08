@@ -1,0 +1,27 @@
+LOG:  database system was shut down at 2016-12-07 20:39:06 EST
+LOG:  MultiXact member wraparound protections are now enabled
+LOG:  database system is ready to accept connections
+LOG:  autovacuum launcher started
+LOG:  received fast shutdown request
+LOG:  aborting any active transactions
+LOG:  autovacuum launcher shutting down
+LOG:  shutting down
+LOG:  database system is shut down
+LOG:  database system was shut down at 2016-12-07 20:39:57 EST
+LOG:  MultiXact member wraparound protections are now enabled
+LOG:  database system is ready to accept connections
+LOG:  autovacuum launcher started
+LOG:  received fast shutdown request
+LOG:  aborting any active transactions
+LOG:  autovacuum launcher shutting down
+LOG:  shutting down
+LOG:  database system is shut down
+LOG:  received fast shutdown request
+LOG:  database system was shut down at 2016-12-07 20:41:15 EST
+LOG:  MultiXact member wraparound protections are now enabled
+LOG:  shutting down
+LOG:  database system is shut down
+LOG:  database system was shut down at 2016-12-07 20:53:44 EST
+LOG:  MultiXact member wraparound protections are now enabled
+LOG:  database system is ready to accept connections
+LOG:  autovacuum launcher started
