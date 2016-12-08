@@ -1,5 +1,5 @@
 #!/bin/sh 
-for dir in ./* ; 
+for dir in ./test/* ; 
 do
   #  echo $dir
   if [ -f "$dir" ]
