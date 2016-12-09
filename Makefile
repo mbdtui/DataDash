@@ -7,7 +7,7 @@ server: server_dependency
 	node ./server/server.js
 test: 
 	bash ./test/testDriver.sh
-appDB:
+appDB: 
 	mongod --dbpath=./server/data &
 kill:
 	pgrep mongod | xargs kill -2
@@ -20,8 +20,13 @@ createDB:
 	mkdir -p server/data server/data2
 	initdb -D server/data2
 
-client_dependency:
+client_dependency: client/package.json
+
+client/package.json:
 	npm --prefix ./client install ./client
-server_dependency:
+
+server_dependency: server/package.json
+
+server/package.json:
 	npm --prefix ./server install ./server
 

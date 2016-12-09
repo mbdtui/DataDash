@@ -4,3 +4,4 @@ npm-debug.log
 client/build
 server/data
 server/data2
+server/DB.log
