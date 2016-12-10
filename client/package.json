@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Macro execution and data viewing dashboard",
   "private": true,
-  "scripts": {    
+  "scripts": {
     "build": "./node_modules/.bin/webpack",
     "watch": "./node_modules/.bin/webpack --watch",
     "serve": "./node_modules/.bin/webpack-dev-server --content-base build"
@@ -18,9 +18,9 @@
     "url": "https://github.com/mbdtui/DataDash/issues"
   },
   "homepage": "https://github.com/mbdtui/DataDash",
-  "dependencies": {    
+  "dependencies": {
     "react-router": "^2.0.0"
-  },  
+  },
   "devDependencies": {
     "babel": "^6.3.26",
     "babel-core": "^6.4.0",
