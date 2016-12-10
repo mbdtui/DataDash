@@ -1,8 +1,37 @@
 import React from 'react';
 import {Link} from 'react-router';
+import {getRunStatusCode} from '../server';
+import RowData from './TableComponents/RowData.js';
+import Table from './TableComponents/Table.js';
 
 export default class View extends React.Component{
-
+  constructor(props){
+    super(props);
+    this.state = {
+      headers: [],
+      result: []
+    };
+    this.sendView = this.sendView.bind(this);
+  }
+  componentDidMount(){
+    // this.sendView();
+  }
+  sendView(){
+    var app_name = 'EDW';//app_name,
+    var run_name = 'S_2_O_CL_FA_ISO_NRT';//run_name,
+    var run_status_code = null;//run_status_code
+    getRunStatusCode(app_name, run_name, run_status_code, (result) => {
+      var headers = [];
+      // Get all the headers of result.
+      for (var property in result[0]) {
+        headers.push(property);
+      }
+      this.setState({
+        headers: headers,
+        result: result
+      });
+    });
+  }
   render(){
     return(
       <div id="wrapper">
@@ -10,6 +39,7 @@ export default class View extends React.Component{
           <div className="container-fluid">
             <div className="row">
               <div className="col-lg-12">
+                <div><Table result={this.state.result}/></div>
                 <div className="row">
                   <div className="col-lg-12 view-options-rows">
                     <div className="col-lg-6 row-name">
@@ -71,16 +101,25 @@ export default class View extends React.Component{
                       </select>
                     </div>
                     <div className="col-lg-12">
-                    <center><a href="#" role="button" className="btn btn-secondary btn-lg go-btn">Go</a></center>
+                    <center><a href="#" role="button" onClick={this.sendView} className="btn btn-secondary btn-lg go-btn">Go</a></center>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-
           </div>
         </div>
       </div>
     );
   }
 }
+
+ // <tbody>
+ //            {this.state.result.map((result, i) => {
+ //              <tr key={i}>
+ //                {this.state.headers.map((header, i) => {
+ //                  return <td key={i}>{result[header]}</td>
+ //                })}
+ //              </tr>
+ //            })}
+ //          </tbody>

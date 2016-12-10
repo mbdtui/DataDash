@@ -4,7 +4,7 @@
 //GetMacroData might cover all of the above (just requires handling of the data returned)
 export function getMacroData(macroIDs, cb){
     var xhr = new XMLHttpRequest();
-    if(/*macroIDs is empty*/){
+    if(true/*macroIDs is empty*/){
 	xhr.open('GET', '/macro');
 	xhr.setRequestHeader('Authorization', 'Bearer ' + token);
 	xhr.addEventListener('load', function() {
@@ -22,6 +22,16 @@ export function getMacroData(macroIDs, cb){
     //Handle the callback with xhr return
     cb(JSON.parse(xhr.responseText));
     });*/
+}
+
+export function getRunStatusCode(app_name, run_name, run_status_code, cb){
+  sendXHR('POST', '/view_run_status_code', {
+    app_name: app_name,
+    run_name: run_name,
+    run_status_code: run_status_code
+  }, (xhr) => {
+    cb(JSON.parse(xhr.responseText));
+  });
 }
 
 //Post requests - Macro requests (run/delete), View Macro Request (no approval needed)
