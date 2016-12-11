@@ -32,14 +32,33 @@ var mailOptions = {
 };
 
 
-exports.sendMail = function(toNames, macroID, parametersArray, callback){
+exports.sendMail = function(toNames, jsonObject, callback){
   mailOptions.to = toNames;
 
+  var paramString = "";
+  switch(jsonObject.table){
+    case 'c_driver_schedule':
+      if(jsonObject.function_called == 'update_schedule_starttime_by_runname_auditid'){
+        paramString = "Update schedule start time by run name and auditID.  MacroID: " + jsonObject.macroID + " with the following parameters: run name: " +
+        jsonObject.params.run_name + "  auditID: " + jsonObject.params.audit_id + "  schedule start time: " + jsonObject.params.schedule_start_time;
+      }
+      if(jsonObject.function_called == 'update_status_code_by_runname_auditid'){
+        paramString = "Update status code by run name and auditID.  MacroID: " + jsonObject.macroID + " with the following parameters: run name: " +
+        jsonObject.params.run_name + " auditID: " + jsonObject.params.audit_id + " status code: " + jsonObject.params.status_code);
+      }
+      if(jsonObject.function_called == 'update_valuation_enddate_by_runname_auditid'){
+        paramString = "Update status code by run name and auditID.  MacroID: " + jsonObject.macroID + " with the following parameters: run name: " +
+        jsonObject.params.run_name + " auditID: " + jsonObject.params.status_code + " valuation end date:" + jsonObject.valuation_end_date);
+      }
+
+
+  }
+
   //Build the email body string to show parameters involved in the macro.
-  var paramString = "MacroID:" + macroID + " with the following parameters: ";
-  for(var i = 0; i < parametersArray.length; i++){
-      var paramString = paramString + ", " + parametersArray[i];
-   }
+  // for(var i = 0; i < parametersArray.length; i++){
+  //     var paramString = paramString + ", " + parametersArray[i];
+  //  }
+
 
    //Attach a link to the pending macros page of the website.
    paramString = paramString + ".  Click this link to review pending macros.";
