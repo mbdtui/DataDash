@@ -1,4 +1,8 @@
 
+var libAccessor = require('libAccessor.js');
+driver_schedule = libAccessor.driver_schedule;
+driver_step = libAccessor.driver_step;
+driver_step_detail = libAccessor.driver_step_detail;
 
 exports.runDeleteMacro = function(jsonObject){
   switch(jsonObject.table){
