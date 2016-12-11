@@ -1,7 +1,30 @@
 import React from 'react';
 import {Link} from 'react-router';
+import {getHistory} from '../server';
+
+/*$(document).ready( function () {
+    $('#historyTable').DataTable(
+      {
+        paging:true
+      }
+    );
+} );*/
 
 export default class History extends React.Component{
+  constructor(props) {
+    super();
+    this.state = {
+      contents: []
+    };
+  }
+  refresh(){
+    getHistory( (data) => {
+        this.setState({contents: data});
+    });
+  }
+  componentDidMount() {
+    this.refresh();
+  }
   render(){
     return(
       <div id="wrapper">
@@ -16,7 +39,7 @@ export default class History extends React.Component{
             </div>
 
             <div className="col-lg-12">
-              <div className="pending-table">
+              <div className="pending-table" id="scrollTable">
                 <table className="sortable">
                   <tbody>
                     <tr>
@@ -26,41 +49,25 @@ export default class History extends React.Component{
                       <th>Employee</th>
                       <th>Approved/Denied</th>
                     </tr>
-                    <tr>
-                      <td>EX1</td>
-                      <td>10/10/2016</td>
-                      <td>09:00</td>
-                      <td>Bob Norton</td>
-                      <td>Approved</td>
-                    </tr>
-                    <tr>
-                      <td>EX2</td>
-                      <td>10/11/2016</td>
-                      <td>13:22</td>
-                      <td>Chancellor Bennett</td>
-                      <td>Approved</td>
-                    </tr>
-                    <tr>
-                      <td>EX3</td>
-                      <td>10/12/2016</td>
-                      <td>10:20</td>
-                      <td>Aubrey Graham</td>
-                      <td>Denied</td>
-                    </tr>
-                    <tr>
-                      <td>EX4</td>
-                      <td>10/13/2016</td>
-                      <td>11:11</td>
-                      <td>Shawn Carter</td>
-                      <td>Denied</td>
-                    </tr>
-                    <tr>
-                      <td>EX5</td>
-                      <td>10/14/2016</td>
-                      <td>21:11</td>
-                      <td>Kanye West</td>
-                      <td>Approved</td>
-                    </tr>
+                    {this.state.contents.map(function(historyObj) {
+                      return (
+                        <tr key={historyObj["ObjectID"]}>
+                          <td>
+                            {historyObj["macroName"]}
+                          </td>
+                          <td>
+                            {historyObj["created_at"]}
+                          </td>
+                          <td>
+                          </td>
+                          <td>
+                            {historyObj["author"]}
+                          </td>
+                          <td>
+                          </td>
+                        </tr>
+                      )
+                    })}
                   </tbody>
                 </table>
               </div>

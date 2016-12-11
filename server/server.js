@@ -27,7 +27,7 @@ app.get('/macro/:macroid', function(req, res){
 //get pending macros
 app.get('/pending_macro', function(req, res){
   getPendingMacroData(function(data) {
-      res.send(data)
+      res.send(data);
   });
 });
 
@@ -37,15 +37,14 @@ app.post('/create_pending/:pendinginfo', function(req, res){
   res.send(postMacroData(req.params.pendinginfo));
 });
 app.post('/create_journal/:journalinfo', function(req, res){
-  getPendingMacroData(new ObjectID(userid), function(data) {
-      res.send(data)
-  });
   res.send(postJournalEntry(req.params.journalinfo));
 });
 
 //
-app.get('/journalentry', function(req, res){
-    res.send(getJournalEntry(req.params.macroid));
+app.get('/journal_entry', function(req, res){
+  getJournalEntry(function(data) {
+    res.send(data);
+  });
 });
 
 app.post('/view_run_status_code', function(req, res) {
@@ -70,11 +69,11 @@ function postMacroData(data){
   //parse data and run mongo method
   mongoAccessor.createPendingMacro("1", "2", "3", "4", {}, true);
 }
-function getJournalEntry(){
+function getJournalEntry(cb){
+  console.log("Called get history in server");
   mongoAccessor.readJournalEntries(
-      function(entries){
-        console.log(entries);
-        return entries;
+    function(items){
+      cb(items);
   });
 }
 function getMacroData(macroIDs){

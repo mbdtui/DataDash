@@ -30,7 +30,7 @@ export default class Pending extends React.Component{
 
 
             <div className="col-lg-12">
-              <div className="pending-table">
+              <div className="pending-table" id="scrollTable">
                 <table className="sortable">
                   <tbody>
                     <tr>
@@ -39,8 +39,6 @@ export default class Pending extends React.Component{
                       <th>Time</th>
                       <th>Employee</th>
                     </tr>
-
-
                     {this.state.contents.map(function(macroObj) {
                       return (
                         <tr key={macroObj["ObjectID"]}>
@@ -59,39 +57,6 @@ export default class Pending extends React.Component{
                         </tr>
                       )
                     })}
-
-
-                    <tr>
-
-                      <td>EX1</td>
-                      <td>10/10/2016</td>
-                      <td>09:00</td>
-                      <td>Bob Norton</td>
-                    </tr>
-                    <tr>
-                      <td>EX2</td>
-                      <td>10/11/2016</td>
-                      <td>13:22</td>
-                      <td>Chancellor Bennett</td>
-                    </tr>
-                    <tr>
-                      <td>EX3</td>
-                      <td>10/12/2016</td>
-                      <td>10:20</td>
-                      <td>Aubrey Graham</td>
-                    </tr>
-                    <tr>
-                      <td>EX4</td>
-                      <td>10/13/2016</td>
-                      <td>11:11</td>
-                      <td>Shawn Carter</td>
-                    </tr>
-                    <tr>
-                      <td>EX5</td>
-                      <td>10/14/2016</td>
-                      <td>21:11</td>
-                      <td>Kanye West</td>
-                    </tr>
                   </tbody>
                 </table>
               </div>

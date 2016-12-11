@@ -33,6 +33,14 @@ export function getPendingMacros(cb) {
   });
 }
 
+export function getHistory(cb) {
+  console.log("Called get history in client");
+  sendXHR('GET', '/journal_entry', undefined, (xhr) => {
+    // Call the callback with the data.
+    console.log(typeof(xhr.responseText));
+    cb(JSON.parse(xhr.responseText));
+  });
+}
 
 
 export function getRunStatusCode(app_name, run_name, run_status_code, cb){
