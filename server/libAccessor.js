@@ -8,11 +8,11 @@
 */
 
 var pg = require('pg');
-
+var util = require('util');
 var resetPostgreDB = require('./lib_mockDB_loader/LibDBLoader.js').loadMockDB;
 
 // Reset database.
-resetPostgreDB('./lib_mockDB_loader/LibDataLogs');
+// resetPostgreDB('./lib_mockDB_loader/LibDataLogs');
 
 var PostgreSQL_config = {
 	user: 'postgres',
@@ -22,11 +22,11 @@ var PostgreSQL_config = {
 	port: 5433,
 };
 
-// Create a client to connect to the database.
-var client = new pg.Client(PostgreSQL_config);
-
 // Callback receive results from the query.
 function executeQuery(query_string, cb){
+
+	// Create a client to connect to the database.
+	var client = new pg.Client(PostgreSQL_config);
 	// open connection to database.
 	client.connect(function (err) {
 		if (err) {
@@ -37,13 +37,14 @@ function executeQuery(query_string, cb){
 			client.query(query_string, function(err, result) {
 				client.end();
 				if(err) {
-					console.log("Query error!");
+					// console.log("Query error!");
 				}
 				else {
-					console.log('Query results:');
-					for(var i=0; i < result.rows.length; i++) {
-						console.log(JSON.stringify(result.rows[i])+'\n');
-					}
+
+					// console.log('Query results:');
+					// for(var i=0; i < result.rows.length; i++) {
+					// 	console.log(JSON.stringify(result.rows[i])+'\n');
+					// }			
 				}
 				cb(err, result);
 			});
@@ -89,7 +90,8 @@ var driver_schedule = {
 // Interface for the table 'c_driver_step'.
 var driver_step = {
 	delete_all_entries_by_runname: function(run_name, cb){
-		executeQuery('DELETE FROM c_driver_step WHERE run_nme=\'' + run_name + '\' RETURNING *;', cb);
+		var q = util.format("DELETE FROM c_driver_step WHERE run_nme='%s' RETURNING *;", run_name);
+		executeQuery(q, cb);
 	},
 	delete_all_entries_by_runname_groupnumber: function(run_name, group_number, cb){
 		executeQuery('DELETE FROM c_driver_step WHERE run_nme=\'' + run_name +
@@ -133,7 +135,7 @@ var driver_step_detail = {
 	},
 };
 
-// Test modified sample query.
+// View the run status code using the sample query given by Liberty Mutual.
 function viewRunStatusCode(app_name, run_name, run_status_code, cb) {
 	var query = "SELECT run_stts_cd, b.STEP_NME, b.PRMTR_TXT, a.run_nme, a.grp_nbr, a.run_order_nbr, a.run_stts_cd, a.run_start_dtm, a.run_end_dtm,a.run_end_dtm - a.run_start_dtm As run_time_diff, b.STEP_NME"+
 			" FROM c_driver_step_detail a, c_driver_step b" +
@@ -147,29 +149,13 @@ function viewRunStatusCode(app_name, run_name, run_status_code, cb) {
 	executeQuery(query, cb);
 }
 
-
 exports.driver_schedule = driver_schedule;
-exports.driver_step = driver_schedule;
-exports.driver_step_detail = driver_schedule;
+exports.driver_step = driver_step;
+exports.driver_step_detail = driver_step_detail;
 exports.viewRunStatusCode = viewRunStatusCode;
 
-// driver_schedule.update_historical_sla_date_time_by_runname('ARMS_TO_ODS_SETUP','2016-12-4', '11:11:11', function(err, result){
-// 	if(err) {
-// 		console.log(err);
-// 	}
-// 	else {
-// 		console.log(JSON.stringify(result));
-// 	}
-// });
+exports.executeQuery = executeQuery;
 
-// driver_step.delete_all_entries_by_runname('V_2_O', function(err, result) {
-// 	if(err) {
-// 		console.log('Error occurs!');
-// 	}
-// 	else {
-// 		console.log(JSON.stringify(result));
-// 	}
-// });
 
 // "SELECT run_stts_cd, b.STEP_NME, b.PRMTR_TXT, a.run_nme, a.grp_nbr, a.run_order_nbr, a.run_stts_cd, a.run_start_dtm, a.run_end_dtm,a.run_end_dtm - a.run_start_dtm As run_time_diff, b.STEP_NME"+
 // 			" FROM c_driver_step_detail a, c_driver_step b" +

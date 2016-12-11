@@ -1,48 +1,34 @@
 "use strict"
-/* Prequisites:
- * Windows server with the Domain Services role installed and configured as a domain controller. No need for LDS.
- * npm install activedirectory
- */
-
-// To run: node ad-auth-test.js
 
 var config = require('config');
 var ActiveDirectory = require('activedirectory');
 
-// Build config for the ActiveDirectory module
-// TODO Add error handling that informs the user that there was an error in the config
-// TODO config.get() will throw an exception for undefined keys to help catch typos and missing values
-// TODO Altively use config.has() on each value.
-const DEVELOPER_AD_GROUP = config.get('AD.developer-group');
-const ADMIN_AD_GROUP = config.get('AD.admin-group');
-const MANAGER_AD_GROUP = config.get('AD.manager-group');
+const ADMIN-GROUP      = config.get('AD.admin-group');
+const DEVELOPER-GROUP  = config.get('AD.developer-group');
+const MANAGER-GROUP    = config.get('AD.manager-group');
 
 var ActiveDirectoryModuleConfig = {
-  url: config.get('AD.url'),
-  baseDN: config.get('AD.baseDN'),
+  url:      config.get('AD.url'),
+  baseDN:   config.get('AD.baseDN'),
   username: config.get('AD.username'),
   password: config.get('AD.password')
 }
 
 var ad = new ActiveDirectory(ActiveDirectoryModuleConfig);
 
-let username = 'myUsername';
-let password = 'myPassword';
-
-authenticate(username, password);
-isUserMemberOf(username, DEVELOPER_AD_GROUP);
-isUserMemberOf(username, ADMIN_AD_GROUP);
-isUserMemberOf(username, MANAGER_AD_GROUP);
-getGroupMembershipForUser(username);
-
-// Authenticate the user:
-// TODO give proper return type
+/**
+ * authenticate - Authenticates a users based on the provided credentials
+ *
+ * @param  {String} username
+ * @param  {String} password
+ * @throws an Error if there is a problem authenticating the user
+ * @return {boolean} True if the user was successfully authenticated. False otherwise.
+ */
 function authenticate(username, password) {
   ad.authenticate(username, password, function(err, auth) {
     if (err) {
-      console.log('Failed to authenticate \'' + username + '\'');
-      console.log('ERROR:' + JSON.stringify(err));
-      return;
+      throw new Error('Failed to authenticate \'' + username + '\' : '
+                      + JSON.stringify(err));
     }
 
     if (auth) {
@@ -51,36 +37,86 @@ function authenticate(username, password) {
     else {
       console.log('Failed to authenticate \'' + username + '\'');
     }
+    return auth;
   });
 }
 
-// Check that the user is authorized by group membership:
-// Note that this method doesn't check a user's primary group https://github.com/gheeres/node-activedirectory/issues/74. This isn't functionality we should need, but it's important to be aware of.
-// TODO give proper return type
+/**
+ * isUserMemberOf - checks whether 'username' is a member of 'group' in AD
+ *
+ * Note that this method doesn't check a user's primary group https://github.com/gheeres/node-activedirectory/issues/74.
+ * This isn't functionality we should need, but it's important to be aware of.
+ *
+ * @param  {String} username
+ * @param  {String} group
+ * @throws an Error if there was an issue checking group membership
+ * @return {boolean} True if 'username' is a member of 'group'. False otherwise.
+ */
 function isUserMemberOf(username, group){
   ad.isUserMemberOf(username, group, function(err, isMember) {
     if (err) {
-      console.log('ERROR: ' +JSON.stringify(err));
-      return;
+      throw new Error('Error while checking that \'' + username '\' is a member of \''
+                      + group + '\' : ' + JSON.stringify(err));
     }
 
     console.log(username + ' isMemberOf ' + group + ': ' + isMember);
+    return isMember;
   });
 }
 
-// TODO give proper return type
+/**
+ * getGroupMembershipForUser - Gets the group membership for 'username'
+ *
+ * @param  {type} username
+ * @throws an Error if there was an issue getting the group membership
+ * @return {JSON} A JSON object defining group membership for 'username'
+ */
 function getGroupMembershipForUser(username) {
   ad.getGroupMembershipForUser(username, function(err, groups) {
     if (err) {
-      console.log('ERROR: ' +JSON.stringify(err));
-      return;
+      console.log('ERROR: ' + JSON.stringify(err));
+      throw new Error('There was an error getting the groups for \'' + username '\'');
     }
 
     if (! groups) {
-      console.log('User: ' + username + ' not found.');
+      throw new Error('User: ' + username + ' not found.')
     }
     else {
       console.log(JSON.stringify(groups));
     }
+    return groups;
   });
+}
+
+/**
+ * isUserAdmin - looks up if the specified user is a member of the admin group.
+ *
+ * @param  {type} username
+ * @throws an Error if there was an issue looking up the group membership.
+ * @return {boolean} True if the user is a member of the admin group. False otherwise.
+ */
+function isUserAdmin(username) {
+  isUserMemberOf(username, ADMIN-GROUP);
+}
+
+/**
+ * isUserDeveloper - looks up if the specified user is a memeber of the developer group.
+ *
+ * @param  {type} username
+ * @throws an Error if there was an issue looking up the group membership.
+ * @return {type} True if the user is a member of the developer group. False otherwise.
+ */
+function isUserDeveloper(username) {
+  return isUserMemberOf(username, DEVELOPER-GROUP;
+}
+
+/**
+ * isUserManager - Looks up if the specified user is a member of the manager group.
+ *
+ * @param  {type} username
+ * @throws an Error if there was an issue looking up the group membership
+ * @return {type} True if the user is a member of the manager group. False otherwise.
+ */
+function isUserManager(username) {
+  isUserMemberOf(username, MANAGER-GROUP);
 }
