@@ -3,6 +3,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var libAccessor = require('./libAccessor.js');
 var mongoAccessor = require('./mongoAccessor');
+var mongoDummyData = require('./mongoDummyData');
 //var MongoClient = require('mongodb').MongoClient;
 
 var app = express();
@@ -13,9 +14,6 @@ app.use(bodyParser.json());
 // Serve files in the client/build directory.
 app.use(express.static('../client/build'));
 
-app.get('/', function (req, res){
-    res.send('Hello World!');
-});
 
 app.get('/macro', function (req, res){
     res.send(getMacroData());
@@ -26,7 +24,7 @@ app.get('/macro/:macroid', function(req, res){
     res.send(getMacroData(req.params.macroid));
 });
 
-//Temporary get pending macros
+//get pending macros
 app.get('/pending_macro', function(req, res){
   getPendingMacroData(function(data) {
       res.send(data)

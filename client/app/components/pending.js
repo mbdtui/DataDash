@@ -10,9 +10,8 @@ export default class Pending extends React.Component{
     };
   }
   refresh(){
-    getPendingMacros(
-      function(data){
-        alert(data);
+    getPendingMacros( (data) => {
+        this.setState({contents: data});
     });
   }
   componentDidMount() {
@@ -40,7 +39,30 @@ export default class Pending extends React.Component{
                       <th>Time</th>
                       <th>Employee</th>
                     </tr>
+
+
+                    {this.state.contents.map(function(macroObj) {
+                      return (
+                        <tr key={macroObj["ObjectID"]}>
+                          <td>
+                            {macroObj["macroName"]}
+                          </td>
+                          <td>
+                            {macroObj["created_at"]}
+                          </td>
+                          <td>
+
+                          </td>
+                          <td>
+                            {macroObj["author"]}
+                          </td>
+                        </tr>
+                      )
+                    })}
+
+
                     <tr>
+
                       <td>EX1</td>
                       <td>10/10/2016</td>
                       <td>09:00</td>

@@ -28,8 +28,7 @@ export function getPendingMacros(cb) {
   console.log("Called get pending in client");
   sendXHR('GET', '/pending_macro', undefined, (xhr) => {
     // Call the callback with the data.
-    console.log(xhr.responseText);
-    console.log(JSON.parse(xhr.responseText));
+    console.log(typeof(xhr.responseText));
     cb(JSON.parse(xhr.responseText));
   });
 }
