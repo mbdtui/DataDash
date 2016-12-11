@@ -1,5 +1,6 @@
 errorLog="./test/logs/error_$(date +%m_%d_%H_%M_%S).log"
-for dir in ./test/* ; 
+echo "Running tests..."
+for dir in ./test/* ;
 do
   #  echo $dir
   if [ -f "$dir" ]
