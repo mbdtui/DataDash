@@ -1,8 +1,16 @@
 import React from 'react';
 import {Link} from 'react-router';
+import {getMacrosForTableDelete} from '../server.js';
 
 export default class Delete extends React.Component{
-
+  constructor(props){
+    super(props);
+  }
+  componentDidMount(){
+    getMacrosForTableDelete('driver_step', (macros) => {
+      console.log(JSON.stringify(macros));
+    });
+  }
   render(){
     return(
       <div id="wrapper">
