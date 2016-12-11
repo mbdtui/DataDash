@@ -14,7 +14,7 @@ db.once('open', function() {
 var JournalEntry = require('./models/JournalEntry.js');
 var PendingMacro = require('./models/PendingMacro.js');
 
-exports.createJournalEntry = function(_macroID, _macroName, _macroGroup, _author, _reviewer, _params, _emergency){
+var createJournalEntry = function(_macroID, _macroName, _macroGroup, _author, _reviewer, _params, _emergency){
   var journalEntry = new JournalEntry({
     macroID : _macroID,
     macroName : _macroName,
@@ -33,7 +33,7 @@ exports.createJournalEntry = function(_macroID, _macroName, _macroGroup, _author
   });
 }
 
-exports.readJournalEntries = function(callback){
+var readJournalEntries = function(callback){
   JournalEntry.find(function(err, items){
     if(err){
       console.err("read failed");
@@ -43,7 +43,7 @@ exports.readJournalEntries = function(callback){
   });
 }
 
-exports.readJournalEntry = function(query, callback){
+var readJournalEntry = function(query, callback){
   JournalEntry.find(query, function(err,items){
     if(err){
       console.err("read failed");
@@ -53,7 +53,7 @@ exports.readJournalEntry = function(query, callback){
   });
 }
 
-exports.deleteJournalEntry = function(query){
+var deleteJournalEntry = function(query){
   JournalEntry.remove(query, function(err){
     if(err){
       console.err("delete failed");
@@ -63,7 +63,7 @@ exports.deleteJournalEntry = function(query){
   });
 }
 
-exports.createPendingMacro = function(_macroID, _macroName, _macroGroup, _author, _params, _emergency){
+var createPendingMacro = function(_macroID, _macroName, _macroGroup, _author, _params, _emergency){
   var pendingMacro = new PendingMacro({
     macroID : _macroID,
     macroName : _macroName,
@@ -81,7 +81,7 @@ exports.createPendingMacro = function(_macroID, _macroName, _macroGroup, _author
   });
 }
 
-exports.readPendingMacros = function(callback){
+var readPendingMacros = function(callback){
   PendingMacro.find(function(err, items){
     if(err){
       console.err("read failed");
@@ -90,10 +90,12 @@ exports.readPendingMacros = function(callback){
     callback(items);
   });
 }
-exports.test = function (callback){
+
+var test = function (callback){
   callback(20);
 }
-exports.readPendingMacro = function(query, callback){
+
+var readPendingMacro = function(query, callback){
   PendingMacro.find(query, function(err,items){
     if(err){
       console.err("read failed");
@@ -103,7 +105,7 @@ exports.readPendingMacro = function(query, callback){
   });
 }
 
-exports.deletePendingMacro = function(query){
+var deletePendingMacro = function(query){
   PendingMacro.remove(query, function(err){
     if(err){
       console.err("delete failed");
@@ -112,11 +114,24 @@ exports.deletePendingMacro = function(query){
   });
 }
 
-exports.loadDummyData = function(_dummyJournal, _dummyPending) {
+var loadDummyData = function(_dummyJournal, _dummyPending) {
   _dummyJournal.forEach(function(o) {
-    this.createJournalEntry(o.macroID, o.macroName, o.macroGroup, o.author, o.reviewer, {}, o.emergency);
+    createJournalEntry(o.macroID, o.macroName, o.macroGroup, o.author, o.reviewer, {}, o.emergency);
   });
   _dummyPending.forEach(function(o) {
-    this.createPendingMacro(o.macroID, o.macroName, o.macroGroup, o.author, {}, o.emergency);
+    createPendingMacro(o.macroID, o.macroName, o.macroGroup, o.author, {}, o.emergency);
   });
+}
+
+module.exports = {
+  createJournalEntry: createJournalEntry,
+  readJournalEntries: readJournalEntries,
+  readJournalEntry: readJournalEntry,
+  deleteJournalEntry: deleteJournalEntry,
+  createPendingMacro: createPendingMacro,
+  readPendingMacros: readPendingMacros,
+  readPendingMacro: readPendingMacro,
+  deletePendingMacro: deletePendingMacro,
+  test: test,
+  loadDummyData: loadDummyData
 }

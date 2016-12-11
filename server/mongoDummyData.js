@@ -1,5 +1,5 @@
 // Populates the mongoDB database with dummy data
-Object[] dummyJournal = [{"macroID":"395","macroName":"Daltfresh","macroGroup":"Feedbug","author":"Elizabeth","reviewer":"Jeffrey","emergency":true},
+var dummyJournal = [{"macroID":"395","macroName":"Daltfresh","macroGroup":"Feedbug","author":"Elizabeth","reviewer":"Jeffrey","emergency":true},
 {"macroID":"04","macroName":"Domainer","macroGroup":"Ntags","author":"Russell","reviewer":"Debra","emergency":false},
 {"macroID":"4","macroName":"Transcof","macroGroup":"Linklinks","author":"Rose","reviewer":"Donna","emergency":true},
 {"macroID":"767","macroName":"Sub-Ex","macroGroup":"Riffpath","author":"Denise","reviewer":"Lawrence","emergency":false},
@@ -200,7 +200,7 @@ Object[] dummyJournal = [{"macroID":"395","macroName":"Daltfresh","macroGroup":"
 {"macroID":"6","macroName":"Ronstring","macroGroup":"Flashdog","author":"Christopher","reviewer":"Maria","emergency":false},
 {"macroID":"20","macroName":"Pannier","macroGroup":"Mymm","author":"Howard","reviewer":"Gerald","emergency":true}];
 
-Object[] dummyPending = [{"macroID":"6160","macroName":"Fintone","macroGroup":"Feedfish","author":"Sean","emergency":true},
+var dummyPending = [{"macroID":"6160","macroName":"Fintone","macroGroup":"Feedfish","author":"Sean","emergency":true},
 {"macroID":"5","macroName":"Konklab","macroGroup":"Skinte","author":"Kimberly","emergency":true},
 {"macroID":"289","macroName":"Duobam","macroGroup":"Blogpad","author":"Sara","emergency":false},
 {"macroID":"928","macroName":"Gembucket","macroGroup":"Feedfish","author":"Julie","emergency":false},
