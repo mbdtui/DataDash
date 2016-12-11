@@ -5,6 +5,16 @@ body {
   padding-left: 15%;
 }
 
+.input-group h3{
+  text-align: left;
+  padding-top: 35px;
+  margin-bottom: 5px;
+
+}
+
+.input-group{
+  padding-bottom: 30px;
+}
 
 #home_page_navbar {
   text-align:left;
@@ -122,7 +132,8 @@ body {
 .go-btn{
   background-color: #EEEEEE;
   color: black;
-  min-width: 33%;
+  width: 100%;
+  margin-top: 20px;
 }
 
 .input-group{
@@ -160,4 +171,10 @@ tr:nth-child(even) {
 h2 {
   font-weight: bold;
   text-align: center;
+}
+
+#view-table {
+    height: 250px;
+    width: 250px;
+    overflow: auto;
 }
