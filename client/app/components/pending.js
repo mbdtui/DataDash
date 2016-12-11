@@ -1,7 +1,23 @@
 import React from 'react';
 import {Link} from 'react-router';
+import {getPendingMacros} from '../server';
 
 export default class Pending extends React.Component{
+  constructor(props) {
+    super();
+    this.state = {
+      contents: []
+    };
+  }
+  refresh(){
+    getPendingMacros(
+      function(data){
+        alert(data);
+    });
+  }
+  componentDidMount() {
+    this.refresh();
+  }
   render(){
     return(
       <div id="wrapper">
@@ -9,9 +25,6 @@ export default class Pending extends React.Component{
       <div className="container-fluid">
         <div className="row">
           <div className="col-lg-12">
-
-
-
             <div className="col-lg-12">
               <h2>View Pending Macros</h2>
             </div>

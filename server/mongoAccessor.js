@@ -81,7 +81,7 @@ exports.createPendingMacro = function(_macroID, _macroName, _macroGroup, _author
   });
 }
 
-exports.readPendingMacro = function(callback){
+exports.readPendingMacros = function(callback){
   PendingMacro.find(function(err, items){
     if(err){
       console.err("read failed");
@@ -90,7 +90,9 @@ exports.readPendingMacro = function(callback){
     callback(items);
   });
 }
-
+exports.test = function (callback){
+  callback(20);
+}
 exports.readPendingMacro = function(query, callback){
   PendingMacro.find(query, function(err,items){
     if(err){
