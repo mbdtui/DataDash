@@ -52,9 +52,7 @@ exports.sendMail = function(toNames, macroID, parametersArray, callback){
   });
 }
 
-exports.queueMacro = function(jsonObject){
-  //Insert JSON object to application database.
-}
+
 /*switch(jsonObject.table){
   case 'c_driver_schedule':
     if(jsonObject.function_called == 'delete_all_entries_by_runname'){
