@@ -1,8 +1,16 @@
 import React from 'react';
 import {Link} from 'react-router';
+import {getMacrosForTableUpdate, getMacrosForTableDelete} from '../server.js';
 
 export default class Update extends React.Component{
-
+  constructor(props){
+    super(props);
+  }
+  componentDidMount(){
+    getMacrosForTableUpdate('driver_step', (macros) => {
+      console.log(JSON.stringify(macros));
+    });
+  }
   render(){
     return(
       <div id="wrapper">

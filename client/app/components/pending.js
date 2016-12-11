@@ -30,7 +30,7 @@ export default class Pending extends React.Component{
 
 
             <div className="col-lg-12">
-              <div className="pending-table" id="scrollTable">
+              <div className="pending-table scrollTable">
                 <table className="sortable">
                   <tbody>
                     <tr>
