@@ -29,18 +29,20 @@ export function getMacrosForTableUpdate(table_name, cb) {
     cb(JSON.parse(xhr.responseText));
   });
 }
+
+export function getMacrosForTableDelete(table_name, cb) {
+  sendXHR('GET', '/macros_for_table/' + table_name + '/delete', undefined, (xhr) => {
+    cb(JSON.parse(xhr.responseText));
+  });
+}
+
+
 export function getPendingMacros(cb) {
   console.log("Called get pending in client");
   sendXHR('GET', '/pending_macro', undefined, (xhr) => {
     // Call the callback with the data.
     console.log(xhr.responseText);
     console.log(JSON.parse(xhr.responseText));
-    cb(JSON.parse(xhr.responseText));
-  });
-}
-
-export function getMacrosForTableDelete(table_name, cb) {
-  sendXHR('GET', '/macros_for_table/' + table_name + '/delete', undefined, (xhr) => {
     cb(JSON.parse(xhr.responseText));
   });
 }
