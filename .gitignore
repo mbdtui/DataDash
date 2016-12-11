@@ -3,3 +3,6 @@ npm-debug.log
 .DS_Store
 client/build
 server/data
+server/data2
+server/DB.log
+test/logs

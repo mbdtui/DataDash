@@ -33,8 +33,8 @@ function executeQuery(query_string, cb){
 			console.log(err);
 			cb(err, null);
 		}
-		else{		
-			client.query(query_string, function(err, result) {				
+		else{
+			client.query(query_string, function(err, result) {
 				client.end();
 				if(err) {
 					// console.log("Query error!");
@@ -43,7 +43,7 @@ function executeQuery(query_string, cb){
 					// console.log('Query results:');
 					// for(var i=0; i < result.rows.length; i++) {
 					// 	console.log(JSON.stringify(result.rows[i])+'\n');
-					// }			
+					// }
 				}
 				cb(err, result);
 			});
@@ -121,7 +121,7 @@ var driver_step = {
 
 // Interface for the table 'c_driver_step_detail'.
 var driver_step_detail = {
-	delete_all_entries_by_runname: function(run_name, cb){		
+	delete_all_entries_by_runname: function(run_name, cb){
 		executeQuery('DELETE FROM c_driver_step_detail WHERE run_nme=\'' + run_name + '\' RETURNING *;', cb);
 	},
 	update_run_status_code_by_runname_groupnumber: function(run_name, group_number, run_status_code, cb){
@@ -138,7 +138,7 @@ var driver_step_detail = {
 function viewRunStatusCode(app_name, run_name, run_status_code, cb) {
 	var query = "SELECT run_stts_cd, b.STEP_NME, b.PRMTR_TXT, a.run_nme, a.grp_nbr, a.run_order_nbr, a.run_stts_cd, a.run_start_dtm, a.run_end_dtm,a.run_end_dtm - a.run_start_dtm As run_time_diff, b.STEP_NME"+
 			" FROM c_driver_step_detail a, c_driver_step b" +
-			" WHERE a.DRVR_STEP_ID = b.DRVR_STEP_ID AND a.app_nme = '" + 
+			" WHERE a.DRVR_STEP_ID = b.DRVR_STEP_ID AND a.app_nme = '" +
 			app_name + "' and a.RUN_NME = '" + run_name + "'";
 	if(run_status_code === null) {
 		query += " AND a.run_stts_cd = '" + run_status_code+ "'";
@@ -154,7 +154,6 @@ exports.driver_step_detail = driver_step_detail;
 exports.viewRunStatusCode = viewRunStatusCode;
 
 exports.executeQuery = executeQuery;
-
 
 // "SELECT run_stts_cd, b.STEP_NME, b.PRMTR_TXT, a.run_nme, a.grp_nbr, a.run_order_nbr, a.run_stts_cd, a.run_start_dtm, a.run_end_dtm,a.run_end_dtm - a.run_start_dtm As run_time_diff, b.STEP_NME"+
 // 			" FROM c_driver_step_detail a, c_driver_step b" +

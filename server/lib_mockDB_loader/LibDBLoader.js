@@ -102,7 +102,7 @@ function recreateDriverSchedule(client, cb) {
 // Table C_DRIVER_SCHEDULE.
 const number_of_columns_of_DriverSchedule = 16;
 function createDriverSchedule(cb) {
-	client.query("create table c_driver_schedule (" + 
+	client.query("create table c_driver_schedule (" +
 		"audt_id decimal(18,0) primary key,"+
 		"app_nme varchar(25),"+
 		"run_nme varchar(25),"+
@@ -141,13 +141,13 @@ function createDriverSchedule(cb) {
 			console.log('C_DRIVER_SCHEDULE creation succeded!');
 			cb();
 		}
-	});	
+	});
 }
 
 // Table C_DRIVER_SCHEDULE_H.
 const number_of_columns_of_DriverScheduleH = 17;
 function createDriverScheduleH(cb) {
-	client.query("create table c_driver_schedule_h (" + 
+	client.query("create table c_driver_schedule_h (" +
 		"audt_id decimal(18,0),"+
 		"app_nme varchar(25),"+
 		"run_nme varchar(25),"+
@@ -172,7 +172,7 @@ function createDriverScheduleH(cb) {
 			console.log('C_DRIVER_SCHEDULE_H creation succeded!');
 			cb();
 		}
-	});	
+	});
 }
 
 // Table C_DRIVER_STEP.
@@ -298,7 +298,7 @@ function createDriverStepDetail(cb) {
 			console.log('C_DRIVER_STEP_DETAIL creation succeded!');
 			cb();
 		}
-	});	
+	});
 }
 
 // Table C_DRIVER_STEP_DETAIL_H.
@@ -328,7 +328,7 @@ function createDriverStepDetailH(cb) {
 			console.log('C_DRIVER_STEP_DETAIL_H creation succeded!');
 			cb();
 		}
-	});	
+	});
 }
 
 // Table C_APP_RUN_DEPENDENCY.
@@ -505,9 +505,9 @@ function reloadTable(datalogDir, table_name, cb) {
 						// console.log('Success: ' + query);
 					}
 					executeQuery(queries, cb);
-				});				
+				});
 			}
-		}			
+		}
 		executeQuery(queries, cb);
 	});
 }
@@ -517,7 +517,7 @@ function reloadTable(datalogDir, table_name, cb) {
 // 16600001
 
 // Form INSERT query to insert rows into database.
-function formulateInsertQuery(table, arr) {	
+function formulateInsertQuery(table, arr) {
 	for(var i = 0; i < arr.length; i++) {
 		if(arr[i] === '?') {
 			arr[i] = '\\N'; // \N means Null
@@ -543,7 +543,7 @@ function joinArray(arr, delimiter) {
 				join = join + delimiter + "$$" + t_arr[i] + "$$";
 			}
 			else {
-				join = join + delimiter + "'" + t_arr[i]+ "'";				
+				join = join + delimiter + "'" + t_arr[i]+ "'";
 			}
 		}
 	}
@@ -565,7 +565,7 @@ function reloadDriverSchedule(dir){
 						client.end();
 					});
 				});
-			});			
+			});
 		}
 	});
 }
@@ -583,7 +583,7 @@ function reloadDriverStep(dir){
 						client.end();
 					});
 				});
-			});			
+			});
 		}
 	});
 }
@@ -600,7 +600,7 @@ function reloadDriverStepDetail(dir){
 						client.end();
 					});
 				});
-			});			
+			});
 		}
 	});
 }

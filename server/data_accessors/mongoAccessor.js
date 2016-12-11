@@ -7,9 +7,6 @@ mongoose.connect(url);
 
 var db = mongoose.connection;
 db.on('error', console.error);
-db.once('open', function() {
-  console.log("connected");
-});
 
 var JournalEntry = require('./models/JournalEntry.js');
 var PendingMacro = require('./models/PendingMacro.js');
@@ -108,4 +105,8 @@ exports.deletePendingMacro = function(query){
       System.exit(-1);
     }
   });
+}
+
+exports.disconnect = function(){
+  mongoose.connection.close();
 }
