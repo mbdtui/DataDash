@@ -3,9 +3,9 @@
 var config = require('config');
 var ActiveDirectory = require('activedirectory');
 
-const ADMIN-GROUP      = config.get('AD.admin-group');
-const DEVELOPER-GROUP  = config.get('AD.developer-group');
-const MANAGER-GROUP    = config.get('AD.manager-group');
+const ADMIN_GROUP      = config.get('AD.admin-group');
+const DEVELOPER_GROUP  = config.get('AD.developer-group');
+const MANAGER_GROUP    = config.get('AD.manager-group');
 
 var ActiveDirectoryModuleConfig = {
   url:      config.get('AD.url'),
@@ -55,8 +55,7 @@ function authenticate(username, password) {
 function isUserMemberOf(username, group){
   ad.isUserMemberOf(username, group, function(err, isMember) {
     if (err) {
-      throw new Error('Error while checking that \'' + username '\' is a member of \''
-                      + group + '\' : ' + JSON.stringify(err));
+      throw new Error('Error while checking that \'' + username + '\' is a member of \'' + group + '\' : ' + JSON.stringify(err));
     }
 
     console.log(username + ' isMemberOf ' + group + ': ' + isMember);
@@ -75,7 +74,7 @@ function getGroupMembershipForUser(username) {
   ad.getGroupMembershipForUser(username, function(err, groups) {
     if (err) {
       console.log('ERROR: ' + JSON.stringify(err));
-      throw new Error('There was an error getting the groups for \'' + username '\'');
+      throw new Error('There was an error getting the groups for \'' + username +'\'');
     }
 
     if (! groups) {
@@ -96,7 +95,7 @@ function getGroupMembershipForUser(username) {
  * @return {boolean} True if the user is a member of the admin group. False otherwise.
  */
 function isUserAdmin(username) {
-  isUserMemberOf(username, ADMIN-GROUP);
+  isUserMemberOf(username, ADMIN_GROUP);
 }
 
 /**
@@ -107,7 +106,7 @@ function isUserAdmin(username) {
  * @return {type} True if the user is a member of the developer group. False otherwise.
  */
 function isUserDeveloper(username) {
-  return isUserMemberOf(username, DEVELOPER-GROUP;
+  return isUserMemberOf(username, DEVELOPER_GROUP);
 }
 
 /**
@@ -118,5 +117,5 @@ function isUserDeveloper(username) {
  * @return {type} True if the user is a member of the manager group. False otherwise.
  */
 function isUserManager(username) {
-  isUserMemberOf(username, MANAGER-GROUP);
+  isUserMemberOf(username, MANAGER_GROUP);
 }
