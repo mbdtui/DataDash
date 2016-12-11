@@ -7,7 +7,7 @@ var journalEntrySchema = new Schema({
   macroGroup: String,
   author: String,
   reviewer: String,
-  params: Array,
+  params: Object,
   emergency: Boolean,
   created_at: Date,
   approved_at: Date
