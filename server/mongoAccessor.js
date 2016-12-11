@@ -109,3 +109,12 @@ exports.deletePendingMacro = function(query){
     }
   });
 }
+
+exports.loadDummyData = function(_dummyJournal, _dummyPending) {
+  for (Object o : _dummyJournal) {
+    this.createJournalEntry(o.macroID, o.macroName, o.macroGroup, o.author, o.reviewer, {}, o.emergency);
+  }
+  for (Object o : _dummyPending) {
+    this.createPendingMacro(o.macroID, o.macroName, o.macroGroup, o.author, {}, o.emergency);
+  }
+}
