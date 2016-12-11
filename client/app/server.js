@@ -24,6 +24,18 @@ export function getMacroData(macroIDs, cb){
     });*/
 }
 
+export function getPendingMacros(cb) {
+  console.log("Called get pending in client");
+  sendXHR('GET', '/pending_macro', undefined, (xhr) => {
+    // Call the callback with the data.
+    console.log(xhr.responseText);
+    console.log(JSON.parse(xhr.responseText));
+    cb(JSON.parse(xhr.responseText));
+  });
+}
+
+
+
 export function getRunStatusCode(app_name, run_name, run_status_code, cb){
   sendXHR('POST', '/view_run_status_code', {
     app_name: app_name,
