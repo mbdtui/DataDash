@@ -7,7 +7,7 @@ body {
 
 .input-group h3{
   text-align: left;
-  padding-top: 35px;
+  padding-top: 45px;
   margin-bottom: 5px;
 
 }
@@ -76,19 +76,32 @@ body {
 }
 
 .main-btn{
-  min-width: 33%;
+  min-width: 31%;
+}
+
+.btn{
+      box-shadow: 0px 5px 3px #888888;
+      margin-left: 5px;
+      margin-right: 5px;
+}
+
+.btn:hover {
+        box-shadow: 0px 5px 3px white;
 }
 
 .active-btn{
   background-color: #003E7E !important;
-  border-color: #003E7E !important;
   color: white !important;
+          box-shadow: 0px 5px 3px white !important;
+
 }
 
 .active-btn:hover {
   background-color: #003E7E !important;
-  border-color: #003E7E !important;
   color: white !important;
+        box-shadow: 0px 5px 3px white;
+
+
 }
 .view-options-rows{
   padding-top: 20px;
@@ -131,13 +144,20 @@ body {
 
 .go-btn{
   background-color: #EEEEEE;
-  color: black;
+  color: black !important;
   width: 100%;
-  margin-top: 20px;
+  margin-top: 45px;
+  margin-bottom: 50px;
+}
+
+.go-btn:hover{
+
+  color: black !important;
+
 }
 
 .input-group{
-  width: 75%;
+  width: 100%;
 }
 
 #nav-item {
@@ -182,4 +202,8 @@ h2 {
     height: 100%;
     width: 100%;
     overflow: auto;
+}
+
+#app-name{
+  padding-top: 0px !important;
 }
