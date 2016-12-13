@@ -1,10 +1,9 @@
 var express = require('express');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var libAccessor = require('./libAccessor.js');
+var libAccessor = require('./data_accessors/libAccessor.js');
 var mongoAccessor = require('./data_accessors/mongoAccessor');
 var mongoDummyData = require('./mongoDummyData');
-//var MongoClient = require('mongodb').MongoClient;
 
 var app = express();
 
