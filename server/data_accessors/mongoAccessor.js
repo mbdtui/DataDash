@@ -7,9 +7,6 @@ mongoose.connect(url);
 
 var db = mongoose.connection;
 db.on('error', console.error);
-db.once('open', function() {
-  console.log("connected");
-});
 
 var JournalEntry = require('./models/JournalEntry.js');
 var PendingMacro = require('./models/PendingMacro.js');
@@ -123,6 +120,10 @@ var loadDummyData = function(_dummyJournal, _dummyPending) {
   });
 }
 
+var disconnect = function() {
+  mongoose.connection.close();
+}
+
 module.exports = {
   createJournalEntry: createJournalEntry,
   readJournalEntries: readJournalEntries,
@@ -133,5 +134,6 @@ module.exports = {
   readPendingMacro: readPendingMacro,
   deletePendingMacro: deletePendingMacro,
   test: test,
-  loadDummyData: loadDummyData
+  loadDummyData: loadDummyData,
+  disconnect: disconnect
 }
