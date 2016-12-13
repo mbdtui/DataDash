@@ -2,8 +2,10 @@
 ## Liberty Mutual Capstone
 
 #### Instructions for starting the app:
+(Alternatively, use the Makefile: `make`)
 1. Start Mongodb:
-  * On Windows, use (make sure the version number is correct): `C:\Program Files\MongoDB\Server\3.2\bin\mongod.exe`
+  * On Windows, use (make sure the version number is correct):
+    `C:\Program Files\MongoDB\Server\3.2\bin\mongod.exe`
   * On Mac, use the command `mongod`
 2. In a separate window, navigate to the the server directory and run:
   * `npm install`
