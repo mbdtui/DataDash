@@ -401,6 +401,6 @@ var dummyPending = [{"macroID":"6160","macroName":"Fintone","macroGroup":"Feedfi
 {"macroID":"50884","macroName":"Subin","macroGroup":"Fiveclub","author":"Wanda","emergency":false},
 {"macroID":"823","macroName":"Temp","macroGroup":"Trilith","author":"Sean","emergency":false}];
 
-var mongoAccessor = require('./mongoAccessor');
+var mongoAccessor = require('./data_accessors/mongoAccessor');
 
 mongoAccessor.loadDummyData(dummyJournal, dummyPending);

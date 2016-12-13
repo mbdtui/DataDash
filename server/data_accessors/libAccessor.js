@@ -8,7 +8,7 @@
 
 var pg = require('pg');
 var util = require('util');
-var resetPostgreDB = require('./lib_mockDB_loader/LibDBLoader.js').loadMockDB;
+var resetPostgreDB = require('../lib_mockDB_loader/LibDBLoader.js').loadMockDB;
 
 // Reset database.
 // resetPostgreDB('./lib_mockDB_loader/LibDataLogs');

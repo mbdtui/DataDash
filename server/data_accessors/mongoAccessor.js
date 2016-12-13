@@ -8,8 +8,8 @@ mongoose.connect(url);
 var db = mongoose.connection;
 db.on('error', console.error);
 
-var JournalEntry = require('./models/JournalEntry.js');
-var PendingMacro = require('./models/PendingMacro.js');
+var JournalEntry = require('../models/JournalEntry.js');
+var PendingMacro = require('../models/PendingMacro.js');
 
 var createJournalEntry = function(_macroID, _macroName, _macroGroup, _author, _reviewer, _params, _emergency){
   var journalEntry = new JournalEntry({
