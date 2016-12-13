@@ -54,6 +54,9 @@ export default class Pending extends React.Component{
                           <td>
                             {macroObj["author"]}
                           </td>
+                          <td>
+                            <button> Approve </button>
+                          </td>
                         </tr>
                       )
                     })}

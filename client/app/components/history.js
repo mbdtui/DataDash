@@ -32,12 +32,9 @@ export default class History extends React.Component{
       <div className="container-fluid">
         <div className="row">
           <div className="col-lg-12">
-
-
             <div className="col-lg-12">
               <h2>View History of Macros</h2>
             </div>
-
             <div className="col-lg-12">
               <div className="pending-table scrollTable">
                 <table className="sortable">
@@ -47,7 +44,7 @@ export default class History extends React.Component{
                       <th>Date</th>
                       <th>Time</th>
                       <th>Employee</th>
-                      <th>Approved/Denied</th>
+                      <th>Reviewer</th>
                     </tr>
                     {this.state.contents.map(function(historyObj) {
                       return (
@@ -64,6 +61,7 @@ export default class History extends React.Component{
                             {historyObj["author"]}
                           </td>
                           <td>
+                            {historyObj["reviewer"]}
                           </td>
                         </tr>
                       )
