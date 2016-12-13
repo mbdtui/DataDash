@@ -73,7 +73,7 @@ export default class View extends React.Component{
                 <div className="input-group">
                   <center>
                     <form action="" method="post" id="view-form">
-                      <h3> App Name: </h3>
+                      <h3 id="app-name"> App Name: </h3>
                       <input type="text" name="app_name" className="form-control" placeholder="Enter App Name here" aria-describedby="basic-addon1" />
                       <h3> Run Name: </h3>
                       <input type="text" name="run_name" className="form-control" placeholder="Enter Run Name here" aria-describedby="basic-addon1" />
