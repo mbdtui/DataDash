@@ -5,6 +5,16 @@ body {
   padding-left: 15%;
 }
 
+.input-group h3{
+  text-align: left;
+  padding-top: 45px;
+  margin-bottom: 5px;
+
+}
+
+.input-group{
+  padding-bottom: 30px;
+}
 
 #home_page_navbar {
   text-align:left;
@@ -66,19 +76,32 @@ body {
 }
 
 .main-btn{
-  min-width: 33%;
+  min-width: 31%;
+}
+
+.btn{
+      box-shadow: 0px 5px 3px #888888;
+      margin-left: 5px;
+      margin-right: 5px;
+}
+
+.btn:hover {
+        box-shadow: 0px 5px 3px white;
 }
 
 .active-btn{
   background-color: #003E7E !important;
-  border-color: #003E7E !important;
   color: white !important;
+          box-shadow: 0px 5px 3px white !important;
+
 }
 
 .active-btn:hover {
   background-color: #003E7E !important;
-  border-color: #003E7E !important;
   color: white !important;
+        box-shadow: 0px 5px 3px white;
+
+
 }
 .view-options-rows{
   padding-top: 20px;
@@ -109,6 +132,7 @@ body {
   color: #ffffff;
   background-color: #003E7E;
   border-color: #003E7E;
+  width: 75%;
 }
 
 .options:hover{
@@ -120,10 +144,21 @@ body {
 
 .go-btn{
   background-color: #EEEEEE;
-  color: black;
-  min-width: 33%;
+  color: black !important;
+  width: 100%;
+  margin-top: 45px;
+  margin-bottom: 50px;
 }
 
+.go-btn:hover{
+
+  color: black !important;
+
+}
+
+.input-group{
+  width: 100%;
+}
 
 #nav-item {
   text-align: center;
@@ -132,4 +167,43 @@ body {
 
 .bypass-check{
   margin-bottom: 10px;
+}
+
+
+table {
+    margin-top: 2.5%;
+    margin-bottom: 5%;
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+
+h2 {
+  font-weight: bold;
+  text-align: center;
+}
+
+.scrollTable{
+  overflow:hidden;
+  overflow-y: scroll;
+  height: 500px;
+}
+#view-table {
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+}
+
+#app-name{
+  padding-top: 0px !important;
 }

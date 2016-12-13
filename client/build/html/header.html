@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DataDash</title>
+
+    <!-- Bootstrap -->
+  	<link href="css/bootstrap.min.css" rel="stylesheet">
+  	<link href="css/bootstrap-slate-theme.css" rel="stylesheet">
+
+  	<!-- Custom CSS goes here -->
+  	<link href="css/custom.css" rel="stylesheet">
+
+  </head>
+  <body>
+    <div id="main_container">
+      <!-- INDEX FILE, what is rendered before react renders. -->
+
+      <div class="col-lg-12">
+        <div class="header">
+          <nav class="navbar navbar-light bg-faded" id="home_page_navbar">
+            <div class="col-lg-9">
+              <img  id="logo" src="\img\LibertyMutual.png" alt="Liberty Mutual Logo"/>
+            </div>
+            <div class="col-lg-3 top-right-menu">
+              <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown top-dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i id="user_icon"></i>Bob Norton <span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="#">Account Settings</a></li>
+                    <li><a href="#">Change Environment</a></li>
+                    <li><a href="#">Add Driver Rows</a></li>
+                    <li><a href="#">View Metadata and Statistics</a></li>
+                    <li><a href="#">View Pending Macros</a></li>
+                    <li><a href="#">View History</a></li>
+                    <li>
+                        Log Out
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </nav>
+          <div class="col-lg-12">
+            <div class="row main-buttons">
+              <div id="main_buttons">
+                  <button class = "btn btn-secondary btn-lg main-btn">View</button>
+                  <button class = "btn btn-primary btn-lg main-btn active-btn">Update</button>
+                <button href="#" role="button" class="btn btn-secondary btn-lg main-btn">Delete</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  	<script src="js/jquery.min.js"></script>
+  	<script src="js/bootstrap.min.js"></script>
+  	<!-- React Code -->
+  	<!--<script src="js/app.js" type="text/javascript"></script>-->
+  </body>
+</html>
