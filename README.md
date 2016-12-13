@@ -3,6 +3,7 @@
 
 #### Instructions for starting the app:
 (Alternatively, use the Makefile: `make`)
+
 1. Start Mongodb:
   * On Windows, use (make sure the version number is correct):
     `C:\Program Files\MongoDB\Server\3.2\bin\mongod.exe`
