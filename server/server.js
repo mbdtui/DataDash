@@ -121,7 +121,8 @@ app.post('/view_run_status_code', function(req, res) {
 });
 
 app.post('/journal_entry', function(req, res) {
-  //req.body is a JSON object holding _id, created_at, macroID, macroName, macroGroup, author, emergency, _v, reviewer
+  //req.body is a JSON object holding macroID, macroName, macroGroup, author, emergency, reviewer
+  //at the very least. (mongodb should handle creation time and unique obj ids)
   mongoAccessor.createJournalEntry(
     req.body.macroID,
     req.body.macroName,
