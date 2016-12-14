@@ -132,7 +132,14 @@ body {
   color: #ffffff;
   background-color: #003E7E;
   border-color: #003E7E;
-  width: 75%;
+  width: 100%;
+}
+
+.options{
+  background-color: white !important;
+  border-color: white !important;
+  color: black !important;
+  border-color: #003E7E !important;
 }
 
 .options:hover{
@@ -205,5 +212,9 @@ h2 {
 }
 
 #app-name{
+  padding-top: 0px !important;
+}
+
+#update-form h3{
   padding-top: 0px !important;
 }
