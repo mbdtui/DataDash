@@ -1,9 +1,17 @@
 
+
 /*Takes a JSON object and checks the table, function, and params, and runs
   the corresponding query on the data layer.  The JSON object should be of
   the following form: {macroID, macroName, macroGroup, author,
-  params, emergency}, where params is an array of parameters.
-*/
+  params, emergency}, where params is an array of parameters.*/
+
+var libAccessor = require('libAccessor.js');
+driver_schedule = libAccessor.driver_schedule;
+driver_step = libAccessor.driver_step;
+driver_step_detail = libAccessor.driver_step_detail;
+
+
+
 
 //This function runs a delete macro based on the parameters given by the JSON object.
 exports.runUpdateMacro = function(jsonObject){
@@ -57,26 +65,4 @@ exports.runUpdateMacro = function(jsonObject){
         driver_step_detail.update_run_status_code_by_runname_driverstepdetail_id(jsonObject.parametrs.run_name, jsonObject.params.driver_step_detail_id, jsonObject.params.run_status_code);
       }
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

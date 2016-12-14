@@ -1,4 +1,8 @@
 
+var libAccessor = require('libAccessor.js');
+driver_schedule = libAccessor.driver_schedule;
+driver_step = libAccessor.driver_step;
+driver_step_detail = libAccessor.driver_step_detail;
 
 /*This runs delete macros based on the specified table, function, and parameters
 given.  The table, function, and parameters are provided through a JSON object,

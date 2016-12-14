@@ -50,6 +50,7 @@ exports.sendMail = function(toNames, jsonObject, callback){
         paramString = "Update status code by run name and auditID.  MacroID: " + jsonObject.macroID + " with the following parameters: run name: " +
         jsonObject.params.run_name + " auditID: " + jsonObject.params.status_code + " valuation end date:" + jsonObject.valuation_end_date);
       }
+      //if(jsonObject.function_called == 'update_')
 
 
   }
