@@ -61,17 +61,18 @@ export default class Update extends React.Component{
                       </select>
                       <h3> Update: </h3>
                       <select name="update" className="selectpicker options btn btn-default" data-width="75%" title="Select a Run Name">
-                        <option>Driver Step</option>
-                        <option>Driver Step Detail </option>
-                        <option>Driver Schedule</option>
+                        <option>Schedule Start time</option>
+                        <option>Status Code</option>
+                        <option>Valuation End Date</option>
+                        <option>Valuation Start Date</option>
+                        <option>SLA Date Time</option>
                       </select>
                       <h3> Group Number: </h3>
                       <input type="text" name="Group-Number" className="form-control" placeholder="Username" aria-describedby="basic-addon1" />
                       <h3> By: </h3>
-                      <select name="By" className="selectpicker options btn btn-default" data-width="75%" title="Select a Step ID">
-                        <option>Driver Step</option>
-                        <option>Driver Step Detail </option>
-                        <option>Driver Schedule</option>
+                      <select id="by" name="By" className="selectpicker options btn btn-default" data-width="75%" title="Select a Step ID">
+                        <option>Run Name and Driver Step Detail ID</option>
+                        <option>Run Name and Group Number</option>
                       </select>
                       <input type="text" name="by-one" className="form-control" placeholder="First by" aria-describedby="basic-addon1" />
                       <input type="text" name="by-two" className="form-control" placeholder="Second by" aria-describedby="basic-addon1" />
@@ -86,6 +87,7 @@ export default class Update extends React.Component{
                   </form>
                 </center>
               </div>
+
               <div className= "col-lg-3"></div>
             </div>
           </div>

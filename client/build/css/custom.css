@@ -61,6 +61,13 @@ body {
   color: black !important;
 }
 
+#update-form input{
+  margin-bottom: 10px;
+}
+
+#by{
+  margin-bottom: 10px;
+}
 
 #login-logo{
   height: 250px;
@@ -163,13 +170,16 @@ body {
   color: black !important;
   width: 100%;
   margin-top: 45px;
-  margin-bottom: 50px;
 }
 
 .go-btn:hover{
 
   color: black !important;
 
+}
+
+.update-view-panel{
+  margin-top: 50px;
 }
 
 .input-group{
