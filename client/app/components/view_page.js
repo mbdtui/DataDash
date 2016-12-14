@@ -66,10 +66,10 @@ export default class View extends React.Component{
         <div id="page-content-wrapper">
           <div className="container-fluid">
             <div className="row">
-
             <div  id="view-table" onscroll="scrollFunction()"><Table result={this.state.result}/></div>
-              <div className= "col-lg-4"></div>
-              <div className= "col-lg-5">
+              <div className= "col-lg-3"></div>
+              <div className= "col-lg-6">
+
                 <div className="input-group">
                   <center>
                     <form action="" method="post" id="view-form">
@@ -83,6 +83,7 @@ export default class View extends React.Component{
                     </form>
                   </center>
                 </div>
+
               </div>
               <div className= "col-lg-3"></div>
             </div>
