@@ -1,5 +1,5 @@
 body {
-  background-color: white;
+  background-color: white;;
   padding: 0px 100px;
   padding-right: 15%;
   padding-left: 15%;
@@ -28,17 +28,18 @@ body {
 }
 
 .log-in-page{
-  background-color: #002664;
+  background-color: white;
 }
 
-.log-in label{
-  color: white;
+.log-in h3{
+  color: #002663;
 }
+
 
 .log-in-btn{
   background-color: #EEEEEE;
   color: black;
-  max-width: 30%;
+  width: 100%;
   margin-top: 20px;
 }
 
@@ -60,6 +61,14 @@ body {
   color: black !important;
 }
 
+
+#login-logo{
+  height: 250px;
+}
+
+#main_container{
+  background-color: white !important;
+}
 
 .main-buttons{
   text-align: center;
