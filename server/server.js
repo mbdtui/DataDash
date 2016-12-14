@@ -1,3 +1,4 @@
+var auth = require('./api/dummy-auth.js'); // change to auth.js for real authentication against AD
 var express = require('express');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
