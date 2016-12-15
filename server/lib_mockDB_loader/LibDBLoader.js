@@ -20,7 +20,7 @@ var PostgreSQL_config = {
 };
 
 // Load Liberty Mutual Mock Database into PostgreSQL database server.
-// loadMockDB();
+loadMockDB();
 
 
 // open connection to database.

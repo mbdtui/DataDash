@@ -66,23 +66,26 @@ export default class View extends React.Component{
         <div id="page-content-wrapper">
           <div className="container-fluid">
             <div className="row">
-
             <div  id="view-table" onscroll="scrollFunction()"><Table result={this.state.result}/></div>
-              <div className= "col-lg-4"></div>
-              <div className= "col-lg-5">
-                <div className="input-group">
-                  <center>
-                    <form action="" method="post" id="view-form">
-                      <h3 id="app-name"> App Name: </h3>
-                      <input type="text" name="app_name" className="form-control" placeholder="Enter App Name here" aria-describedby="basic-addon1" />
-                      <h3> Run Name: </h3>
-                      <input type="text" name="run_name" className="form-control" placeholder="Enter Run Name here" aria-describedby="basic-addon1" />
-                      <h3> Run Status Code: </h3>
-                      <input type="text" name="run_status_code" className="form-control" placeholder="Enter Run Status Code here" aria-describedby="basic-addon1" />
-                      <a href="#" role="button" onClick={this.sendView} className="btn btn-secondary btn-lg go-btn">Go</a>
-                    </form>
-                  </center>
-                </div>
+              <div className= "col-lg-3"></div>
+              <div className= "col-lg-6">
+
+
+                  <div className="input-group">
+                    <center>
+                      <form action="" method="post" id="view-form">
+                        <h3 id="app-name"> App Name: </h3>
+                        <input type="text" name="app_name" className="form-control" placeholder="Enter App Name here" aria-describedby="basic-addon1" />
+                        <h3> Run Name: </h3>
+                        <input type="text" name="run_name" className="form-control" placeholder="Enter Run Name here" aria-describedby="basic-addon1" />
+                        <h3> Run Status Code: </h3>
+                        <input type="text" name="run_status_code" className="form-control" placeholder="Enter Run Status Code here" aria-describedby="basic-addon1" />
+                        <a href="#" role="button" onClick={this.sendView} className="btn btn-secondary btn-lg go-btn">Go</a>
+                      </form>
+                    </center>
+                  </div>
+
+
               </div>
               <div className= "col-lg-3"></div>
             </div>

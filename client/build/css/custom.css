@@ -1,5 +1,5 @@
 body {
-  background-color: white;
+  background-color: white;;
   padding: 0px 100px;
   padding-right: 15%;
   padding-left: 15%;
@@ -28,17 +28,18 @@ body {
 }
 
 .log-in-page{
-  background-color: #002664;
+  background-color: white;
 }
 
-.log-in label{
-  color: white;
+.log-in h3{
+  color: #002663;
 }
+
 
 .log-in-btn{
   background-color: #EEEEEE;
   color: black;
-  max-width: 30%;
+  width: 100%;
   margin-top: 20px;
 }
 
@@ -60,6 +61,21 @@ body {
   color: black !important;
 }
 
+#update-form input{
+  margin-bottom: 10px;
+}
+
+#by{
+  margin-bottom: 10px;
+}
+
+#login-logo{
+  height: 250px;
+}
+
+#main_container{
+  background-color: white !important;
+}
 
 .main-buttons{
   text-align: center;
@@ -132,7 +148,14 @@ body {
   color: #ffffff;
   background-color: #003E7E;
   border-color: #003E7E;
-  width: 75%;
+  width: 100%;
+}
+
+.options{
+  background-color: white !important;
+  border-color: white !important;
+  color: black !important;
+  border-color: #003E7E !important;
 }
 
 .options:hover{
@@ -147,13 +170,16 @@ body {
   color: black !important;
   width: 100%;
   margin-top: 45px;
-  margin-bottom: 50px;
 }
 
 .go-btn:hover{
 
   color: black !important;
 
+}
+
+.update-view-panel{
+  margin-top: 50px;
 }
 
 .input-group{
@@ -205,5 +231,9 @@ h2 {
 }
 
 #app-name{
+  padding-top: 0px !important;
+}
+
+#update-form h3{
   padding-top: 0px !important;
 }

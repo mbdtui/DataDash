@@ -2,6 +2,25 @@
 //Tentative get request emulation (test)
 //Get requests - get list of macro names, get macro history info, get pending macro info
 //GetMacroData might cover all of the above (just requires handling of the data returned)
+
+export function deletePendingMacro(objectID,cb){
+  //TWO HTTPRequests one for deleting from pending and one for updating history
+  sendXHR('DELETE', '/pending_macro/' + objectID, undefined, (xhr) => {
+    // Call the callback with the data.
+    cb();
+  });
+}
+
+
+export function postJournalEntry(obj,cb){
+  obj.reviewer = "TemporaryUser"; //Replace temporaryUser with user from AD
+  sendXHR('POST', '/journal_entry', obj, (xhr) => {
+    // Call the callback with the data.
+    cb();
+  });
+}
+
+//tentative - this does nothing
 export function getMacroData(macroIDs, cb){
     var xhr = new XMLHttpRequest();
     if(true/*macroIDs is empty*/){
@@ -38,10 +57,8 @@ export function getMacrosForTableDelete(table_name, cb) {
 
 
 export function getPendingMacros(cb) {
-  console.log("Called get pending in client");
   sendXHR('GET', '/pending_macro', undefined, (xhr) => {
     // Call the callback with the data.
-    console.log(typeof(xhr.responseText));
     cb(JSON.parse(xhr.responseText));
   });
 }

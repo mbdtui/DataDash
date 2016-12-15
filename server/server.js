@@ -120,6 +120,32 @@ app.post('/view_run_status_code', function(req, res) {
 	});
 });
 
+app.post('/journal_entry', function(req, res) {
+  //req.body is a JSON object holding macroID, macroName, macroGroup, author, emergency, reviewer
+  //at the very least. (mongodb should handle creation time and unique obj ids)
+  mongoAccessor.createJournalEntry(
+    req.body.macroID,
+    req.body.macroName,
+    req.body.macroGroup,
+    req.body.author,
+    req.body.reviewer,
+    /**/{},
+    req.body.emergency
+  );
+  //Blank for success
+  res.send();
+});
+
+
+
+app.delete('/pending_macro/:macroID', function(req, res){
+  console.log("In server folder attempting macro deletion");
+  var macroID = req.params.macroID;
+  mongoAccessor.deletePendingMacro({ _id: macroID});
+  //Blank for success
+  res.send();
+});
+
 function postJournalEntry(data){
   //Parse data and run mongo method
   mongoAccessor.createJournalEntry("1", "2", "3", "4", "5", {}, true);
@@ -145,22 +171,10 @@ function getMacroData(macroIDs){
     return macroIDs;
 }
 function getPendingMacroData(cb){
-    //macroIDs=comma separated list of ids
-    //return macroIDs;
-    //Parse list of ids
-    //Make call to DB methods and get data
-    //Maybe need a sync to get references
-		//return data
-    console.log("Called get pending in the server");
     mongoAccessor.readPendingMacros(
       function(items){
         cb(items);
     });
-    /*return mongoAccessor.test(
-      function(i){
-        return i;
-      }
-    )*/
 }
 
 //Replace res.send contents with database data
