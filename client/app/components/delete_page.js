@@ -1,42 +1,23 @@
 import React from 'react';
 import {Link} from 'react-router';
-import {getMacrosForTableUpdate, getMacrosForTableDelete} from '../server.js';
+import {getMacrosForTableDelete} from '../server.js';
 
-export default class Update extends React.Component{
+export default class Delete extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      selected_table: '',
-      selected_macro: '',
-      macros: []
+      headers: [],
+      result: []
     };
-    this.sendUpdate = this.sendUpdate.bind(this);
-    this.handleTableSelected = this.handleTableSelected.bind(this);
+    this.sendDelete = this.sendDelete.bind(this);
   }
-
   componentDidMount(){
-  }
-  handleTableSelected(event){
-    event.preventDefault();
-    var table_name = event.target.value;
-    if(table_name === '') {
-      this.setState({
-        selected_table: '',
-        selected_macro: '',
-        macros: []
-      });
-      return;
-    }
-    getMacrosForTableUpdate(table_name, (macros) => {
+    getMacrosForTableDelete('driver_step', (macros) => {
       console.log(JSON.stringify(macros));
-      this.setState({
-        selected_table: table_name,
-        macros: macros.macros
-      });
     });
   }
 
-  sendUpdate(){
+  sendDelete(){
     console.log("Taking in input from user");
     var formData = $('#update-form').serializeArray();
     var table = formData[0].value;
@@ -58,6 +39,8 @@ export default class Update extends React.Component{
     //   });
     // });
   }
+
+
   render(){
     return(
       <div id="wrapper">
@@ -70,17 +53,18 @@ export default class Update extends React.Component{
                   <center>
                     <form action="" method="post" id="update-form">
                       <h3> Table: </h3>
-                      <select name="table" value={this.state.table} onChange={this.handleTableSelected} className="selectpicker options btn btn-default" data-width="75%" title="Select a table">
-                        <option value=""></option>
-                        <option value="c_driver_step">Driver Step</option>
-                        <option value="c_driver_step_detail">Driver Step Detail </option>
-                        <option value="c_driver_schedule">Driver Schedule</option>
+                      <select name="table"className="selectpicker options btn btn-default" data-width="75%" title="Select a table">
+                        <option>Driver Step</option>
+                        <option>Driver Step Detail </option>
+                        <option>Driver Schedule</option>
                       </select>
                       <h3> Update: </h3>
-                      <select name="update" value={this.state.macro} onChange={this.handleMacroSelected} className="selectpicker options btn btn-default" data-width="75%" title="Select a Run Name">
-                        {this.state.macros.map((macro, i)=>{
-                          return <option key={i} value={macro}>{macro}</option>
-                        })}
+                      <select name="update" className="selectpicker options btn btn-default" data-width="75%" title="Select a Run Name">
+                        <option>Schedule Start time</option>
+                        <option>Status Code</option>
+                        <option>Valuation End Date</option>
+                        <option>Valuation Start Date</option>
+                        <option>SLA Date Time</option>
                       </select>
                       <h3> Group Number: </h3>
                       <input type="text" name="Group-Number" className="form-control" placeholder="Username" aria-describedby="basic-addon1" />
@@ -97,12 +81,11 @@ export default class Update extends React.Component{
                       </center>
                     </div>
                     <div className="col-lg-12">
-                      <a href="#" role="button" onClick={this.sendUpdate} className="btn btn-secondary btn-lg go-btn">Go</a>
+                      <a href="#" role="button" onClick={this.sendDelete} className="btn btn-secondary btn-lg go-btn">Go</a>
                     </div>
                   </form>
                 </center>
               </div>
-
               <div className= "col-lg-3"></div>
             </div>
           </div>
