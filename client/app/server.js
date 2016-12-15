@@ -75,6 +75,12 @@ export function getRunStatusCode(app_name, run_name, run_status_code, cb){
   });
 }
 
+export function requestMacroExecution(request_type, table_macro_params, cb) {
+  sendXHR('POST','/request_macro_execution/'+request_type, table_macro_params, (xhr) => {
+    cb(JSON.parse(xhr.responseText));
+  });
+}
+
 //Post requests - Macro requests (run/delete), View Macro Request (no approval needed)
 
 var token = 'eyJpZCI6NH0'; // <-- Put your base64'd JSON token here

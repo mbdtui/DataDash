@@ -1,5 +1,5 @@
 
-var libAccessor = require('libAccessor.js');
+var libAccessor = require('./data_accessors/libAccessor.js');
 driver_schedule = libAccessor.driver_schedule;
 driver_step = libAccessor.driver_step;
 driver_step_detail = libAccessor.driver_step_detail;

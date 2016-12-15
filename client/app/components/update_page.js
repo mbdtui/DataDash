@@ -1,6 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router';
-import {getMacrosAllTables} from '../server.js';
+import {getMacrosAllTables, requestMacroExecution} from '../server.js';
 
 export default class Update extends React.Component{
   constructor(props){
@@ -13,6 +13,7 @@ export default class Update extends React.Component{
     this.sendUpdate = this.sendUpdate.bind(this);
     this.handleTableSelected = this.handleTableSelected.bind(this);
     this.handleMacroSelected = this.handleMacroSelected.bind(this);
+    this.handleParameterChanged = this.handleParameterChanged.bind(this);
   }
 
   componentDidMount(){
@@ -40,36 +41,29 @@ export default class Update extends React.Component{
       selected_macro: macro_name
     })
   }
-
-  sendUpdate(){
-    console.log("Taking in input from user");
-    var formData = $('#update-form').serializeArray();
-    var table = formData[0].value;
-    var update = formData[1].value;
-    var GroupNumber = formData[2].value;
-    var By = formData[2].value;
-    console.log(formData);
-
-    // getRunStatusCode(app_name, run_name, run_status_code, (result) => {
-    //   console.log(JSON.stringify(result));
-    //   var headers = [];
-    //   // Get all the headers of result.
-    //   for (var property in result[0]) {
-    //     headers.push(property);
-    //   }
-    //   this.setState({
-    //     headers: headers,
-    //     result: result
-    //   });
-    // });
+  handleParameterChanged(event) {
+    event.preventDefault();
+    // console.log(JSON.stringify(event));
+    var param_value = event.target.value;
+    var param_name = event.target.id;
+    this.state.macros_all_tables.update[this.state.selected_table][this.state.selected_macro][param_name] = param_value;
+    // this.state. = param_value;
+    // console.log(this.state.macros_all_tables.update[this.state.selected_table][this.state.selected_macro][param_name]);
   }
 
-  //                     <h3> Update: </h3>
-  //                     <select name="update" value={this.state.macro} onChange={this.handleMacroSelected} className="selectpicker options btn btn-default" data-width="75%" title="Select a Run Name">
-  //                       {this.state.macros.map((macro, i)=>{
-  //                         return <option key={i} value={macro}>{macro}</option>
-  //                       })}
-  //                     </select>
+  sendUpdate(){
+    var request_type = 'emergency';
+    var proposed_macro = {
+      table: this.state.selected_table,
+      function_called: this.state.selected_macro,
+      params: this.state.macros_all_tables.update[this.state.selected_table][this.state.selected_macro]
+    };
+    console.log(JSON.stringify(proposed_macro));
+    requestMacroExecution(request_type, proposed_macro, (result) => {
+      console.log(JSON.stringify(result));
+    });
+  }
+
   render(){
     var tables = [];
     var available_macros = [];
@@ -85,9 +79,9 @@ export default class Update extends React.Component{
           return <option key={i} value={eachMacro}>{eachMacro}</option>
         });
         if (this.state.selected_macro !== '') {
-          var parameterNames = this.state.macros_all_tables.update[this.state.selected_table][this.state.selected_macro];
+          var parameterNames = Object.getOwnPropertyNames(this.state.macros_all_tables.update[this.state.selected_table][this.state.selected_macro]);
           parameters = parameterNames.map((eachParameter, i) => {
-            return <input key={i} type="text" name="by-two" className="form-control" placeholder={eachParameter} aria-describedby="basic-addon1" />
+            return <input key={i} id={eachParameter} onChange={this.handleParameterChanged} type="text" name="by-two" className="form-control" placeholder={eachParameter} aria-describedby="basic-addon1" />
           });
         }
       }
@@ -112,7 +106,7 @@ export default class Update extends React.Component{
                         {available_macros}
                       </select>
                       <h3> Parameters: </h3>
-                      <div className="input-group">
+                      <div id="parameters" className="input-group">
                         {parameters}
                       </div>
                       <div className="col-lg-12">

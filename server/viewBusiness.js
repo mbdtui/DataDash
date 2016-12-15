@@ -1,6 +1,6 @@
 
-var libAccessor = require('libAccessor.js');
+var libAccessor = require('./data_accessors/libAccessor.js');
 
-exports.runViewStatusCodes = function(jsonObject){
-	libAccessor.viewRunStatusCodes(jsonObject.parameters.app_name, jsonObject.parameters.run_name, jsonObject.parameters.run_status_code)
+exports.viewRunStatusCode = function(jsonObject, cb){
+	libAccessor.viewRunStatusCode(jsonObject.app_name, jsonObject.run_name, jsonObject.run_status_code, cb)
 }

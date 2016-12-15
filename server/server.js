@@ -1,9 +1,11 @@
 var express = require('express');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var libAccessor = require('./data_accessors/libAccessor.js');
 var mongoAccessor = require('./data_accessors/mongoAccessor');
 var mongoDummyData = require('./mongoDummyData');
+var updateBusiness = require('./updateBusiness');
+var viewBusiness = require('./viewBusiness');
+var deleteBusiness = require('./deleteBusiness');
 
 var app = express();
 
@@ -27,72 +29,80 @@ app.get('/macros_all_tables', function(req, res) {
 	var macros_all_tables = {
 		update: {
 			'c_driver_schedule': {
-				'update_schedule_starttime_by_runname_auditid': [
-					'run_name', 'audit_id', 'schedule_start_time'
-				],
-				'update_status_code_by_runname_auditid': [
-					'run_name', 'audit_id', 'status_code'
-				],
-				'update_valuation_enddate_by_runname_auditid': [
-					'run_name', 'audit_id', 'valuation_end_date'
-				],
-				'update_valuation_startdate_by_runname_auditid': [
-					'run_name', 'audit_id', 'valuation_start_date'
-				],
-				'update_sla_date_time_by_auditid': [
-					'audit_id', 'date', 'time'
-				],
-				'update_sla_date_time_by_runname': [
-					'run_name', 'date', 'time'
-				],
-				'update_historical_sla_date_time_by_runname': [
-					'run_name', 'date', 'time'
-				]				
+				'update_schedule_starttime_by_runname_auditid': {
+					'run_name': '', 
+					'audit_id': '',
+					'schedule_start_time': ''
+				},
+				'update_status_code_by_runname_auditid': {
+					'run_name':'', 
+					'audit_id':'', 
+					'status_code':''
+				},
+				'update_valuation_enddate_by_runname_auditid': {
+					'run_name':'', 
+					'audit_id':'', 
+					'valuation_end_date':''
+				},
+				'update_valuation_startdate_by_runname_auditid': {
+					'run_name':'', 
+					'audit_id':'', 
+					'valuation_start_date':''
+				},
+				'update_sla_date_time_by_auditid': {
+					'audit_id':'', 'date':'', 'time':''
+				},
+				'update_sla_date_time_by_runname': {
+					'run_name':'', 'date':'', 'time':''
+				},
+				'update_historical_sla_date_time_by_runname': {
+					'run_name':'', 'date':'', 'time':''
+				}	
 			},
 			'c_driver_step': {
-				'update_active_step_indicator_by_driverstepid': [
-					'driver_step_id', 'active_step_indicator'
-				],
-				'update_active_step_indicator_by_runname_driverstepid': [
-					'run_name', 'driver_step_id', 'active_step_indicator'
-				],
-				'update_active_step_indicator_by_runname': [
-					'run_name', 'active_step_indicator'
-				],
-				'update_active_step_indicator_by_runname_groupnumber': [
-					'run_name', 'group_number', 'active_step_indicator'
-				]
+				'update_active_step_indicator_by_driverstepid': {
+					'driver_step_id':'', 'active_step_indicator':''
+				},
+				'update_active_step_indicator_by_runname_driverstepid': {
+					'run_name':'', 'driver_step_id':'', 'active_step_indicator':''
+				},
+				'update_active_step_indicator_by_runname': {
+					'run_name':'', 'active_step_indicator':''
+				},
+				'update_active_step_indicator_by_runname_groupnumber': {
+					'run_name':'', 'group_number':'', 'active_step_indicator':''
+				}
 			},
 			'c_driver_step_detail': {
-				'update_run_status_code_by_runname_groupnumber': [
-					'run_name', 'group_number', 'run_status_code'
-				],
-				'update_run_status_code_by_runname_driverstepdetail_id': [
-					'run_name', 'driver_step_detail_id', 'run_status_code'
-				]
+				'update_run_status_code_by_runname_groupnumber': {
+					'run_name':'', 'group_number':'', 'run_status_code':''
+				},
+				'update_run_status_code_by_runname_driverstepdetail_id': {
+					'run_name':'', 'driver_step_detail_id':'', 'run_status_code':''
+				}
 			}
 		},
 		delete: {
 			'c_driver_schedule': {
-				'delete_all_entries_by_runname': [
-					'run_name'
-				],
+				'delete_all_entries_by_runname': {
+					'run_name':''
+				},
 			},
 			'c_driver_step': {
-				'delete_all_entries_by_runname': [
-					'run_name'
-				],
-				'delete_all_entries_by_runname_groupnumber': [
-					'run_name', 'group_number'
-				],
-				'delete_all_entries_by_runname_driverstepid': [
-					'run_name', 'driver_step_id'
-				]
+				'delete_all_entries_by_runname': {
+					'run_name':''
+				},
+				'delete_all_entries_by_runname_groupnumber': {
+					'run_name':'', 'group_number':''
+				},
+				'delete_all_entries_by_runname_driverstepid': {
+					'run_name':'', 'driver_step_id':''
+				}
 			},
 			'c_driver_step_detail': {
-				'delete_all_entries_by_runname': [
-					'run_name'
-				]
+				'delete_all_entries_by_runname': {
+					'run_name':''
+				}
 			}
 		}
 	};
@@ -126,7 +136,7 @@ app.post('/view_run_status_code', function(req, res) {
 	var app_name = req.body.app_name;
     var run_name = req.body.run_name;
     var run_status_code = req.body.run_status_code;
-	libAccessor.viewRunStatusCode(app_name, run_name, run_status_code, (err, result) => {
+	viewBusiness.viewRunStatusCode(req.body, (err, result) => {
 		if(err) {
 			res.status(400).end();
 		}
@@ -135,6 +145,22 @@ app.post('/view_run_status_code', function(req, res) {
 			res.send(result.rows);
 		}
 	});
+});
+
+app.post('/request_macro_execution/:request_type', function(req, res) {
+	var requestType = req.params.request_type;
+	var proposed_macro = req.body;
+	if(requestType === 'emergency') {
+		console.log('Received!');
+		updateBusiness.runUpdateMacro(proposed_macro, (err, result) => {
+			if(err) {
+				res.send(err);
+			}
+			res.send(result);
+		});
+	} else {
+		// Peer review request.
+	}
 });
 
 app.post('/journal_entry', function(req, res) {
