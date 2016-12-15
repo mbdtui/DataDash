@@ -43,18 +43,11 @@ export function getMacroData(macroIDs, cb){
     });*/
 }
 
-export function getMacrosForTableUpdate(table_name, cb) {
-  sendXHR('GET', '/macros_for_table/' + table_name + '/update', undefined, (xhr) => {
+export function getMacrosAllTables(cb) {
+  sendXHR('GET', '/macros_all_tables', undefined, (xhr) => {
     cb(JSON.parse(xhr.responseText));
   });
 }
-
-export function getMacrosForTableDelete(table_name, cb) {
-  sendXHR('GET', '/macros_for_table/' + table_name + '/delete', undefined, (xhr) => {
-    cb(JSON.parse(xhr.responseText));
-  });
-}
-
 
 export function getPendingMacros(cb) {
   sendXHR('GET', '/pending_macro', undefined, (xhr) => {

@@ -1,6 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router';
-import {getMacrosForTableUpdate, getMacrosForTableDelete} from '../server.js';
+import {getMacrosAllTables} from '../server.js';
 
 export default class Update extends React.Component{
   constructor(props){
@@ -8,32 +8,37 @@ export default class Update extends React.Component{
     this.state = {
       selected_table: '',
       selected_macro: '',
-      macros: []
+      macros_all_tables: null
     };
     this.sendUpdate = this.sendUpdate.bind(this);
     this.handleTableSelected = this.handleTableSelected.bind(this);
+    this.handleMacroSelected = this.handleMacroSelected.bind(this);
   }
 
   componentDidMount(){
+    console.log('Component Mounted');
+    getMacrosAllTables((macros_all_tables) => {
+      // console.log(JSON.stringify(macros_all_tables));
+      this.setState({
+        macros_all_tables: macros_all_tables
+      });
+    })
   }
   handleTableSelected(event){
     event.preventDefault();
     var table_name = event.target.value;
-    if(table_name === '') {
-      this.setState({
-        selected_table: '',
-        selected_macro: '',
-        macros: []
-      });
-      return;
-    }
-    getMacrosForTableUpdate(table_name, (macros) => {
-      console.log(JSON.stringify(macros));
-      this.setState({
-        selected_table: table_name,
-        macros: macros.macros
-      });
+    console.log('Called');
+    this.setState({
+      selected_table: table_name,
+      selected_macro: ''
     });
+  }
+  handleMacroSelected(event){
+    event.preventDefault();
+    var macro_name = event.target.value;
+    this.setState({
+      selected_macro: macro_name
+    })
   }
 
   sendUpdate(){
@@ -58,7 +63,36 @@ export default class Update extends React.Component{
     //   });
     // });
   }
+
+  //                     <h3> Update: </h3>
+  //                     <select name="update" value={this.state.macro} onChange={this.handleMacroSelected} className="selectpicker options btn btn-default" data-width="75%" title="Select a Run Name">
+  //                       {this.state.macros.map((macro, i)=>{
+  //                         return <option key={i} value={macro}>{macro}</option>
+  //                       })}
+  //                     </select>
   render(){
+    var tables = [];
+    var available_macros = [];
+    var parameters = [];
+    if (this.state.macros_all_tables !== null) {
+      var tableNames = Object.getOwnPropertyNames(this.state.macros_all_tables.update);
+      tables = tableNames.map((eachTableName, i) => {
+        return <option key={i} value={eachTableName}>{eachTableName}</option>
+      });
+      if (this.state.selected_table !== '') {
+        var macroNames = Object.getOwnPropertyNames(this.state.macros_all_tables.update[this.state.selected_table]);
+        available_macros = macroNames.map((eachMacro, i)=>{
+          return <option key={i} value={eachMacro}>{eachMacro}</option>
+        });
+        if (this.state.selected_macro !== '') {
+          var parameterNames = this.state.macros_all_tables.update[this.state.selected_table][this.state.selected_macro];
+          parameters = parameterNames.map((eachParameter, i) => {
+            return <input key={i} type="text" name="by-two" className="form-control" placeholder={eachParameter} aria-describedby="basic-addon1" />
+          });
+        }
+      }
+    };
+
     return(
       <div id="wrapper">
         <div id="page-content-wrapper">
@@ -71,26 +105,16 @@ export default class Update extends React.Component{
                     <form action="" method="post" id="update-form">
                       <h3> Table: </h3>
                       <select name="table" value={this.state.table} onChange={this.handleTableSelected} className="selectpicker options btn btn-default" data-width="75%" title="Select a table">
-                        <option value=""></option>
-                        <option value="c_driver_step">Driver Step</option>
-                        <option value="c_driver_step_detail">Driver Step Detail </option>
-                        <option value="c_driver_schedule">Driver Schedule</option>
+                         {tables}
                       </select>
                       <h3> Update: </h3>
                       <select name="update" value={this.state.macro} onChange={this.handleMacroSelected} className="selectpicker options btn btn-default" data-width="75%" title="Select a Run Name">
-                        {this.state.macros.map((macro, i)=>{
-                          return <option key={i} value={macro}>{macro}</option>
-                        })}
+                        {available_macros}
                       </select>
-                      <h3> Group Number: </h3>
-                      <input type="text" name="Group-Number" className="form-control" placeholder="Username" aria-describedby="basic-addon1" />
-                      <h3> By: </h3>
-                      <select id="by" name="By" className="selectpicker options btn btn-default" data-width="75%" title="Select a Step ID">
-                        <option>Run Name and Driver Step Detail ID</option>
-                        <option>Run Name and Group Number</option>
-                      </select>
-                      <input type="text" name="by-one" className="form-control" placeholder="First by" aria-describedby="basic-addon1" />
-                      <input type="text" name="by-two" className="form-control" placeholder="Second by" aria-describedby="basic-addon1" />
+                      <h3> Parameters: </h3>
+                      <div className="input-group">
+                        {parameters}
+                      </div>
                       <div className="col-lg-12">
                         <center><p>Note: This change will be peer reviewed before executed. To bypass peer review check the box below. </p>
                         <input type="checkbox" name="bypass-peer-review" value="Bypass Peer Review"/>

@@ -23,64 +23,81 @@ app.get('/macro/:macroid', function(req, res){
     res.send(getMacroData(req.params.macroid));
 });
 
-app.get('/macros_for_table/:table_name/update', function(req, res) {
-	var table_name = req.params.table_name;
-	var available_macros;
-	switch(table_name) {
-		case 'c_driver_step':
-			available_macros = [
-			'update_active_step_indicator_by_driverstepid',
-			'update_active_step_indicator_by_runname_driverstepid',
-			'update_active_step_indicator_by_runname',
-			'update_active_step_indicator_by_runname_groupnumber'
-			];
-			break;
-		case 'c_driver_schedule':
-			available_macros = [
-			'update_schedule_starttime_by_runname_auditid',
-			'update_status_code_by_runname_auditid',
-			'update_valuation_enddate_by_runname_auditid',
-			'update_valuation_startdate_by_runname_auditid',
-			'update_sla_date_time_by_auditid',
-			'update_sla_date_time_by_runname',
-			'update_historical_sla_date_time_by_runname'
-			];
-			break;
-		case 'c_driver_step_detail':
-			available_macros = [
-			'update_run_status_code_by_runname_groupnumber',
-			'update_run_status_code_by_runname_driverstepdetail_id'
-			];
-			break;
-	}
+app.get('/macros_all_tables', function(req, res) {
+	var macros_all_tables = {
+		update: {
+			'c_driver_schedule': {
+				'update_schedule_starttime_by_runname_auditid': [
+					'run_name', 'audit_id', 'schedule_start_time'
+				],
+				'update_status_code_by_runname_auditid': [
+					'run_name', 'audit_id', 'status_code'
+				],
+				'update_valuation_enddate_by_runname_auditid': [
+					'run_name', 'audit_id', 'valuation_end_date'
+				],
+				'update_valuation_startdate_by_runname_auditid': [
+					'run_name', 'audit_id', 'valuation_start_date'
+				],
+				'update_sla_date_time_by_auditid': [
+					'audit_id', 'date', 'time'
+				],
+				'update_sla_date_time_by_runname': [
+					'run_name', 'date', 'time'
+				],
+				'update_historical_sla_date_time_by_runname': [
+					'run_name', 'date', 'time'
+				]				
+			},
+			'c_driver_step': {
+				'update_active_step_indicator_by_driverstepid': [
+					'driver_step_id', 'active_step_indicator'
+				],
+				'update_active_step_indicator_by_runname_driverstepid': [
+					'run_name', 'driver_step_id', 'active_step_indicator'
+				],
+				'update_active_step_indicator_by_runname': [
+					'run_name', 'active_step_indicator'
+				],
+				'update_active_step_indicator_by_runname_groupnumber': [
+					'run_name', 'group_number', 'active_step_indicator'
+				]
+			},
+			'c_driver_step_detail': {
+				'update_run_status_code_by_runname_groupnumber': [
+					'run_name', 'group_number', 'run_status_code'
+				],
+				'update_run_status_code_by_runname_driverstepdetail_id': [
+					'run_name', 'driver_step_detail_id', 'run_status_code'
+				]
+			}
+		},
+		delete: {
+			'c_driver_schedule': {
+				'delete_all_entries_by_runname': [
+					'run_name'
+				],
+			},
+			'c_driver_step': {
+				'delete_all_entries_by_runname': [
+					'run_name'
+				],
+				'delete_all_entries_by_runname_groupnumber': [
+					'run_name', 'group_number'
+				],
+				'delete_all_entries_by_runname_driverstepid': [
+					'run_name', 'driver_step_id'
+				]
+			},
+			'c_driver_step_detail': {
+				'delete_all_entries_by_runname': [
+					'run_name'
+				]
+			}
+		}
+	};
 	// console.log(available_macros);
-	res.send({ macros: available_macros});
-});
-
-app.get('/macros_for_table/:table_name/delete', function(req, res) {
-	var table_name = req.params.table_name;
-	var available_macros;
-	switch(table_name) {
-		case 'c_driver_step':
-			available_macros = [
-			'delete_all_entries_by_runname',
-			'delete_all_entries_by_runname_groupnumber',
-			'delete_all_entries_by_runname_driverstepid'
-			];
-			break;
-		case 'c_driver_schedule':
-			available_macros = [
-			'delete_all_entries_by_runname'
-			];
-			break;
-		case 'c_driver_step_detail':
-			available_macros = [
-			'delete_all_entries_by_runname'
-			];
-			break;
-	}
-	// console.log(available_macros);
-	res.send({ macros: available_macros});
+	res.send(macros_all_tables);
 });
 
 app.get('/pending_macro', function(req, res){
