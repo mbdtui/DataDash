@@ -15,3 +15,9 @@
   * `npm install`
   * `npm run watch`
 4. In your browser, go to localhost:3000
+
+#### Hook up Liberty Mock PostgreSQL database
+
+1. Download and install PostgreSQL at http://www.enterprisedb.com/products-services-training/pgdownload, which comes along with pgAdmin allowing us to view the database graphically. On configuring the database in the installation, set the password to 'abc12345' and the port to '5432'. Otherwise, we have to change the configuration object in code files, which will cause merge conflicts because of different settings from each of us.
+2. After having the PostgreSQL database installed and ready, we need to load the data logs given by Liberty Mutual into PostgreSQL database. Open the file 'libAccessor.js' in '/DataDash/server/data_accessors/' and uncomment the statement `resetPostgreDB('../lib_mockDB_loader/LibDataLogs');` to load data into our mock database. *** Important: After the loading data completes, comment that statement so that when we use this libAccessor from other files, it won't reload the database again.
+3. Having the data logs populated into the mock database, we now can use libAccessor to query data from the mock database. Comment and uncomment `resetPostgreDB('../lib_mockDB_loader/LibDataLogs');` to reload the mock database if needed.
