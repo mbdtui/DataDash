@@ -7,7 +7,19 @@ export default class Update extends React.Component{
     super(props);
   }
   componentDidMount(){
+  }
+  handleDriverStepSelected(){
     getMacrosForTableUpdate('driver_step', (macros) => {
+      console.log(JSON.stringify(macros));
+    });
+  }
+  handleDriverStepDetailSelected(){
+    getMacrosForTableUpdate('driver_step_detail', (macros) => {
+      console.log(JSON.stringify(macros));
+    });
+  }
+  handleDriverScheduleSelected(){
+    getMacrosForTableUpdate('driver_schedule', (macros) => {
       console.log(JSON.stringify(macros));
     });
   }
@@ -24,7 +36,7 @@ export default class Update extends React.Component{
                       <h3> Table: </h3>
                     </div>
                     <div className="col-lg-6">
-                      <select className="selectpicker options btn btn-default" data-width="75%" title="Select a table">
+                      <select name="table" className="selectpicker options btn btn-default" data-width="75%" title="Select a table">
                         <option>Driver Step</option>
                         <option>Driver Step Detail </option>
                         <option>Driver Schedule</option>
@@ -36,7 +48,7 @@ export default class Update extends React.Component{
                       <h3> Update: </h3>
                     </div>
                     <div className="col-lg-6">
-                      <select className="selectpicker options btn btn-default" data-width="75%" title="Select a Run Name">
+                      <select name="Run-name" onChange={}className="selectpicker options btn btn-default" data-width="75%" title="Select a Run Name">
                         <option>Driver Step</option>
                         <option>Driver Step Detail </option>
                         <option>Driver Schedule</option>
