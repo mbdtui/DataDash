@@ -43,8 +43,14 @@ export function getMacroData(macroIDs, cb){
     });*/
 }
 
-export function getMacrosAllTables(cb) {
-  sendXHR('GET', '/macros_all_tables', undefined, (xhr) => {
+export function getMacrosAllTablesUpdate(cb) {
+  sendXHR('GET', '/macros_all_tables/update', undefined, (xhr) => {
+    cb(JSON.parse(xhr.responseText));
+  });
+}
+
+export function getMacrosAllTablesDelete(cb) {
+  sendXHR('GET', '/macros_all_tables/delete', undefined, (xhr) => {
     cb(JSON.parse(xhr.responseText));
   });
 }
@@ -75,8 +81,8 @@ export function getRunStatusCode(app_name, run_name, run_status_code, cb){
   });
 }
 
-export function requestMacroExecution(request_type, table_macro_params, cb) {
-  sendXHR('POST','/request_macro_execution/'+request_type, table_macro_params, (xhr) => {
+export function requestUpdateMacroExecution(request_type, table_macro_params, cb) {
+  sendXHR('POST','/request_macro_execution/update/'+request_type, table_macro_params, (xhr) => {
     cb(JSON.parse(xhr.responseText));
   });
 }

@@ -25,9 +25,35 @@ app.get('/macro/:macroid', function(req, res){
     res.send(getMacroData(req.params.macroid));
 });
 
-app.get('/macros_all_tables', function(req, res) {
-	var macros_all_tables = {
-		update: {
+app.get('/macros_all_tables/delete', function(req, res) {
+	var macros_delete = {
+			'c_driver_schedule': {
+				'delete_all_entries_by_runname': {
+					'run_name':''
+				},
+			},
+			'c_driver_step': {
+				'delete_all_entries_by_runname': {
+					'run_name':''
+				},
+				'delete_all_entries_by_runname_groupnumber': {
+					'run_name':'', 'group_number':''
+				},
+				'delete_all_entries_by_runname_driverstepid': {
+					'run_name':'', 'driver_step_id':''
+				}
+			},
+			'c_driver_step_detail': {
+				'delete_all_entries_by_runname': {
+					'run_name':''
+				}
+			}
+		};
+	res.send(macros_delete);
+})
+
+app.get('/macros_all_tables/update', function(req, res) {
+	var macros_update = {
 			'c_driver_schedule': {
 				'update_schedule_starttime_by_runname_auditid': {
 					'run_name': '', 
@@ -81,33 +107,9 @@ app.get('/macros_all_tables', function(req, res) {
 					'run_name':'', 'driver_step_detail_id':'', 'run_status_code':''
 				}
 			}
-		},
-		delete: {
-			'c_driver_schedule': {
-				'delete_all_entries_by_runname': {
-					'run_name':''
-				},
-			},
-			'c_driver_step': {
-				'delete_all_entries_by_runname': {
-					'run_name':''
-				},
-				'delete_all_entries_by_runname_groupnumber': {
-					'run_name':'', 'group_number':''
-				},
-				'delete_all_entries_by_runname_driverstepid': {
-					'run_name':'', 'driver_step_id':''
-				}
-			},
-			'c_driver_step_detail': {
-				'delete_all_entries_by_runname': {
-					'run_name':''
-				}
-			}
-		}
 	};
 	// console.log(available_macros);
-	res.send(macros_all_tables);
+	res.send(macros_update);
 });
 
 app.get('/pending_macro', function(req, res){
@@ -133,10 +135,8 @@ app.get('/journal_entry', function(req, res){
 });
 
 app.post('/view_run_status_code', function(req, res) {
-	var app_name = req.body.app_name;
-    var run_name = req.body.run_name;
-    var run_status_code = req.body.run_status_code;
-	viewBusiness.viewRunStatusCode(req.body, (err, result) => {
+	var appn_runn_statusc = req.body;
+	viewBusiness.viewRunStatusCode(appn_runn_statusc, (err, result) => {
 		if(err) {
 			res.status(400).end();
 		}
@@ -147,11 +147,11 @@ app.post('/view_run_status_code', function(req, res) {
 	});
 });
 
-app.post('/request_macro_execution/:request_type', function(req, res) {
+app.post('/request_macro_execution/update/:request_type', function(req, res) {
 	var requestType = req.params.request_type;
 	var proposed_macro = req.body;
 	if(requestType === 'emergency') {
-		console.log('Received!');
+		console.log('Received:' + JSON.stringify(proposed_macro));
 		updateBusiness.runUpdateMacro(proposed_macro, (err, result) => {
 			if(err) {
 				res.send(err);

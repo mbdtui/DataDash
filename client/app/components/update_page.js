@@ -1,6 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router';
-import {getMacrosAllTables, requestMacroExecution} from '../server.js';
+import {getMacrosAllTablesUpdate, requestUpdateMacroExecution} from '../server.js';
 
 export default class Update extends React.Component{
   constructor(props){
@@ -18,7 +18,7 @@ export default class Update extends React.Component{
 
   componentDidMount(){
     console.log('Component Mounted');
-    getMacrosAllTables((macros_all_tables) => {
+    getMacrosAllTablesUpdate((macros_all_tables) => {
       // console.log(JSON.stringify(macros_all_tables));
       this.setState({
         macros_all_tables: macros_all_tables
@@ -46,7 +46,7 @@ export default class Update extends React.Component{
     // console.log(JSON.stringify(event));
     var param_value = event.target.value;
     var param_name = event.target.id;
-    this.state.macros_all_tables.update[this.state.selected_table][this.state.selected_macro][param_name] = param_value;
+    this.state.macros_all_tables[this.state.selected_table][this.state.selected_macro][param_name] = param_value;
     // this.state. = param_value;
     // console.log(this.state.macros_all_tables.update[this.state.selected_table][this.state.selected_macro][param_name]);
   }
@@ -56,10 +56,10 @@ export default class Update extends React.Component{
     var proposed_macro = {
       table: this.state.selected_table,
       function_called: this.state.selected_macro,
-      params: this.state.macros_all_tables.update[this.state.selected_table][this.state.selected_macro]
+      params: this.state.macros_all_tables[this.state.selected_table][this.state.selected_macro]
     };
     console.log(JSON.stringify(proposed_macro));
-    requestMacroExecution(request_type, proposed_macro, (result) => {
+    requestUpdateMacroExecution(request_type, proposed_macro, (result) => {
       console.log(JSON.stringify(result));
     });
   }
@@ -69,17 +69,17 @@ export default class Update extends React.Component{
     var available_macros = [];
     var parameters = [];
     if (this.state.macros_all_tables !== null) {
-      var tableNames = Object.getOwnPropertyNames(this.state.macros_all_tables.update);
+      var tableNames = Object.getOwnPropertyNames(this.state.macros_all_tables);
       tables = tableNames.map((eachTableName, i) => {
         return <option key={i} value={eachTableName}>{eachTableName}</option>
       });
       if (this.state.selected_table !== '') {
-        var macroNames = Object.getOwnPropertyNames(this.state.macros_all_tables.update[this.state.selected_table]);
+        var macroNames = Object.getOwnPropertyNames(this.state.macros_all_tables[this.state.selected_table]);
         available_macros = macroNames.map((eachMacro, i)=>{
           return <option key={i} value={eachMacro}>{eachMacro}</option>
         });
         if (this.state.selected_macro !== '') {
-          var parameterNames = Object.getOwnPropertyNames(this.state.macros_all_tables.update[this.state.selected_table][this.state.selected_macro]);
+          var parameterNames = Object.getOwnPropertyNames(this.state.macros_all_tables[this.state.selected_table][this.state.selected_macro]);
           parameters = parameterNames.map((eachParameter, i) => {
             return <input key={i} id={eachParameter} onChange={this.handleParameterChanged} type="text" name="by-two" className="form-control" placeholder={eachParameter} aria-describedby="basic-addon1" />
           });
