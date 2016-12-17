@@ -43,12 +43,14 @@ export function getMacroData(macroIDs, cb){
     });*/
 }
 
+// Get available UPDATE macros.
 export function getMacrosAllTablesUpdate(cb) {
   sendXHR('GET', '/macros_all_tables/update', undefined, (xhr) => {
     cb(JSON.parse(xhr.responseText));
   });
 }
 
+// Get available DELETE macros.
 export function getMacrosAllTablesDelete(cb) {
   sendXHR('GET', '/macros_all_tables/delete', undefined, (xhr) => {
     cb(JSON.parse(xhr.responseText));
@@ -71,6 +73,7 @@ export function getHistory(cb) {
   });
 }
 
+// Get data for the VIEW.
 export function getRunStatusCode(app_name, run_name, run_status_code, cb){
   sendXHR('POST', '/view_run_status_code', {
     app_name: app_name,
@@ -81,12 +84,19 @@ export function getRunStatusCode(app_name, run_name, run_status_code, cb){
   });
 }
 
+// Send UPDATE macro request to the server.
 export function requestUpdateMacroExecution(request_type, table_macro_params, cb) {
   sendXHR('POST','/request_macro_execution/update/'+request_type, table_macro_params, (xhr) => {
     cb(JSON.parse(xhr.responseText));
   });
 }
 
+// Send DELETE macro request to the server.
+export function requestDeleteMacroExecution(request_type, table_macro_params, cb) {
+  sendXHR('POST','/request_macro_execution/delete/'+request_type, table_macro_params, (xhr) => {
+    cb(JSON.parse(xhr.responseText));
+  });
+}
 //Post requests - Macro requests (run/delete), View Macro Request (no approval needed)
 
 var token = 'eyJpZCI6NH0'; // <-- Put your base64'd JSON token here

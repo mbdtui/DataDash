@@ -8,20 +8,26 @@ export default class Update extends React.Component{
     this.state = {
       selected_table: '',
       selected_macro: '',
+      emergency_check: true,
       macros_all_tables: null
     };
     this.sendUpdate = this.sendUpdate.bind(this);
     this.handleTableSelected = this.handleTableSelected.bind(this);
     this.handleMacroSelected = this.handleMacroSelected.bind(this);
     this.handleParameterChanged = this.handleParameterChanged.bind(this);
+    this.handleCheckboxClicked = this.handleCheckboxClicked.bind(this);
   }
 
   componentDidMount(){
     console.log('Component Mounted');
     getMacrosAllTablesUpdate((macros_all_tables) => {
       // console.log(JSON.stringify(macros_all_tables));
+      var tableName = Object.getOwnPropertyNames(macros_all_tables)[0];
+      var macro = Object.getOwnPropertyNames(macros_all_tables[tableName])[0];
       this.setState({
-        macros_all_tables: macros_all_tables
+        macros_all_tables: macros_all_tables,
+        selected_table: tableName,
+        selected_macro: macro
       });
     })
   }
@@ -31,7 +37,7 @@ export default class Update extends React.Component{
     console.log('Called');
     this.setState({
       selected_table: table_name,
-      selected_macro: ''
+      selected_macro: Object.getOwnPropertyNames(this.state.macros_all_tables[table_name])[0]
     });
   }
   handleMacroSelected(event){
@@ -50,10 +56,21 @@ export default class Update extends React.Component{
     // this.state. = param_value;
     // console.log(this.state.macros_all_tables.update[this.state.selected_table][this.state.selected_macro][param_name]);
   }
+  handleCheckboxClicked() {
+    this.setState({
+      emergency_check: !this.state.emergency_check
+    });
+  }
 
   sendUpdate(){
-    var request_type = 'emergency';
+    var request_type;
+    if(this.state.emergency_check) {
+      request_type = 'emergency';
+    } else {
+      request_type = 'peer_review';
+    }
     var proposed_macro = {
+      request_type: request_type,
       table: this.state.selected_table,
       function_called: this.state.selected_macro,
       params: this.state.macros_all_tables[this.state.selected_table][this.state.selected_macro]
@@ -111,7 +128,7 @@ export default class Update extends React.Component{
                       </div>
                       <div className="col-lg-12">
                         <center><p>Note: This change will be peer reviewed before executed. To bypass peer review check the box below. </p>
-                        <input type="checkbox" name="bypass-peer-review" value="Bypass Peer Review"/>
+                        <input type="checkbox" checked={this.state.emergency_check} name="bypass-peer-review" value="Bypass Peer Review" onChange={this.handleCheckboxClicked}/>
                       </center>
                     </div>
                     <div className="col-lg-12">
