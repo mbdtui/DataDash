@@ -7,7 +7,9 @@ var mongoDummyData = require('./mongoDummyData');
 var updateBusiness = require('./updateBusiness');
 var viewBusiness = require('./viewBusiness');
 var deleteBusiness = require('./deleteBusiness');
-
+var bcrypt = require('bcryptjs');
+var jwt = require('jsonwebtoken');
+var secretKey = "7d672134-7365-40d8-acd6-ca6a82728471";
 var app = express();
 
 // Use text parser functionality of bodyParser.
@@ -15,6 +17,31 @@ app.use(bodyParser.text());
 app.use(bodyParser.json());
 // Serve files in the client/build directory.
 app.use(express.static('../client/build'));
+
+  app.post('/login', function(req, res) {
+    var loginData = req.body;
+    var user = loginData.username;
+    var pw = loginData.password;
+    console.log("POST to /login. user: " + user + " pass: " + pw);
+    // TODO return user group
+    // TODO remove console.log messages
+    if (auth.authenticate(user, pw)) {
+      // Successful login!
+      // Create a token that is valid for a week.
+      jwt.sign({ username: user }, secretKey, { expiresIn: "7 days" }, function(token) {
+        // We have the token.
+        console.log("Key generated");
+        // Send the user document and the token to the client.
+        res.send({
+          user: user,
+          token: token
+        });
+      });
+    }
+    else {
+      res.status(401).end();
+    }
+  });
 
 
 app.get('/macro', function (req, res){
@@ -57,23 +84,23 @@ app.get('/macros_all_tables/update', function(req, res) {
 	var macros_update = {
 			'c_driver_schedule': {
 				'update_schedule_starttime_by_runname_auditid': {
-					'run_name': '', 
+					'run_name': '',
 					'audit_id': '',
 					'schedule_start_time': ''
 				},
 				'update_status_code_by_runname_auditid': {
-					'run_name':'', 
-					'audit_id':'', 
+					'run_name':'',
+					'audit_id':'',
 					'status_code':''
 				},
 				'update_valuation_enddate_by_runname_auditid': {
-					'run_name':'', 
-					'audit_id':'', 
+					'run_name':'',
+					'audit_id':'',
 					'valuation_end_date':''
 				},
 				'update_valuation_startdate_by_runname_auditid': {
-					'run_name':'', 
-					'audit_id':'', 
+					'run_name':'',
+					'audit_id':'',
 					'valuation_start_date':''
 				},
 				'update_sla_date_time_by_auditid': {
@@ -84,7 +111,7 @@ app.get('/macros_all_tables/update', function(req, res) {
 				},
 				'update_historical_sla_date_time_by_runname': {
 					'run_name':'', 'date':'', 'time':''
-				}	
+				}
 			},
 			'c_driver_step': {
 				'update_active_step_indicator_by_driverstepid': {
