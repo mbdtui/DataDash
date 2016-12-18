@@ -1,3 +1,4 @@
+var auth = require('./api/dummy-auth.js'); // change to auth.js for real authentication against AD
 var express = require('express');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
@@ -6,7 +7,9 @@ var mongoDummyData = require('./mongoDummyData');
 var updateBusiness = require('./updateBusiness');
 var viewBusiness = require('./viewBusiness');
 var deleteBusiness = require('./deleteBusiness');
-
+var bcrypt = require('bcryptjs');
+var jwt = require('jsonwebtoken');
+var secretKey = "7d672134-7365-40d8-acd6-ca6a82728471";
 var app = express();
 
 // Use text parser functionality of bodyParser.
@@ -14,6 +17,31 @@ app.use(bodyParser.text());
 app.use(bodyParser.json());
 // Serve files in the client/build directory.
 app.use(express.static('../client/build'));
+
+  app.post('/login', function(req, res) {
+    var loginData = req.body;
+    var user = loginData.username;
+    var pw = loginData.password;
+    console.log("POST to /login. user: " + user + " pass: " + pw);
+    // TODO return user group
+    // TODO remove console.log messages
+    if (auth.authenticate(user, pw)) {
+      // Successful login!
+      // Create a token that is valid for a week.
+      jwt.sign({ username: user }, secretKey, { expiresIn: "7 days" }, function(token) {
+        // We have the token.
+        console.log("Key generated");
+        // Send the user document and the token to the client.
+        res.send({
+          user: user,
+          token: token
+        });
+      });
+    }
+    else {
+      res.status(401).end();
+    }
+  });
 
 
 app.get('/macro', function (req, res){
@@ -326,15 +354,7 @@ function getJournalEntry(cb){
       cb(items);
   });
 }
-function getMacroData(macroIDs){
-    //macroIDs=comma separated list of ids
-    //return macroIDs;
-    //Parse list of ids
-    //Make call to DB methods and get data
-    //Maybe need a sync to get references
-		//return data
-    return macroIDs;
-}
+
 function getPendingMacroData(cb){
     mongoAccessor.readPendingMacros(
       function(items){
