@@ -170,7 +170,6 @@ app.post('/request_macro_execution/update/:request_type', function(req, res) {
 	else if(requestType === 'peer_review'){
 		// Peer review request.
     //Create entry in the pending macros table
-    console.log("Request body is " + req.body);
     var emergency = false;
     var macroType = req.body.macroType;
     var macroParams = req.body.params;
@@ -204,7 +203,15 @@ app.post('/request_macro_execution/delete/:request_type', function(req, res) {
 	}
 	// else if it is a peer review one.
 	else if(requestType === 'peer_review'){
-		// Peer review request.
+    // Peer review request.
+    //Create entry in the pending macros table
+    var emergency = false;
+    var macroType = req.body.macroType;
+    var macroParams = req.body.params;
+    var macroFunction = req.body.function_called;
+    var macroTable = req.body.table;
+    var macroName = req.body.name; //Later add to GUI macroName
+    mongoAccessor.createPendingMacro(/*macroID,*/ macroName, macroType, macroTable, macroFunction, "TestUser", macroParams, emergency);
 		res.status(200).end();
 	}
 	// else it is an invalid request.

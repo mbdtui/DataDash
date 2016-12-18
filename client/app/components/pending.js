@@ -67,10 +67,13 @@ export default class Pending extends React.Component{
       rows.push(
         <tr key={macroObj["_id"]}>
           <td>
+            {macroObj["macroType"]}
+          </td>
+          <td>
             {macroObj["macroTable"]}
           </td>
           <td>
-            <button onClick ={() => self.showMacroDetails(macroObj)}> Show Details </button>
+            <a onClick ={() => self.showMacroDetails(macroObj)}> Show Details </a>
           </td>
           <td>
             <p>{self.getDateFormat(macroObj["created_at"], "date")}</p>
@@ -79,7 +82,7 @@ export default class Pending extends React.Component{
           <td>
             {macroObj["author"]}
           </td>
-          <td>
+          <td id = "MacroReviewTableCell">
             <button onClick={() => self.handleApprovePending(macroObj)}> Approve </button> <button onClick={() => self.handleDenyPending(macroObj)}> Deny </button>
           </td>
         </tr>
@@ -101,11 +104,11 @@ export default class Pending extends React.Component{
                 <table className="sortable">
                   <thead>
                     <tr>
+                      <th>Type</th>
                       <th>Table</th>
                       <th>Details</th>
                       <th>Date</th>
                       <th>Employee</th>
-                      <th>Approve/Deny</th>
                     </tr>
                   </thead>
                   <tbody>

@@ -49,11 +49,12 @@ export default class History extends React.Component{
     this.state.contents.map(function(journalObj) {
       rows.push(
         <tr key={journalObj["_id"]}>
+          <td> {journalObj["macroType"]}</td>
           <td>
             {journalObj["macroTable"]}
           </td>
           <td>
-            <button onClick ={() => self.showMacroDetails(journalObj)}> Show Details </button>
+            <a onClick ={() => self.showMacroDetails(journalObj)}> Show Details </a>
           </td>
           <td>
             <p>{self.getDateFormat(journalObj["created_at"], "date")}</p>
@@ -86,8 +87,9 @@ export default class History extends React.Component{
                 <table className="sortable">
                   <tbody>
                     <tr>
-                      <th>Macro</th>
-                      <th>Date</th>
+                      <th>Type</th>
+                      <th>Table</th>
+                      <th>Details</th>
                       <th>Created Date</th>
                       <th>Reviewed Date</th>
                       <th>Employee</th>
