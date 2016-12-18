@@ -57,23 +57,23 @@ app.get('/macros_all_tables/update', function(req, res) {
 	var macros_update = {
 			'c_driver_schedule': {
 				'update_schedule_starttime_by_runname_auditid': {
-					'run_name': '', 
+					'run_name': '',
 					'audit_id': '',
 					'schedule_start_time': ''
 				},
 				'update_status_code_by_runname_auditid': {
-					'run_name':'', 
-					'audit_id':'', 
+					'run_name':'',
+					'audit_id':'',
 					'status_code':''
 				},
 				'update_valuation_enddate_by_runname_auditid': {
-					'run_name':'', 
-					'audit_id':'', 
+					'run_name':'',
+					'audit_id':'',
 					'valuation_end_date':''
 				},
 				'update_valuation_startdate_by_runname_auditid': {
-					'run_name':'', 
-					'audit_id':'', 
+					'run_name':'',
+					'audit_id':'',
 					'valuation_start_date':''
 				},
 				'update_sla_date_time_by_auditid': {
@@ -84,7 +84,7 @@ app.get('/macros_all_tables/update', function(req, res) {
 				},
 				'update_historical_sla_date_time_by_runname': {
 					'run_name':'', 'date':'', 'time':''
-				}	
+				}
 			},
 			'c_driver_step': {
 				'update_active_step_indicator_by_driverstepid': {
@@ -157,6 +157,14 @@ app.post('/request_macro_execution/update/:request_type', function(req, res) {
 	// If the request is an emergency one.
 	if(requestType === 'emergency') {
 		console.log('Received:' + JSON.stringify(proposed_macro));
+    var emergency = false;
+    var macroType = req.body.macroType;
+    var macroParams = req.body.params;
+    var macroFunction = req.body.function_called;
+    var macroTable = req.body.table;
+    var macroName = req.body.name; //Later add to GUI macroName
+    var created_at = new Date();
+    mongoAccessor.createJournalEntry(macroName, macroType, macroTable, macroFunction, macroParams, "testUser", "testReviewer", emergency, created_at);
 		// Run update business.
 		updateBusiness.runUpdateMacro(proposed_macro, (err, result) => {
 			// If error,
@@ -170,6 +178,14 @@ app.post('/request_macro_execution/update/:request_type', function(req, res) {
 	// else if it is a peer review one.
 	else if(requestType === 'peer_review'){
 		// Peer review request.
+    //Create entry in the pending macros table
+    var emergency = false;
+    var macroType = req.body.macroType;
+    var macroParams = req.body.params;
+    var macroFunction = req.body.function_called;
+    var macroTable = req.body.table;
+    var macroName = req.body.name; //Later add to GUI macroName
+    mongoAccessor.createPendingMacro(/*macroID,*/ macroName, macroType, macroTable, macroFunction, "TestUser", macroParams, emergency);
 		res.status(200).end();
 	}
 	// else it is an invalid request.
@@ -185,6 +201,15 @@ app.post('/request_macro_execution/delete/:request_type', function(req, res) {
 	// If the request is an emergency one.
 	if(requestType === 'emergency') {
 		console.log('Received:' + JSON.stringify(proposed_macro));
+
+    var emergency = false;
+    var macroType = req.body.macroType;
+    var macroParams = req.body.params;
+    var macroFunction = req.body.function_called;
+    var macroTable = req.body.table;
+    var macroName = req.body.name; //Later add to GUI macroName
+    var created_at = new Date();
+    mongoAccessor.createJournalEntry(macroName, macroType, macroTable, macroFunction, macroParams, "testUser", "testReviewer", emergency, created_at);
 		deleteBusiness.runDeleteMacro(proposed_macro, (err, result) => {
 			// If error,
 			if(err) {
@@ -196,7 +221,15 @@ app.post('/request_macro_execution/delete/:request_type', function(req, res) {
 	}
 	// else if it is a peer review one.
 	else if(requestType === 'peer_review'){
-		// Peer review request.
+    // Peer review request.
+    //Create entry in the pending macros table
+    var emergency = false;
+    var macroType = req.body.macroType;
+    var macroParams = req.body.params;
+    var macroFunction = req.body.function_called;
+    var macroTable = req.body.table;
+    var macroName = req.body.name; //Later add to GUI macroName
+    mongoAccessor.createPendingMacro(/*macroID,*/ macroName, macroType, macroTable, macroFunction, "TestUser", macroParams, emergency);
 		res.status(200).end();
 	}
 	// else it is an invalid request.
@@ -209,15 +242,18 @@ app.post('/journal_entry', function(req, res) {
   //req.body is a JSON object holding macroID, macroName, macroGroup, author, emergency, reviewer
   //at the very least. (mongodb should handle creation time and unique obj ids)
   mongoAccessor.createJournalEntry(
-    req.body.macroID,
+    //req.body.macroID,
     req.body.macroName,
-    req.body.macroGroup,
+    req.body.macroType,
+    req.body.macroTable,
+    req.body.macroFunction,
+    //req.body.macroGroup,
+    req.body.macroParams,
     req.body.author,
     req.body.reviewer,
-    /**/{},
-    req.body.emergency
+    req.body.emergency,
+    req.body.created_at
   );
-  //Blank for success
   res.send();
 });
 

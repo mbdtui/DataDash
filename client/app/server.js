@@ -20,29 +20,6 @@ export function postJournalEntry(obj,cb){
   });
 }
 
-//tentative - this does nothing
-export function getMacroData(macroIDs, cb){
-    var xhr = new XMLHttpRequest();
-    if(true/*macroIDs is empty*/){
-	xhr.open('GET', '/macro');
-	xhr.setRequestHeader('Authorization', 'Bearer ' + token);
-	xhr.addEventListener('load', function() {
-	   cb(JSON.parse(xhr.responseText));
-	});
-    } else {
-	xhr.open('GET', '/macro/' + macroIDs);
-	xhr.setRequestHeader('Authorization', 'Bearer ' + token);
-	xhr.addEventListener('load', function() {
-	    cb(JSON.parse(xhr.responseText));
-	});
-    }
-    xhr.send();
-    /*sendXHR('GET', '/macro', undefined, (xhr) =>{
-    //Handle the callback with xhr return
-    cb(JSON.parse(xhr.responseText));
-    });*/
-}
-
 // Get available UPDATE macros.
 export function getMacrosAllTablesUpdate(cb) {
   sendXHR('GET', '/macros_all_tables/update', undefined, (xhr) => {

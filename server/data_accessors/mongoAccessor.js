@@ -11,15 +11,19 @@ db.on('error', console.error);
 var JournalEntry = require('../models/JournalEntry.js');
 var PendingMacro = require('../models/PendingMacro.js');
 
-var createJournalEntry = function(_macroID, _macroName, _macroGroup, _author, _reviewer, _params, _emergency){
+var createJournalEntry = function(_macroName, _macroType, _macroTable, _macroFunction, _macroParams, _author, _reviewer, _emergency, _created_at){
   var journalEntry = new JournalEntry({
-    macroID : _macroID,
+    //macroID : _macroID,
     macroName : _macroName,
-    macroGroup: _macroGroup,
+    macroType: _macroType,
+    macroTable: _macroTable,
+    macroFunction: _macroFunction,
+    //macroGroup: _macroGroup,
+    macroParams : _macroParams,
     author : _author,
-    reviewer : _reviewer,
-    params : _params,
-    emergency : _emergency
+    reviewer: _reviewer,
+    emergency : _emergency,
+    created_at: _created_at
   });
 
   journalEntry.save(function(err, item){
@@ -60,13 +64,16 @@ var deleteJournalEntry = function(query){
   });
 }
 
-var createPendingMacro = function(_macroID, _macroName, _macroGroup, _author, _params, _emergency){
+var createPendingMacro = function(/*_macroID,*/ _macroName, _macroType, _macroTable, _macroFunction, /*_macroGroup, */_author, _macroParams, _emergency){
   var pendingMacro = new PendingMacro({
-    macroID : _macroID,
+    //macroID : _macroID,
     macroName : _macroName,
-    macroGroup: _macroGroup,
+    macroType: _macroType,
+    macroTable: _macroTable,
+    macroFunction: _macroFunction,
+    //macroGroup: _macroGroup,
     author : _author,
-    params : _params,
+    macroParams : _macroParams,
     emergency : _emergency
   });
 
