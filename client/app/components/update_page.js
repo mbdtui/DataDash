@@ -9,14 +9,18 @@ export default class Update extends React.Component{
       selected_table: '',
       selected_macro: '',
       emergency_check: true,
-      macros_all_tables: null
+      macros_all_tables: null,
+      request_info: null
     };
     this.sendUpdate = this.sendUpdate.bind(this);
     this.handleTableSelected = this.handleTableSelected.bind(this);
     this.handleMacroSelected = this.handleMacroSelected.bind(this);
     this.handleParameterChanged = this.handleParameterChanged.bind(this);
     this.handleCheckboxClicked = this.handleCheckboxClicked.bind(this);
+    this.handleConfirmation = this.handleConfirmation.bind(this);
   }
+
+
 
   componentDidMount(){
     console.log('Component Mounted');
@@ -81,6 +85,32 @@ export default class Update extends React.Component{
       console.log(JSON.stringify(result));
     });
   }
+  handleConfirmation(){
+    var request_type;
+    if(this.state.emergency_check) {
+      request_type = 'emergency';
+    } else {
+      request_type = 'peer_review';
+    }
+    var proposed_macro = {
+      request_type: request_type,
+      table: this.state.selected_table,
+      function_called: this.state.selected_macro,
+      params: this.state.macros_all_tables[this.state.selected_table][this.state.selected_macro]
+    };
+    this.setState({
+      request_info: proposed_macro
+    });
+  }
+
+  addMacroDetails(obj){
+    var keys = Object.keys(obj);
+    var message = "\n";
+    for (var i = 0; i<keys.length; i++){
+      message += keys[i] + ": " + obj[keys[i]] + "\n";
+    }
+    return message;
+  }
 
   render(){
     var tables = [];
@@ -133,7 +163,32 @@ export default class Update extends React.Component{
                       </center>
                     </div>
                     <div className="col-lg-12">
-                      <a href="#" role="button" onClick={this.sendUpdate} className="btn btn-secondary btn-lg go-btn">Go</a>
+                        <div className="bs-example">
+                              <button type="button" onClick={this.handleConfirmation} className="btn btn-secondary btn-lg go-btn" data-toggle="modal" data-target="#myModal">
+                                  Go
+                              </button>
+                            <div id="myModal" className="modal fade">
+                                <div className="modal-dialog">
+                                    <div className="modal-content">
+                                        <div className="modal-header">
+                                            <button type="button" className="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            <h4 className="modal-title">Confirmation</h4>
+                                        </div>
+                                        <div className="modal-body">
+                                            <h3>Are you sure you want to perform an update with the following information?</h3>
+                                            <p><strong>Table</strong>: {this.state.selected_table}</p>
+                                            <p><strong>Marco:</strong> {this.state.selected_macro}</p>
+                                            <p id= "ModalPopup"><strong>Parameters: </strong>{this.state.request_info===null?'':                                              this.addMacroDetails(this.state.request_info.params)}</p>
+                                        </div>
+                                        <div className="modal-footer">
+                                            <button type="button" onClick={this.sendUpdate} className="btn btn-default" data-dismiss="modal">Yes</button>
+                                            <button type="button" className="btn btn-default" aria-hidden="true" data-dismiss="modal">No</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                   </form>
                 </center>
