@@ -237,6 +237,19 @@ h2 {
 #update-form h3{
   padding-top: 0px !important;
 }
+<<<<<<< HEAD
+#ModalPopup {
+  white-space: pre-wrap;
+}
+
+
+.modal-body p{
+  text-align: left;
+}
+
+.modal-body h3{
+  text-align: center;
+=======
  #MacroReviewTableCell{
     background-color: #ffffff;
     border:none;
