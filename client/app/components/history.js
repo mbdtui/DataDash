@@ -34,6 +34,15 @@ export default class History extends React.Component{
       return splitTime[1];
     }
   }
+  showMacroDetails(journalObj){
+    var message = ("Function : " + journalObj["macroFunction"] + "\n");
+    var params = journalObj["macroParams"];
+    var keys = Object.keys(params);
+    for(var i =0; i<keys.length; i++){
+      message = (message + keys[i] + ": " + params[keys[i]] + "\n");
+    }
+    alert(message);
+  }
   render(){
     var self = this;
     var rows = [];
@@ -41,13 +50,18 @@ export default class History extends React.Component{
       rows.push(
         <tr key={journalObj["_id"]}>
           <td>
-            {journalObj["macroName"]}
+            {journalObj["macroTable"]}
           </td>
           <td>
-            {self.getDateFormat(journalObj["created_at"], "date")}
+            <button onClick ={() => self.showMacroDetails(journalObj)}> Show Details </button>
           </td>
           <td>
-            {self.getDateFormat(journalObj["created_at"], "time")}
+            <p>{self.getDateFormat(journalObj["created_at"], "date")}</p>
+            <p>{self.getDateFormat(journalObj["created_at"], "time")}</p>
+          </td>
+          <td>
+            <p>{self.getDateFormat(journalObj["approved_at"], "date")}</p>
+            <p>{self.getDateFormat(journalObj["approved_at"], "time")}</p>
           </td>
           <td>
             {journalObj["author"]}
@@ -74,7 +88,8 @@ export default class History extends React.Component{
                     <tr>
                       <th>Macro</th>
                       <th>Date</th>
-                      <th>Time</th>
+                      <th>Created Date</th>
+                      <th>Reviewed Date</th>
                       <th>Employee</th>
                       <th>Reviewer</th>
                     </tr>

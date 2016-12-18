@@ -49,21 +49,32 @@ export default class Pending extends React.Component{
       return splitTime[1];
     }
   }
+  showMacroDetails(macroObj){
+    var message = ("Function : " + macroObj["macroFunction"] + "\n");
+    var params = macroObj["macroParams"];
+    var keys = Object.keys(params);
+    for(var i =0; i<keys.length; i++){
+      message = (message + keys[i] + ": " + params[keys[i]] + "\n");
+    }
+    alert(message);
+  }
   render(){
     var self = this;
     //Render rows before we put them in (some weird stuff happens if we do it inline)
+    //Probably want to change dialog of the show details
     var rows = [];
     this.state.contents.map(function(macroObj) {
       rows.push(
         <tr key={macroObj["_id"]}>
           <td>
-            {macroObj["macroName"]}
+            {macroObj["macroTable"]}
           </td>
           <td>
-            {self.getDateFormat(macroObj["created_at"], "date")}
+            <button onClick ={() => self.showMacroDetails(macroObj)}> Show Details </button>
           </td>
           <td>
-            {self.getDateFormat(macroObj["created_at"], "time")}
+            <p>{self.getDateFormat(macroObj["created_at"], "date")}</p>
+            <p>{self.getDateFormat(macroObj["created_at"], "time")}</p>
           </td>
           <td>
             {macroObj["author"]}
@@ -90,9 +101,9 @@ export default class Pending extends React.Component{
                 <table className="sortable">
                   <thead>
                     <tr>
-                      <th>Macro</th>
+                      <th>Table</th>
+                      <th>Details</th>
                       <th>Date</th>
-                      <th>Time</th>
                       <th>Employee</th>
                       <th>Approve/Deny</th>
                     </tr>

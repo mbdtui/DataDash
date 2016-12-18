@@ -70,6 +70,7 @@ export default class Delete extends React.Component{
       request_type = 'peer_review';
     }
     var proposed_macro = {
+      macroType: "Delete",
       request_type: request_type,
       table: this.state.selected_table,
       function_called: this.state.selected_macro,
