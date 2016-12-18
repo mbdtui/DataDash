@@ -189,7 +189,7 @@ app.post('/request_macro_execution/update/:request_type', function(req, res) {
     var macroParams = req.body.params;
     var macroFunction = req.body.function_called;
     var macroTable = req.body.table;
-    var macroName = req.body.name; //Later add to GUI macroName
+    var macroName = "";//Remove this later
     var created_at = new Date();
     mongoAccessor.createJournalEntry(macroName, macroType, macroTable, macroFunction, macroParams, "testUser", "testReviewer", emergency, created_at);
 		// Run update business.
@@ -202,6 +202,27 @@ app.post('/request_macro_execution/update/:request_type', function(req, res) {
 			res.send(result);
 		});
 	}
+  else if(requestType === 'approved_peer_review'){
+  	console.log('Received:' + JSON.stringify(proposed_macro));
+    console.log("Running approved peer review");
+    var emergency = false;
+    var macroType = req.body.macroType;
+    var macroParams = req.body.params;
+    var macroFunction = req.body.function_called;
+    var macroTable = req.body.table;
+    var macroName = "";//Remove this later
+    var created_at = new Date();
+    mongoAccessor.createJournalEntry(macroName, macroType, macroTable, macroFunction, macroParams, "testUser", "testReviewer", emergency, created_at);
+		// Run update business.
+		updateBusiness.runUpdateMacro(proposed_macro, (err, result) => {
+			// If error,
+			if(err) {
+				// send raw error to client.
+				res.send(err);
+			}
+			res.send(result);
+		});
+  }
 	// else if it is a peer review one.
 	else if(requestType === 'peer_review'){
 		// Peer review request.
@@ -223,6 +244,8 @@ app.post('/request_macro_execution/update/:request_type', function(req, res) {
 
 // Handle DELETE macro execution request.
 app.post('/request_macro_execution/delete/:request_type', function(req, res) {
+  console.log('Received:' + JSON.stringify(proposed_macro));
+  console.log("Running approved peer review");
 	var requestType = req.params.request_type;
 	var proposed_macro = req.body;
 	// If the request is an emergency one.
@@ -234,8 +257,12 @@ app.post('/request_macro_execution/delete/:request_type', function(req, res) {
     var macroParams = req.body.params;
     var macroFunction = req.body.function_called;
     var macroTable = req.body.table;
-    var macroName = req.body.name; //Later add to GUI macroName
-    var created_at = new Date();
+    var macroName = ""; //Remove this later
+    if(typeof(req.body.created_at)===undefined){
+      created_at = new Date();
+    } else {
+      created_at = req.body.created_at;
+    }
     mongoAccessor.createJournalEntry(macroName, macroType, macroTable, macroFunction, macroParams, "testUser", "testReviewer", emergency, created_at);
 		deleteBusiness.runDeleteMacro(proposed_macro, (err, result) => {
 			// If error,
@@ -246,6 +273,24 @@ app.post('/request_macro_execution/delete/:request_type', function(req, res) {
 			res.send(result);
 		});
 	}
+  else if(requestType === 'approved_peer_review'){
+    var emergency = false;
+    var macroType = req.body.macroType;
+    var macroParams = req.body.params;
+    var macroFunction = req.body.function_called;
+    var macroTable = req.body.table;
+    var macroName = ""; //Remove this later
+    var created_at = new Date();
+    mongoAccessor.createJournalEntry(macroName, macroType, macroTable, macroFunction, macroParams, "testUser", "testReviewer", emergency, created_at);
+		deleteBusiness.runDeleteMacro(proposed_macro, (err, result) => {
+			// If error,
+			if(err) {
+				// send raw error to client.
+				res.send(err);
+			}
+			res.send(result);
+		});
+  }
 	// else if it is a peer review one.
 	else if(requestType === 'peer_review'){
     // Peer review request.
@@ -309,15 +354,7 @@ function getJournalEntry(cb){
       cb(items);
   });
 }
-function getMacroData(macroIDs){
-    //macroIDs=comma separated list of ids
-    //return macroIDs;
-    //Parse list of ids
-    //Make call to DB methods and get data
-    //Maybe need a sync to get references
-		//return data
-    return macroIDs;
-}
+
 function getPendingMacroData(cb){
     mongoAccessor.readPendingMacros(
       function(items){

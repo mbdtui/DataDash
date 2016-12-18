@@ -1,6 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router';
-import {getPendingMacros, deletePendingMacro, postJournalEntry} from '../server';
+import {getPendingMacros, deletePendingMacro, postJournalEntry, requestDeleteMacroExecution, requestUpdateMacroExecution} from '../server';
 
 export default class Pending extends React.Component{
 
@@ -24,7 +24,29 @@ export default class Pending extends React.Component{
     deletePendingMacro(objectID, () => {
       //Make a second xmlhttprequest to update journal
       postJournalEntry(obj, () => {
-        this.refresh();
+        var request_type='approved_peer_review'
+        var proposed_macro = {
+          macroType: obj["macroType"],
+          request_type: obj["request_type"],
+          table: obj["macroTable"],
+          function_called: obj["macroFunction"],
+          params: obj["macroParams"]
+        };
+        console.log("Proposed macro in pending is of type " + obj["macroType"]);
+        console.log(JSON.stringify(proposed_macro));
+        if(obj["macroType"] === 'Delete'){
+          requestDeleteMacroExecution(request_type, proposed_macro, (result) => {
+            console.log(JSON.stringify(result));
+            this.refresh();
+          });
+        } else if (obj["macroType"] === 'Update'){
+          requestUpdateMacroExecution(request_type, proposed_macro, (result) => {
+            console.log(JSON.stringify(result));
+            this.refresh();
+          });
+        }
+
+
       });
     });
   }
