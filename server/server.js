@@ -134,6 +134,8 @@ app.get('/journal_entry', function(req, res){
   });
 });
 
+
+// Handle VIEW request.
 app.post('/view_run_status_code', function(req, res) {
 	var appn_runn_statusc = req.body;
 	viewBusiness.viewRunStatusCode(appn_runn_statusc, (err, result) => {
@@ -147,19 +149,58 @@ app.post('/view_run_status_code', function(req, res) {
 	});
 });
 
+// Handle UPDATE macro execution request.
 app.post('/request_macro_execution/update/:request_type', function(req, res) {
 	var requestType = req.params.request_type;
 	var proposed_macro = req.body;
+	// If the request is an emergency one.
 	if(requestType === 'emergency') {
 		console.log('Received:' + JSON.stringify(proposed_macro));
+		// Run update business.
 		updateBusiness.runUpdateMacro(proposed_macro, (err, result) => {
+			// If error,
 			if(err) {
+				// send raw error to client.
 				res.send(err);
 			}
 			res.send(result);
 		});
-	} else {
+	}
+	// else if it is a peer review one.
+	else if(requestType === 'peer_review'){
 		// Peer review request.
+		res.status(200).end();
+	}
+	// else it is an invalid request.
+	else {
+		res.status(400).end();
+	}
+});
+
+// Handle DELETE macro execution request.
+app.post('/request_macro_execution/delete/:request_type', function(req, res) {
+	var requestType = req.params.request_type;
+	var proposed_macro = req.body;
+	// If the request is an emergency one.
+	if(requestType === 'emergency') {
+		console.log('Received:' + JSON.stringify(proposed_macro));
+		deleteBusiness.runDeleteMacro(proposed_macro, (err, result) => {
+			// If error,
+			if(err) {
+				// send raw error to client.
+				res.send(err);
+			}
+			res.send(result);
+		});
+	}
+	// else if it is a peer review one.
+	else if(requestType === 'peer_review'){
+		// Peer review request.
+		res.status(200).end();
+	}
+	// else it is an invalid request.
+	else {
+		res.status(400).end();
 	}
 });
 

@@ -40,7 +40,7 @@ export default class View extends React.Component{
     var run_status_code = null;//run_status_code
     //var run_status_code = runStatusCode;
     getRunStatusCode(app_name, run_name, run_status_code, (result) => {
-      console.log(JSON.stringify(result));
+      // console.log(JSON.stringify(result));
       var headers = [];
       // Get all the headers of result.
       for (var property in result[0]) {
