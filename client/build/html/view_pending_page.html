@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <title>Digital Dash</title>
+
+  <!-- Bootstrap -->
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/bootstrap-slate-theme.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/custom.css">
+  <!-- Custom CSS goes here -->
+
+  <!--Fonts-->
+
+  <!--JS library to make tables sortable -->
+  <script src="js/sorttable.js"></script>
+
+
+</head>
+<body>
+  <!-- Custom HTML goes here -->
+  <div id="wrapper">
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-lg-12">
+            <nav class="navbar navbar-light bg-faded" id="home_page_navbar">
+              <div class="col-lg-9">
+                <img  id="logo" src="img\LibertyMutual.png" alt="Liberty Mutual Logo">
+              </div>
+
+              <div class="col-lg-3 top-right-menu">
+                <ul class="nav navbar-nav navbar-right">
+                  <li class="dropdown top-dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i id="user_icon"></i>Bob Norton <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                    <!-- Don't think we need these because they are future requirements
+                      <li><a href="#">Account Settings</a></li>
+                      <li><a href="#">Change Environment</a></li>
+                      <li><a href="#">Add Driver Rows</a></li>
+                      <li><a href="#">View Metadata and Statistics</a></li>
+                      -->
+                      <li><a href="#">View Pending Macros</a></li>
+                      <li><a href="\view_history_page.html">View History</a></li>
+                      <li><a href="\login.html">Log Out</a></li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+            </nav>
+            <!--  Main Content GOES HERE -->
+            
+            <div class="col-lg-12">
+              <h2>View Pending Macros</h2>
+            </div>
+
+
+            <div class="col-lg-12">
+              <div class="pending-table">
+                <table class="sortable">
+                <tr>
+                  <th>Macro</th>
+                  <th>Date</th>
+                  <th>Time</th>
+                  <th>Employee</th>
+                </tr>
+                <tr>
+                  <td>EX1</td>
+                  <td>10/10/2016</td>
+                  <td>09:00</td>
+                  <td>Bob Norton</td>
+                </tr>
+                <tr>
+                  <td>EX2</td>
+                  <td>10/11/2016</td>
+                  <td>13:22</td>
+                  <td>Chancellor Bennett</td>
+                </tr>
+                <tr>
+                  <td>EX3</td>
+                  <td>10/12/2016</td>
+                  <td>10:20</td>
+                  <td>Aubrey Graham</td>
+                </tr>
+                <tr>
+                  <td>EX4</td>
+                  <td>10/13/2016</td>
+                  <td>11:11</td>
+                  <td>Shawn Carter</td>
+                </tr>
+                <tr>
+                  <td>EX5</td>
+                  <td>10/14/2016</td>
+                  <td>21:11</td>
+                  <td>Kanye West</td>
+                </tr>
+                </table>
+              </div>            
+            </div>
+
+            <div class="col-lg-12">
+              <center><a href="\update_page.html" role="button" class="btn btn-secondary btn-lg go-btn">Go Back</a></center>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="js/jquery.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/css/bootstrap-select.min.css">
+
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/js/bootstrap-select.min.js"></script>
+
+  <!-- (Optional) Latest compiled and minified JavaScript translation files -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/js/i18n/defaults-*.min.js"></script>
+
+</body>
+</html>

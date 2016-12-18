@@ -2,6 +2,7 @@ node_modules
 npm-debug.log
 .DS_Store
 client/build
+/client/build/js/app.js
 server/data
 server/data2
 server/DB.log

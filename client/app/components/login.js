@@ -25,17 +25,14 @@ export default class Login extends React.Component{
       	<div className="col-lg-4"></div>
       	<div className="col-lg-12">
           <center>
-            <Link to={"/view/"}>
+            <Link to={"/m/"}>
       				<button className = "btn btn-secondary btn-lg log-in-btn">Login</button>
       			</Link>
       		</center>
           <br/>
           <center>
-            <Link to={"/update/"}>
-              <button className = "btn btn-secondary">Update(Temporary)</button>
-            </Link>
-            <Link to={"/view/"}>
-              <button className = "btn btn-secondary">View(Temporary)</button>
+            <Link to={"/m/"}>
+              <button className = "btn btn-secondary">ModPage(Temporary)</button>
             </Link>
           </center>
       	</div>

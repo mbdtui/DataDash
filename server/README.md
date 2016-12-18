@@ -1,7 +1,7 @@
 # DataDash Server
 
 1. Run `npm install`
-2. Run `npm app.js`
+2. Run `node server.js`
   * Alternatively you can replace app.js with another file
 
 **If you want to use mongodb, run runMongo.sh

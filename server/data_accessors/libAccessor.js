@@ -2,14 +2,13 @@
 /*
 	- PostgreSQL server, which need to be downloaded and installed, is required to be running prior to running this program.
 	- Use 'LibDBLoader.js' in the directory 'lib_mockDB_loader' to load data into the database before calling this accessor.
-	- Make a new query call with the statement:
-		client.query('SQL query statement');
-	- The result is a JSON object.
+	- When calling these functions, we need to supply callback functions which have two parameters,
+	the first one is err, and the second one is result.
 */
 
 var pg = require('pg');
 var util = require('util');
-var resetPostgreDB = require('./lib_mockDB_loader/LibDBLoader.js').loadMockDB;
+var resetPostgreDB = require('../lib_mockDB_loader/LibDBLoader.js').loadMockDB;
 
 // Reset database.
 // resetPostgreDB('./lib_mockDB_loader/LibDataLogs');
@@ -136,14 +135,25 @@ var driver_step_detail = {
 
 // View the run status code using the sample query given by Liberty Mutual.
 function viewRunStatusCode(app_name, run_name, run_status_code, cb) {
-	var query = "SELECT run_stts_cd, b.STEP_NME, b.PRMTR_TXT, a.run_nme, a.grp_nbr, a.run_order_nbr, a.run_stts_cd, a.run_start_dtm, a.run_end_dtm,a.run_end_dtm - a.run_start_dtm As run_time_diff, b.STEP_NME"+
-			" FROM c_driver_step_detail a, c_driver_step b" +
-			" WHERE a.DRVR_STEP_ID = b.DRVR_STEP_ID AND a.app_nme = '" +
-			app_name + "' and a.RUN_NME = '" + run_name + "'";
+	var query = `SELECT run_stts_cd, b.STEP_NME, b.PRMTR_TXT, a.run_nme, a.grp_nbr, a.run_order_nbr, a.run_stts_cd, a.run_start_dtm, a.run_end_dtm,a.run_end_dtm - a.run_start_dtm As run_time_diff, b.STEP_NME
+FROM c_driver_step_detail a, c_driver_step b
+ WHERE a.DRVR_STEP_ID = b.DRVR_STEP_ID AND a.app_nme = '${'EDW'}' and a.RUN_NME = '${'S_2_O_CL_FA_ISO_NRT'}'
+ --AND a.run_stts_cd <> 'S'
+ --AND a.RUN_STTS_CD = 'R'
+ order by a.run_nme, a.grp_nbr, a.run_order_nbr;`;
 	if(run_status_code === null) {
-		query += " AND a.run_stts_cd = '" + run_status_code+ "'";
+		query = `SELECT run_stts_cd, b.STEP_NME, b.PRMTR_TXT, a.run_nme, a.grp_nbr, a.run_order_nbr, a.run_stts_cd, a.run_start_dtm, a.run_end_dtm,a.run_end_dtm - a.run_start_dtm As run_time_diff, b.STEP_NME
+FROM c_driver_step_detail a, c_driver_step b
+ WHERE a.DRVR_STEP_ID = b.DRVR_STEP_ID AND a.app_nme = '${app_name}' and a.RUN_NME = '${run_name}'
+ order by a.run_nme, a.grp_nbr, a.run_order_nbr;`;
 	}
-	query += " order by a.run_nme, a.grp_nbr, a.run_order_nbr;";
+	else {
+ 		query = `SELECT run_stts_cd, b.STEP_NME, b.PRMTR_TXT, a.run_nme, a.grp_nbr, a.run_order_nbr, a.run_stts_cd, a.run_start_dtm, a.run_end_dtm,a.run_end_dtm - a.run_start_dtm As run_time_diff, b.STEP_NME
+FROM c_driver_step_detail a, c_driver_step b
+ WHERE a.DRVR_STEP_ID = b.DRVR_STEP_ID AND a.app_nme = '${app_name}' and a.RUN_NME = '${run_name}'
+ AND a.run_stts_cd = '${run_status_code}'
+ order by a.run_nme, a.grp_nbr, a.run_order_nbr;`;
+	}
 
 	executeQuery(query, cb);
 }

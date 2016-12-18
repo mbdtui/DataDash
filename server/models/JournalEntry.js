@@ -15,8 +15,7 @@ var journalEntrySchema = new Schema({
 
 journalEntrySchema.pre('save', function(next) {
   var currentDate = new Date();
-  if (!this.created_at) this.created_at = currentDate;
-  else this.approved_at = currentDate;
+  if (!this.approved_at) this.approved_at = currentDate;
   next();
 });
 
