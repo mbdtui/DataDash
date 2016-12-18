@@ -2,9 +2,11 @@ var auth = require('./api/dummy-auth.js'); // change to auth.js for real authent
 var express = require('express');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var libAccessor = require('./data_accessors/libAccessor.js');
 var mongoAccessor = require('./data_accessors/mongoAccessor');
 var mongoDummyData = require('./mongoDummyData');
+var updateBusiness = require('./updateBusiness');
+var viewBusiness = require('./viewBusiness');
+var deleteBusiness = require('./deleteBusiness');
 
 var app = express();
 
@@ -24,64 +26,91 @@ app.get('/macro/:macroid', function(req, res){
     res.send(getMacroData(req.params.macroid));
 });
 
-app.get('/macros_for_table/:table_name/update', function(req, res) {
-	var table_name = req.params.table_name;
-	var available_macros;
-	switch(table_name) {
-		case 'driver_step':
-			available_macros = [
-			'update_active_step_indicator_by_driverstepid',
-			'update_active_step_indicator_by_runname_driverstepid',
-			'update_active_step_indicator_by_runname',
-			'update_active_step_indicator_by_runname_groupnumber'
-			];
-			break;
-		case 'driver_schedule':
-			available_macros = [
-			'update_schedule_starttime_by_runname_auditid',
-			'update_status_code_by_runname_auditid',
-			'update_valuation_enddate_by_runname_auditid',
-			'update_valuation_startdate_by_runname_auditid',
-			'update_sla_date_time_by_auditid',
-			'update_sla_date_time_by_runname',
-			'update_historical_sla_date_time_by_runname'
-			];
-			break;
-		case 'driver_step_detail':
-			available_macros = [
-			'update_run_status_code_by_runname_groupnumber',
-			'update_run_status_code_by_runname_driverstepdetail_id'
-			];
-			break;
-	}
-	// console.log(available_macros);
-	res.send({ macros: available_macros});
-});
+app.get('/macros_all_tables/delete', function(req, res) {
+	var macros_delete = {
+			'c_driver_schedule': {
+				'delete_all_entries_by_runname': {
+					'run_name':''
+				},
+			},
+			'c_driver_step': {
+				'delete_all_entries_by_runname': {
+					'run_name':''
+				},
+				'delete_all_entries_by_runname_groupnumber': {
+					'run_name':'', 'group_number':''
+				},
+				'delete_all_entries_by_runname_driverstepid': {
+					'run_name':'', 'driver_step_id':''
+				}
+			},
+			'c_driver_step_detail': {
+				'delete_all_entries_by_runname': {
+					'run_name':''
+				}
+			}
+		};
+	res.send(macros_delete);
+})
 
-app.get('/macros_for_table/:table_name/delete', function(req, res) {
-	var table_name = req.params.table_name;
-	var available_macros;
-	switch(table_name) {
-		case 'driver_step':
-			available_macros = [
-			'delete_all_entries_by_runname',
-			'delete_all_entries_by_runname_groupnumber',
-			'delete_all_entries_by_runname_driverstepid'
-			];
-			break;
-		case 'driver_schedule':
-			available_macros = [
-			'delete_all_entries_by_runname'
-			];
-			break;
-		case 'driver_step_detail':
-			available_macros = [
-			'delete_all_entries_by_runname'
-			];
-			break;
-	}
+app.get('/macros_all_tables/update', function(req, res) {
+	var macros_update = {
+			'c_driver_schedule': {
+				'update_schedule_starttime_by_runname_auditid': {
+					'run_name': '', 
+					'audit_id': '',
+					'schedule_start_time': ''
+				},
+				'update_status_code_by_runname_auditid': {
+					'run_name':'', 
+					'audit_id':'', 
+					'status_code':''
+				},
+				'update_valuation_enddate_by_runname_auditid': {
+					'run_name':'', 
+					'audit_id':'', 
+					'valuation_end_date':''
+				},
+				'update_valuation_startdate_by_runname_auditid': {
+					'run_name':'', 
+					'audit_id':'', 
+					'valuation_start_date':''
+				},
+				'update_sla_date_time_by_auditid': {
+					'audit_id':'', 'date':'', 'time':''
+				},
+				'update_sla_date_time_by_runname': {
+					'run_name':'', 'date':'', 'time':''
+				},
+				'update_historical_sla_date_time_by_runname': {
+					'run_name':'', 'date':'', 'time':''
+				}	
+			},
+			'c_driver_step': {
+				'update_active_step_indicator_by_driverstepid': {
+					'driver_step_id':'', 'active_step_indicator':''
+				},
+				'update_active_step_indicator_by_runname_driverstepid': {
+					'run_name':'', 'driver_step_id':'', 'active_step_indicator':''
+				},
+				'update_active_step_indicator_by_runname': {
+					'run_name':'', 'active_step_indicator':''
+				},
+				'update_active_step_indicator_by_runname_groupnumber': {
+					'run_name':'', 'group_number':'', 'active_step_indicator':''
+				}
+			},
+			'c_driver_step_detail': {
+				'update_run_status_code_by_runname_groupnumber': {
+					'run_name':'', 'group_number':'', 'run_status_code':''
+				},
+				'update_run_status_code_by_runname_driverstepdetail_id': {
+					'run_name':'', 'driver_step_detail_id':'', 'run_status_code':''
+				}
+			}
+	};
 	// console.log(available_macros);
-	res.send({ macros: available_macros});
+	res.send(macros_update);
 });
 
 app.get('/pending_macro', function(req, res){
@@ -106,11 +135,11 @@ app.get('/journal_entry', function(req, res){
   });
 });
 
+
+// Handle VIEW request.
 app.post('/view_run_status_code', function(req, res) {
-	var app_name = req.body.app_name;
-    var run_name = req.body.run_name;
-    var run_status_code = req.body.run_status_code;
-	libAccessor.viewRunStatusCode(app_name, run_name, run_status_code, (err, result) => {
+	var appn_runn_statusc = req.body;
+	viewBusiness.viewRunStatusCode(appn_runn_statusc, (err, result) => {
 		if(err) {
 			res.status(400).end();
 		}
@@ -119,6 +148,87 @@ app.post('/view_run_status_code', function(req, res) {
 			res.send(result.rows);
 		}
 	});
+});
+
+// Handle UPDATE macro execution request.
+app.post('/request_macro_execution/update/:request_type', function(req, res) {
+	var requestType = req.params.request_type;
+	var proposed_macro = req.body;
+	// If the request is an emergency one.
+	if(requestType === 'emergency') {
+		console.log('Received:' + JSON.stringify(proposed_macro));
+		// Run update business.
+		updateBusiness.runUpdateMacro(proposed_macro, (err, result) => {
+			// If error,
+			if(err) {
+				// send raw error to client.
+				res.send(err);
+			}
+			res.send(result);
+		});
+	}
+	// else if it is a peer review one.
+	else if(requestType === 'peer_review'){
+		// Peer review request.
+		res.status(200).end();
+	}
+	// else it is an invalid request.
+	else {
+		res.status(400).end();
+	}
+});
+
+// Handle DELETE macro execution request.
+app.post('/request_macro_execution/delete/:request_type', function(req, res) {
+	var requestType = req.params.request_type;
+	var proposed_macro = req.body;
+	// If the request is an emergency one.
+	if(requestType === 'emergency') {
+		console.log('Received:' + JSON.stringify(proposed_macro));
+		deleteBusiness.runDeleteMacro(proposed_macro, (err, result) => {
+			// If error,
+			if(err) {
+				// send raw error to client.
+				res.send(err);
+			}
+			res.send(result);
+		});
+	}
+	// else if it is a peer review one.
+	else if(requestType === 'peer_review'){
+		// Peer review request.
+		res.status(200).end();
+	}
+	// else it is an invalid request.
+	else {
+		res.status(400).end();
+	}
+});
+
+app.post('/journal_entry', function(req, res) {
+  //req.body is a JSON object holding macroID, macroName, macroGroup, author, emergency, reviewer
+  //at the very least. (mongodb should handle creation time and unique obj ids)
+  mongoAccessor.createJournalEntry(
+    req.body.macroID,
+    req.body.macroName,
+    req.body.macroGroup,
+    req.body.author,
+    req.body.reviewer,
+    /**/{},
+    req.body.emergency
+  );
+  //Blank for success
+  res.send();
+});
+
+
+
+app.delete('/pending_macro/:macroID', function(req, res){
+  console.log("In server folder attempting macro deletion");
+  var macroID = req.params.macroID;
+  mongoAccessor.deletePendingMacro({ _id: macroID});
+  //Blank for success
+  res.send();
 });
 
 function postJournalEntry(data){
@@ -146,22 +256,10 @@ function getMacroData(macroIDs){
     return macroIDs;
 }
 function getPendingMacroData(cb){
-    //macroIDs=comma separated list of ids
-    //return macroIDs;
-    //Parse list of ids
-    //Make call to DB methods and get data
-    //Maybe need a sync to get references
-		//return data
-    console.log("Called get pending in the server");
     mongoAccessor.readPendingMacros(
       function(items){
         cb(items);
     });
-    /*return mongoAccessor.test(
-      function(i){
-        return i;
-      }
-    )*/
 }
 
 //Replace res.send contents with database data

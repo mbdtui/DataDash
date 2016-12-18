@@ -2,14 +2,6 @@ import React from 'react';
 import {Link} from 'react-router';
 import {getHistory} from '../server';
 
-/*$(document).ready( function () {
-    $('#historyTable').DataTable(
-      {
-        paging:true
-      }
-    );
-} );*/
-
 export default class History extends React.Component{
   constructor(props) {
     super();
@@ -25,7 +17,47 @@ export default class History extends React.Component{
   componentDidMount() {
     this.refresh();
   }
+  getDateFormat(date, type){
+    var date = new Date(date);
+    var localeTime = date.toLocaleString();
+    var splitTime = localeTime.split(", ");
+    //in case
+    if(localeTime === "Invalid Date"){
+      return "";
+    }
+
+    if(type == "date"){
+      //MM/DD/YYYY
+      return splitTime[0];
+    } else if(type == "time"){
+      //HH:MM:SS
+      return splitTime[1];
+    }
+  }
   render(){
+    var self = this;
+    var rows = [];
+    this.state.contents.map(function(journalObj) {
+      rows.push(
+        <tr key={journalObj["_id"]}>
+          <td>
+            {journalObj["macroName"]}
+          </td>
+          <td>
+            {self.getDateFormat(journalObj["created_at"], "date")}
+          </td>
+          <td>
+            {self.getDateFormat(journalObj["created_at"], "time")}
+          </td>
+          <td>
+            {journalObj["author"]}
+          </td>
+          <td>
+            {journalObj["reviewer"]}
+          </td>
+        </tr>
+      );
+    });
     return(
       <div id="wrapper">
     <div id="page-content-wrapper">
@@ -46,26 +78,7 @@ export default class History extends React.Component{
                       <th>Employee</th>
                       <th>Reviewer</th>
                     </tr>
-                    {this.state.contents.map(function(historyObj) {
-                      return (
-                        <tr key={historyObj["ObjectID"]}>
-                          <td>
-                            {historyObj["macroName"]}
-                          </td>
-                          <td>
-                            {historyObj["created_at"]}
-                          </td>
-                          <td>
-                          </td>
-                          <td>
-                            {historyObj["author"]}
-                          </td>
-                          <td>
-                            {historyObj["reviewer"]}
-                          </td>
-                        </tr>
-                      )
-                    })}
+                    {rows}
                   </tbody>
                 </table>
               </div>

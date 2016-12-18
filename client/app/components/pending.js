@@ -1,8 +1,9 @@
 import React from 'react';
 import {Link} from 'react-router';
-import {getPendingMacros} from '../server';
+import {getPendingMacros, deletePendingMacro, postJournalEntry} from '../server';
 
 export default class Pending extends React.Component{
+
   constructor(props) {
     super();
     this.state = {
@@ -10,14 +11,69 @@ export default class Pending extends React.Component{
     };
   }
   refresh(){
-    getPendingMacros( (data) => {
+    getPendingMacros((data) => {
         this.setState({contents: data});
     });
   }
   componentDidMount() {
     this.refresh();
   }
+
+  handleApprovePending(obj){
+    var objectID = obj["_id"];
+    deletePendingMacro(objectID, () => {
+      //Make a second xmlhttprequest to update journal
+      postJournalEntry(obj, () => {
+        this.refresh();
+      });
+    });
+  }
+
+  handleDenyPending(obj){
+    var objectID = obj["_id"];
+    console.log(Object.keys(obj));
+    deletePendingMacro(objectID, () => {
+      this.refresh();
+    });
+  }
+  getDateFormat(date, type){
+    var date = new Date(date);
+    var localeTime = date.toLocaleString();
+    var splitTime = localeTime.split(", ");
+    //MM/DD/YYYY
+    if(type == "date"){
+      return splitTime[0];
+    }
+    //HH/MM/SS p
+    if(type == "time"){
+      return splitTime[1];
+    }
+  }
   render(){
+    var self = this;
+    //Render rows before we put them in (some weird stuff happens if we do it inline)
+    var rows = [];
+    this.state.contents.map(function(macroObj) {
+      rows.push(
+        <tr key={macroObj["_id"]}>
+          <td>
+            {macroObj["macroName"]}
+          </td>
+          <td>
+            {self.getDateFormat(macroObj["created_at"], "date")}
+          </td>
+          <td>
+            {self.getDateFormat(macroObj["created_at"], "time")}
+          </td>
+          <td>
+            {macroObj["author"]}
+          </td>
+          <td>
+            <button onClick={() => self.handleApprovePending(macroObj)}> Approve </button> <button onClick={() => self.handleDenyPending(macroObj)}> Deny </button>
+          </td>
+        </tr>
+      );
+    });
     return(
       <div id="wrapper">
     <div id="page-content-wrapper">
@@ -32,34 +88,17 @@ export default class Pending extends React.Component{
             <div className="col-lg-12">
               <div className="pending-table scrollTable">
                 <table className="sortable">
-                  <tbody>
+                  <thead>
                     <tr>
                       <th>Macro</th>
                       <th>Date</th>
                       <th>Time</th>
                       <th>Employee</th>
+                      <th>Approve/Deny</th>
                     </tr>
-                    {this.state.contents.map(function(macroObj) {
-                      return (
-                        <tr key={macroObj["ObjectID"]}>
-                          <td>
-                            {macroObj["macroName"]}
-                          </td>
-                          <td>
-                            {macroObj["created_at"]}
-                          </td>
-                          <td>
-
-                          </td>
-                          <td>
-                            {macroObj["author"]}
-                          </td>
-                          <td>
-                            <button> Approve </button>
-                          </td>
-                        </tr>
-                      )
-                    })}
+                  </thead>
+                  <tbody>
+                    {rows}
                   </tbody>
                 </table>
               </div>
