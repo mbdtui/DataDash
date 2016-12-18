@@ -72,7 +72,6 @@ export default class Update extends React.Component{
     var proposed_macro = {
       macroType: "Update",
       request_type: request_type,
-      name: "Test",
       table: this.state.selected_table,
       function_called: this.state.selected_macro,
       params: this.state.macros_all_tables[this.state.selected_table][this.state.selected_macro]

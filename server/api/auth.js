@@ -24,7 +24,7 @@ var ad = new ActiveDirectory(ActiveDirectoryModuleConfig);
  * @throws an Error if there is a problem authenticating the user
  * @return {boolean} True if the user was successfully authenticated. False otherwise.
  */
-function authenticate(username, password) {
+var authenticate = function(username, password) {
   ad.authenticate(username, password, function(err, auth) {
     if (err) {
       throw new Error('Failed to authenticate \'' + username + '\' : '
@@ -95,8 +95,8 @@ function getGroupMembershipForUser(username) {
  * @throws an Error if there was an issue looking up the group membership.
  * @return {boolean} True if the user is a member of the admin group. False otherwise.
  */
-function isUserAdmin(username) {
-  isUserMemberOf(username, ADMIN-GROUP);
+var isUserAdmin = function(username) {
+  return isUserMemberOf(username, ADMIN-GROUP);
 }
 
 /**
@@ -106,7 +106,7 @@ function isUserAdmin(username) {
  * @throws an Error if there was an issue looking up the group membership.
  * @return {type} True if the user is a member of the developer group. False otherwise.
  */
-function isUserDeveloper(username) {
+var isUserDeveloper = function(username) {
   return isUserMemberOf(username, DEVELOPER-GROUP;
 }
 
@@ -117,6 +117,13 @@ function isUserDeveloper(username) {
  * @throws an Error if there was an issue looking up the group membership
  * @return {type} True if the user is a member of the manager group. False otherwise.
  */
-function isUserManager(username) {
-  isUserMemberOf(username, MANAGER-GROUP);
+var isUserManager = function(username) {
+  return isUserMemberOf(username, MANAGER-GROUP);
+}
+
+module.exports = {
+  authenticate: authenticate,
+  isUserAdmin: isUserAdmin,
+  isUserDeveloper: isUserDeveloper,
+  isUserManager: isUserManager
 }
