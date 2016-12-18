@@ -4,7 +4,7 @@ all: libDB appDB client server
 client: client_dependency
 	cd client && npm run watch
 server: server_dependency
-	node ./server/server.js
+	cd server && node server.js
 test: 
 	bash ./test/testDriver.sh
 appDB: 
