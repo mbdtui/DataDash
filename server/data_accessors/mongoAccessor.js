@@ -7,9 +7,6 @@ mongoose.connect(url);
 
 var db = mongoose.connection;
 db.on('error', console.error);
-db.once('open', function() {
-  console.log("connected");
-});
 
 var JournalEntry = require('./models/JournalEntry.js');
 var PendingMacro = require('./models/PendingMacro.js');
@@ -20,7 +17,7 @@ exports.createJournalEntry = function(_macroID, _macroName, _macroGroup, _author
     macroName : _macroName,
     macroGroup: _macroGroup,
     author : _author,
-    reviewwer : _reviewer,
+    reviewer : _reviewer,
     params : _params,
     emergency : _emergency
   });
@@ -59,7 +56,7 @@ exports.deleteJournalEntry = function(query){
       console.err("delete failed");
       System.exit(-1);
     }
-    
+
   });
 }
 
@@ -108,4 +105,8 @@ exports.deletePendingMacro = function(query){
       System.exit(-1);
     }
   });
+}
+
+exports.disconnect = function(){
+  mongoose.connection.close();
 }
