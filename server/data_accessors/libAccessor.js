@@ -11,7 +11,7 @@ var util = require('util');
 var resetPostgreDB = require('../lib_mockDB_loader/LibDBLoader.js').loadMockDB;
 
 // Reset database.
-// resetPostgreDB('./lib_mockDB_loader/LibDataLogs');
+// resetPostgreDB('../lib_mockDB_loader/LibDataLogs');
 
 var PostgreSQL_config = {
 	user: 'postgres',
@@ -39,6 +39,7 @@ function executeQuery(query_string, cb){
 					// console.log("Query error!");
 				}
 				else {
+
 					// console.log('Query results:');
 					// for(var i=0; i < result.rows.length; i++) {
 					// 	console.log(JSON.stringify(result.rows[i])+'\n');
@@ -53,83 +54,85 @@ function executeQuery(query_string, cb){
 // Interface for the table 'c_driver_schedule'.
 var driver_schedule = {
 	delete_all_entries_by_runname: function(run_name, cb) {
-        executeQuery('DELETE FROM c_driver_schedule WHERE run_nme=\'' + run_name + '\' RETURNING *;', cb);
+        executeQuery(`DELETE FROM c_driver_schedule WHERE run_nme='${run_name}' RETURNING *;`, cb);
 	},
 	update_schedule_starttime_by_runname_auditid: function(run_name, audit_id, schedule_start_time, cb) {
-		executeQuery('UPDATE c_driver_schedule SET schdl_start_dtm=\'' + schedule_start_time
-			+ '\' WHERE audt_id =\'' + audit_id + '\' AND run_nme=\'' + run_name + '\' RETURNING *;', cb);
+		executeQuery(`UPDATE c_driver_schedule SET schdl_start_dtm='${schedule_start_time}'
+		 WHERE audt_id ='${audit_id}' AND run_nme='${run_name}';`, cb);
 	},
 	update_status_code_by_runname_auditid: function(run_name, audit_id, status_code, cb) {
-        executeQuery('UPDATE c_driver_schedule SET stts_cd=\'' + status_code
-            + '\' WHERE audt_id =\'' + audit_id + '\' AND run_nme=\'' + run_name + '\' RETURNING *;', cb);
+        executeQuery(`UPDATE c_driver_schedule SET stts_cd='${status_code}'
+         WHERE audt_id ='${audit_id}' AND run_nme='${run_name}';`, cb);
 	},
 	update_valuation_enddate_by_runname_auditid: function(run_name, audit_id, valuation_end_date, cb) {
-        executeQuery('UPDATE c_driver_schedule SET vlutn_end_dtm=\'' + valuation_end_date
-            + '\' WHERE run_nme =\'' + run_name + '\' AND audt_id=\'' + audit_id + '\' RETURNING *;', cb);
+        executeQuery(`UPDATE c_driver_schedule SET vlutn_end_dtm='${valuation_end_date}'
+         WHERE run_nme ='${run_name}' AND audt_id='${audit_id}';`, cb);
 	},
 	update_valuation_startdate_by_runname_auditid: function(run_name, audit_id, valuation_start_date, cb) {
-        executeQuery('UPDATE c_driver_schedule SET vlutn_start_dtm=\'' + valuation_start_date
-            + '\' WHERE run_nme =\'' + run_name + '\' AND audt_id=\'' + audit_id + '\' RETURNING *;', cb);
+        executeQuery(`UPDATE c_driver_schedule SET vlutn_start_dtm='${valuation_start_date}'
+         WHERE run_nme ='${run_name}' AND audt_id='${audit_id}';`, cb);
 	},
 	update_sla_date_time_by_auditid: function(audit_id, date, time, cb) {
-        executeQuery('UPDATE c_driver_schedule SET sla_date=\'' + date
-            + '\', sla_time=\'' + time + '\' WHERE audt_id =\'' + audit_id + '\' RETURNING *;', cb);
+        executeQuery(`UPDATE c_driver_schedule SET sla_date='${date}', sla_time='${time}'
+         WHERE audt_id ='${audit_id}';`, cb);
 	},
 	update_sla_date_time_by_runname: function(run_name, date, time, cb) {
-        executeQuery('UPDATE c_driver_schedule SET sla_date=\'' + date
-            + '\', sla_time=\'' + time + '\' WHERE run_nme =\'' + run_name + '\' RETURNING *;', cb);
+        executeQuery(`UPDATE c_driver_schedule SET sla_date='${date}', sla_time='${time}'
+         WHERE run_nme ='${run_name}';`, cb);
 	},
 	update_historical_sla_date_time_by_runname: function(run_name, date, time, cb) {
-        executeQuery('UPDATE c_driver_schedule_h SET sla_date=\'' + date
-            + '\', sla_time=\'' + time + '\' WHERE run_nme =\'' + run_name + '\'', cb);
+        executeQuery(`UPDATE c_driver_schedule_h SET sla_date='${date}', sla_time='${time}'
+         WHERE run_nme ='${run_name}';`, cb);
 	}
 };
 
 // Interface for the table 'c_driver_step'.
 var driver_step = {
 	delete_all_entries_by_runname: function(run_name, cb){
-		var q = util.format("DELETE FROM c_driver_step WHERE run_nme='%s' RETURNING *;", run_name);
-		executeQuery(q, cb);
+		executeQuery(`DELETE FROM c_driver_step WHERE run_nme='${run_name}' RETURNING *;`, cb);
 	},
 	delete_all_entries_by_runname_groupnumber: function(run_name, group_number, cb){
-		executeQuery('DELETE FROM c_driver_step WHERE run_nme=\'' + run_name +
-			'\' AND grp_nbr=\'' + group_number + '\' RETURNING *;', cb);
+		executeQuery(`DELETE FROM c_driver_step WHERE run_nme='${run_name}'
+		 AND grp_nbr='${group_number}' RETURNING *;`, cb);
 	},
 	delete_all_entries_by_runname_driverstepid: function(run_name, driver_step_id, cb){
-		executeQuery('DELETE FROM c_driver_step WHERE run_nme=\'' + run_name +
-			'\' AND drvr_step_id=\'' + driver_step_id + '\' RETURNING *;', cb);
+		executeQuery(`DELETE FROM c_driver_step WHERE run_nme='${run_name}'
+		 AND drvr_step_id='${driver_step_id}' RETURNING *;`, cb);
 	},
 	update_active_step_indicator_by_driverstepid: function(driver_step_id, active_step_indicator, cb){
-		executeQuery('UPDATE c_driver_step SET actv_step_ind = ' + active_step_indicator +
-			' WHERE drvr_step_id = ' + driver_step_id + ';', cb);
+		executeQuery(`UPDATE c_driver_step SET actv_step_ind = '${active_step_indicator}'
+		 WHERE drvr_step_id = '${driver_step_id}';`, cb);
 	},
 	update_active_step_indicator_by_runname_driverstepid: function(run_name, driver_step_id, active_step_indicator, cb){
-		executeQuery('UPDATE c_driver_step SET actv_step_ind = ' + active_step_indicator +
-			' WHERE drvr_step_id = ' + driver_step_id + ' AND run_nme=\'' + run_name + '\';', cb);
+		executeQuery(`UPDATE c_driver_step SET actv_step_ind = '${active_step_indicator}'
+		 WHERE drvr_step_id = '${driver_step_id}' AND run_nme='${run_name}';`, cb);
 	},
 	update_active_step_indicator_by_runname: function(run_name, active_step_indicator, cb){
-		executeQuery('UPDATE c_driver_step SET actv_step_ind = ' + active_step_indicator +
-			' WHERE run_nme = \'' + run_name + '\';', cb);
+		executeQuery(`UPDATE c_driver_step SET actv_step_ind = '${active_step_indicator}'
+		 WHERE run_nme = '${run_name}';`, cb);
 	},
 	update_active_step_indicator_by_runname_groupnumber: function(run_name, group_number, active_step_indicator, cb){
-		executeQuery('UPDATE c_driver_step SET actv_step_ind = ' + active_step_indicator +
-			' WHERE run_nme = \'' + run_name + '\' AND grp_nbr=' + group_number + ';', cb);
+		executeQuery(`UPDATE c_driver_step SET actv_step_ind = '${active_step_indicator}'
+		 WHERE run_nme= '${run_name}' AND grp_nbr='${group_number}';`, cb);
 	},
 };
 
+driver_step.update_active_step_indicator_by_runname_driverstepid('V_2_O', 100265, 'O', (err, result) => {
+	console.log(JSON.stringify(err));
+});
 
 // Interface for the table 'c_driver_step_detail'.
 var driver_step_detail = {
 	delete_all_entries_by_runname: function(run_name, cb){
-		executeQuery('DELETE FROM c_driver_step_detail WHERE run_nme=\'' + run_name + '\' RETURNING *;', cb);
+		executeQuery(`DELETE FROM c_driver_step_detail WHERE run_nme='${run_name}' RETURNING *;`, cb);
 	},
 	update_run_status_code_by_runname_groupnumber: function(run_name, group_number, run_status_code, cb){
-		executeQuery('UPDATE c_driver_step_detail SET run_stts_cd = ' + run_status_code +
-			' WHERE run_nme = \'' + run_name + '\' AND grp_nbr=' + group_number + ';', cb);
+		executeQuery(`UPDATE c_driver_step_detail SET run_stts_cd = '${run_status_code}'
+		 WHERE run_nme = '${run_name}' AND grp_nbr='${group_number}';`, cb);
 	},
 	update_run_status_code_by_runname_driverstepdetail_id: function(run_name, driver_step_detail_id, run_status_code, cb){
-		executeQuery('UPDATE c_driver_step_detail SET run_stts_cd = ' + run_status_code +
-			' WHERE run_nme = \'' + run_name + '\' AND drvr_step_dtl_id' + driver_step_detail_id + ';', cb);
+		executeQuery(`UPDATE c_driver_step_detail SET run_stts_cd = '${run_status_code}'
+		 WHERE run_nme= '${run_name}' AND drvr_step_dtl_id='${driver_step_detail_id}';`, cb);
 	},
 };
 

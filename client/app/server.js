@@ -2,6 +2,25 @@
 //Tentative get request emulation (test)
 //Get requests - get list of macro names, get macro history info, get pending macro info
 //GetMacroData might cover all of the above (just requires handling of the data returned)
+
+export function deletePendingMacro(objectID,cb){
+  //TWO HTTPRequests one for deleting from pending and one for updating history
+  sendXHR('DELETE', '/pending_macro/' + objectID, undefined, (xhr) => {
+    // Call the callback with the data.
+    cb();
+  });
+}
+
+
+export function postJournalEntry(obj,cb){
+  obj.reviewer = "TemporaryUser"; //Replace temporaryUser with user from AD
+  sendXHR('POST', '/journal_entry', obj, (xhr) => {
+    // Call the callback with the data.
+    cb();
+  });
+}
+
+//tentative - this does nothing
 export function getMacroData(macroIDs, cb){
     var xhr = new XMLHttpRequest();
     if(true/*macroIDs is empty*/){
@@ -24,24 +43,23 @@ export function getMacroData(macroIDs, cb){
     });*/
 }
 
-export function getMacrosForTableUpdate(table_name, cb) {
-  sendXHR('GET', '/macros_for_table/' + table_name + '/update', undefined, (xhr) => {
+// Get available UPDATE macros.
+export function getMacrosAllTablesUpdate(cb) {
+  sendXHR('GET', '/macros_all_tables/update', undefined, (xhr) => {
     cb(JSON.parse(xhr.responseText));
   });
 }
 
-export function getMacrosForTableDelete(table_name, cb) {
-  sendXHR('GET', '/macros_for_table/' + table_name + '/delete', undefined, (xhr) => {
+// Get available DELETE macros.
+export function getMacrosAllTablesDelete(cb) {
+  sendXHR('GET', '/macros_all_tables/delete', undefined, (xhr) => {
     cb(JSON.parse(xhr.responseText));
   });
 }
-
 
 export function getPendingMacros(cb) {
-  console.log("Called get pending in client");
   sendXHR('GET', '/pending_macro', undefined, (xhr) => {
     // Call the callback with the data.
-    console.log(typeof(xhr.responseText));
     cb(JSON.parse(xhr.responseText));
   });
 }
@@ -55,6 +73,7 @@ export function getHistory(cb) {
   });
 }
 
+// Get data for the VIEW.
 export function getRunStatusCode(app_name, run_name, run_status_code, cb){
   sendXHR('POST', '/view_run_status_code', {
     app_name: app_name,
@@ -65,6 +84,19 @@ export function getRunStatusCode(app_name, run_name, run_status_code, cb){
   });
 }
 
+// Send UPDATE macro request to the server.
+export function requestUpdateMacroExecution(request_type, table_macro_params, cb) {
+  sendXHR('POST','/request_macro_execution/update/'+request_type, table_macro_params, (xhr) => {
+    cb(JSON.parse(xhr.responseText));
+  });
+}
+
+// Send DELETE macro request to the server.
+export function requestDeleteMacroExecution(request_type, table_macro_params, cb) {
+  sendXHR('POST','/request_macro_execution/delete/'+request_type, table_macro_params, (xhr) => {
+    cb(JSON.parse(xhr.responseText));
+  });
+}
 //Post requests - Macro requests (run/delete), View Macro Request (no approval needed)
 
 var token = 'eyJpZCI6NH0'; // <-- Put your base64'd JSON token here
