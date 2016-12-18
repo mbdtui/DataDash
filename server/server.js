@@ -156,6 +156,14 @@ app.post('/request_macro_execution/update/:request_type', function(req, res) {
 	// If the request is an emergency one.
 	if(requestType === 'emergency') {
 		console.log('Received:' + JSON.stringify(proposed_macro));
+    var emergency = false;
+    var macroType = req.body.macroType;
+    var macroParams = req.body.params;
+    var macroFunction = req.body.function_called;
+    var macroTable = req.body.table;
+    var macroName = req.body.name; //Later add to GUI macroName
+    var created_at = new Date();
+    mongoAccessor.createJournalEntry(macroName, macroType, macroTable, macroFunction, macroParams, "testUser", "testReviewer", emergency, created_at);
 		// Run update business.
 		updateBusiness.runUpdateMacro(proposed_macro, (err, result) => {
 			// If error,
@@ -192,6 +200,15 @@ app.post('/request_macro_execution/delete/:request_type', function(req, res) {
 	// If the request is an emergency one.
 	if(requestType === 'emergency') {
 		console.log('Received:' + JSON.stringify(proposed_macro));
+
+    var emergency = false;
+    var macroType = req.body.macroType;
+    var macroParams = req.body.params;
+    var macroFunction = req.body.function_called;
+    var macroTable = req.body.table;
+    var macroName = req.body.name; //Later add to GUI macroName
+    var created_at = new Date();
+    mongoAccessor.createJournalEntry(macroName, macroType, macroTable, macroFunction, macroParams, "testUser", "testReviewer", emergency, created_at);
 		deleteBusiness.runDeleteMacro(proposed_macro, (err, result) => {
 			// If error,
 			if(err) {
