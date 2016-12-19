@@ -147,7 +147,7 @@ export default class Update extends React.Component{
                     <form action="" method="post" id="update-form">
                       <h3> Table: </h3>
                       <select name="table" value={this.state.table} onChange={this.handleTableSelected} className="selectpicker options btn btn-default" data-width="75%" title="Select a table">
-                         {tables}
+                        {tables}
                       </select>
                       <h3> Update: </h3>
                       <select name="update" value={this.state.macro} onChange={this.handleMacroSelected} className="selectpicker options btn btn-default" data-width="75%" title="Select a Run Name">
@@ -163,39 +163,35 @@ export default class Update extends React.Component{
                       </center>
                     </div>
                     <div className="col-lg-12">
-                        <div className="bs-example">
-                              <button type="button" onClick={this.handleConfirmation} className="btn btn-secondary btn-lg go-btn" data-toggle="modal" data-target="#myModal">
-                                  Go
-                              </button>
-                            <div id="myModal" className="modal fade">
-                                <div className="modal-dialog">
-                                    <div className="modal-content">
-                                        <div className="modal-header">
-                                            <button type="button" className="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                            <h4 className="modal-title">Confirmation</h4>
-                                        </div>
-                                        <div className="modal-body">
-                                            <h3>Are you sure you want to perform an update with the following information?</h3>
-                                            <p><strong>Table</strong>: {this.state.selected_table}</p>
-                                            <p><strong>Marco:</strong> {this.state.selected_macro}</p>
-                                            <p id= "ModalPopup"><strong>Parameters: </strong>{this.state.request_info===null?'':                                              this.addMacroDetails(this.state.request_info.params)}</p>
-                                        </div>
-                                        <div className="modal-footer">
-                                            <button type="button" id="yes-btn" onClick={this.sendUpdate} className="btn btn-default" data-dismiss="modal">Yes</button>
-                                            <button type="button" className="btn btn-default" aria-hidden="true" data-dismiss="modal">No</button>
-                                        </div>
-                                    </div>
-                                </div>
+                      <div className="bs-example">
+                        <button type="button" onClick={this.handleConfirmation} className="btn btn-secondary btn-lg go-btn" data-toggle="modal" data-target="#myModal">Go</button>
+                        <div id="myModal" className="modal fade">
+                          <div className="modal-dialog" role="document">
+                            <div className="modal-content">
+                              <div className="modal-header">
+                                <button type="button" className="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h4 className="modal-title">Confirmation</h4>
+                              </div>
+                              <div className="modal-body">
+                                <h3>Are you sure you want to perform an update with the following information?</h3>
+                                <p><strong>Table</strong>: {this.state.selected_table}</p>
+                                <p><strong>Marco:</strong> {this.state.selected_macro}</p>
+                                <p id="ModalPopup"><strong>Parameters: </strong>{this.state.request_info===null?'':this.addMacroDetails(this.state.request_info.params)}</p>
+                              </div>
+                              <div className="modal-footer">
+                                <button type="button" id="yes-btn" onClick={this.sendUpdate} className="btn btn-default" data-dismiss="modal">Yes</button>
+                                <button type="button" className="btn btn-default" aria-hidden="true" data-dismiss="modal">No</button>
+                              </div>
                             </div>
+                          </div>
                         </div>
-
+                      </div>
                     </div>
                   </form>
                 </center>
               </div>
-
-              <div className= "col-lg-3"></div>
             </div>
+            <div className= "col-lg-3"></div>
           </div>
         </div>
       </div>
