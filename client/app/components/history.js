@@ -104,7 +104,7 @@ export default class History extends React.Component{
             <div className="col-lg-12">
               <center>
                 <Link to={"/m/view/"}>
-                  <button className="btn btn-secondary btn-lg go-btn">
+                  <button className="btn btn-secondary btn-lg .history-pending-go-back-btn">
                     Go Back
                   </button>
                 </Link>

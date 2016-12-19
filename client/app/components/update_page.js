@@ -108,11 +108,13 @@ export default class Update extends React.Component{
 
   addMacroDetails(obj){
     var keys = Object.keys(obj);
-    var message = "\n";
-    for (var i = 0; i<keys.length; i++){
-      message += keys[i] + ": " + obj[keys[i]] + "\n";
-    }
-    return message;
+    var parameterNames = Object.getOwnPropertyNames(obj);
+    var message = parameterNames.map((eachParam, i) => {
+      var param = eachParam;
+      var value = obj[eachParam];
+      return <div className="row"><div className="col-md-1"/><div key={i} className="col-md-11"><p><strong>{param}</strong>: {value}</p><br/></div></div>
+    });
+    return <div>{message}</div>;
   }
 
   render(){
@@ -173,13 +175,14 @@ export default class Update extends React.Component{
                             <div className="modal-content">
                               <div className="modal-header">
                                 <button type="button" className="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                <h4 className="modal-title">Confirmation</h4>
+                                <h4 className="modal-title"><b>CONFIRMATION</b></h4>
                               </div>
                               <div className="modal-body">
                                 <h3>Are you sure you want to perform an update with the following information?</h3>
                                 <p><strong>Table</strong>: {this.state.selected_table}</p>
                                 <p><strong>Marco:</strong> {this.state.selected_macro}</p>
-                                <p id="ModalPopup"><strong>Parameters: </strong>{this.state.request_info===null?'':this.addMacroDetails(this.state.request_info.params)}</p>
+                                <p id="ModalPopup"><strong>Parameters: </strong></p><br/>
+                                {this.state.request_info===null?'':this.addMacroDetails(this.state.request_info.params)}
                               </div>
                               <div className="modal-footer">
                                 <button type="button" id="yes-btn" onClick={this.sendUpdate} className="btn btn-default" data-dismiss="modal">Yes</button>
