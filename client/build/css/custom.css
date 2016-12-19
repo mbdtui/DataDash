@@ -174,8 +174,21 @@ body {
 }
 
 .go-btn:hover{
-  border-color: #3F51B5 !important;
-  border: 5px solid;
+  background-color: #d6d6d6;
+  color: black !important;
+}
+
+.history-pending-go-back-btn{
+  background-color: #EEEEEE;
+  color: black !important;
+  width: 50%;
+  margin-top: 45px;
+  font-size: 1.5em;
+  transition: border-color 2s;
+}
+
+.history-pending-go-back-btn:hover{
+  background-color: #d6d6d6;
   color: black !important;
 }
 
@@ -183,7 +196,7 @@ input[type=text]{
   transition: border-color 1.5s;
 }
 input[type=text]:focus{
-  border-color: #3F51B5 !important;
+  border-color: #F5C314 !important;
   border: 3px solid;
   border-left-width: 30px;
 }
@@ -201,10 +214,10 @@ input[type=text]:focus{
   display: inline;
 }
 
-.bypass-check{
-  margin-bottom: 10px;
-}
 
+.selectpicker{
+  box-shadow: 0px 5px 3px white !important;
+}
 
 table {
     margin-top: 2.5%;
