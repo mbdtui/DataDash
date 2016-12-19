@@ -9,13 +9,17 @@ export default class Delete extends React.Component{
       selected_table: '',
       selected_macro: '',
       emergency_check: true,
-      macros_all_tables: null
+      macros_all_tables: null,
+      request_info: null,
+      result_message: null
     };
     this.sendUpdate = this.sendUpdate.bind(this);
     this.handleTableSelected = this.handleTableSelected.bind(this);
     this.handleMacroSelected = this.handleMacroSelected.bind(this);
     this.handleParameterChanged = this.handleParameterChanged.bind(this);
     this.handleCheckboxClicked = this.handleCheckboxClicked.bind(this);
+    this.handleConfirmation = this.handleConfirmation.bind(this);
+    this.handleReadResult = this.handleReadResult.bind(this);
   }
 
   componentDidMount(){
@@ -78,7 +82,59 @@ export default class Delete extends React.Component{
     };
     console.log(JSON.stringify(proposed_macro));
     requestDeleteMacroExecution(request_type, proposed_macro, (result) => {
-      console.log(JSON.stringify(result));
+      if(result.status == 'error'){
+        console.log(JSON.stringify(result.error));
+        this.setState({
+          result_message: {
+            type:'error',
+            msg: 'Your requested macro has failed to execute! Check your input data!'
+          }
+        });
+      }
+      else {
+        console.log(JSON.stringify(result.result));
+        this.setState({
+          result_message: {
+            type:'success',
+            msg: 'Your requested macro has executed successfullly!'
+          }
+        })
+      }
+    });
+  }
+
+  handleConfirmation(){
+    var request_type;
+    if(this.state.emergency_check) {
+      request_type = 'emergency';
+    } else {
+      request_type = 'peer_review';
+    }
+    var proposed_macro = {
+      request_type: request_type,
+      table: this.state.selected_table,
+      function_called: this.state.selected_macro,
+      params: this.state.macros_all_tables[this.state.selected_table][this.state.selected_macro]
+    };
+    this.setState({
+      request_info: proposed_macro
+    });
+  }
+
+  addMacroDetails(obj){
+    var keys = Object.keys(obj);
+    var parameterNames = Object.getOwnPropertyNames(obj);
+    var message = parameterNames.map((eachParam, i) => {
+      var param = eachParam;
+      var value = obj[eachParam];
+      return <div className="row" key={i}><div className="col-xs-1"/><div className="col-xs-11"><p><strong>{param}</strong>: {value}</p><br/></div></div>
+    });
+    return <div>{message}</div>;
+  }
+
+  handleReadResult(){
+    this.setState({
+      result_message: null
     });
   }
 
@@ -99,14 +155,42 @@ export default class Delete extends React.Component{
         if (this.state.selected_macro !== '') {
           var parameterNames = Object.getOwnPropertyNames(this.state.macros_all_tables[this.state.selected_table][this.state.selected_macro]);
           parameters = parameterNames.map((eachParameter, i) => {
-            return <input key={i} id={eachParameter} onChange={this.handleParameterChanged} type="text" name="by-two" className="form-control" placeholder={eachParameter} aria-describedby="basic-addon1" />
+            return <input key={i} id={eachParameter} className="param-input" onChange={this.handleParameterChanged} type="text" name="by-two" className="form-control" placeholder={eachParameter} aria-describedby="basic-addon1" />
           });
         }
       }
     };
+    var execution_result = "No message";
+    if(this.state.result_message !== null) {
+      var result = this.state.result_message;
+      if(result.type == 'error') {
+        execution_result = <div className="alert alert-danger" role="alert"><img className="gordon" src="./img/gordon.jpg" height="40px" width="40px"/>{result.msg}</div>
+      }
+      else if(result.type == 'success') {
+        execution_result = <div className="alert alert-success" role="alert"><img className="gordon" src="./img/gordon.jpg" height="40px" width="40px"/>{result.msg}</div>
+      }
+      $("#execution-result").modal("show");
+    }
 
+        // <button type="button" className="btn btn-primary btn-lg" data-toggle="modal" data-target="#execution-result">Launch demo modal</button>
     return(
       <div id="wrapper">
+        <div className="modal fade" id="execution-result" role="dialog">
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 className="modal-title" id="myModalLabel">MACRO EXECUTION RESULT</h4>
+              </div>
+              <div className="modal-body">
+                {execution_result}
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-default" data-dismiss="modal" onClick={this.handleReadResult}>Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
         <div id="page-content-wrapper">
           <div className="container-fluid">
             <div className="row">
@@ -117,7 +201,7 @@ export default class Delete extends React.Component{
                     <form action="" method="post" id="update-form">
                       <h3> Table: </h3>
                       <select name="table" value={this.state.table} onChange={this.handleTableSelected} className="selectpicker options btn btn-default" data-width="75%" title="Select a table">
-                         {tables}
+                        {tables}
                       </select>
                       <h3> Update: </h3>
                       <select name="update" value={this.state.macro} onChange={this.handleMacroSelected} className="selectpicker options btn btn-default" data-width="75%" title="Select a Run Name">
@@ -133,14 +217,36 @@ export default class Delete extends React.Component{
                       </center>
                     </div>
                     <div className="col-lg-12">
-                      <a href="#" role="button" onClick={this.sendUpdate} className="btn btn-secondary btn-lg go-btn">Go</a>
+                      <div className="bs-example">
+                        <button type="button" onClick={this.handleConfirmation} className="btn btn-secondary btn-lg go-btn" data-toggle="modal" data-target="#myMyDelete">Go</button>
+                        <div id="myMyDelete" className="modal fade">
+                          <div className="modal-dialog" role="document">
+                            <div className="modal-content">
+                              <div className="modal-header">
+                                <button type="button" className="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h4 className="modal-title"><b>CONFIRMATION</b></h4>
+                              </div>
+                              <div className="modal-body">
+                                <h3>Are you sure you want to perform a deletion with the following information?</h3>
+                                <p><strong>Table</strong>: {this.state.selected_table}</p>
+                                <p><strong>Marco:</strong> {this.state.selected_macro}</p>
+                                <p id="ModalPopup"><strong>Parameters: </strong></p><br/>
+                                {this.state.request_info===null?'':this.addMacroDetails(this.state.request_info.params)}
+                              </div>
+                              <div className="modal-footer">
+                                <button type="button" id="yes-btn" onClick={this.sendUpdate} className="btn btn-default" data-dismiss="modal">Yes</button>
+                                <button type="button" className="btn btn-default" aria-hidden="true" data-dismiss="modal">No</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </form>
                 </center>
               </div>
-
-              <div className= "col-lg-3"></div>
             </div>
+            <div className= "col-lg-3"></div>
           </div>
         </div>
       </div>

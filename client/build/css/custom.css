@@ -42,7 +42,7 @@ body {
   margin-top: 20px;
 }
 
-.gordon{		
+.gordon{
   border-color: #FFF !important;
   border: 3px solid;
   margin-right: 20px;
@@ -190,11 +190,13 @@ body {
   margin-top: 45px;
   font-size: 1.5em;
   transition: border-color 2s;
+  margin-bottom: 30px;
 }
 
 .history-pending-go-back-btn:hover{
   background-color: #d6d6d6;
   color: black !important;
+    margin-bottom: 30px;
 }
 
 input[type=text]{

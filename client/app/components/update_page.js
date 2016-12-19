@@ -97,7 +97,7 @@ export default class Update extends React.Component{
             type:'success',
             msg: 'Your requested macro has executed successfullly!'
           }
-        })     
+        })
       }
     });
   }
