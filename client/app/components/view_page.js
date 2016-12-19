@@ -33,12 +33,13 @@ export default class View extends React.Component{
     // if(runStatusCode.length === 0){
     //   runStatusCode = null;
     // }
-    // var app_name = 'EDW';//app_name,
-    var app_name = appName;//app_name,
-    // var run_name = 'S_2_O_CL_FA_ISO_NRT';//run_name,
+    var app_name = appName;
+    app_name = 'EDW';
     var run_name = runName;
-    // var run_status_code = null;//run_status_code
+    run_name = 'S_2_O_CLAIMS_CL_CNTR_NRT';
     var run_status_code = runStatusCode;
+    run_status_code = null;
+    
     if(runStatusCode == "") {
       run_status_code = null;
     }
