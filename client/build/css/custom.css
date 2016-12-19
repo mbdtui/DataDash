@@ -42,7 +42,7 @@ body {
   margin-top: 20px;
 }
 
-.gordon{
+.gordon{		
   border-color: #FFF !important;
   border: 3px solid;
   margin-right: 20px;
@@ -228,6 +228,7 @@ table {
     margin-top: 2.5%;
     margin-bottom: 5%;
     font-family: arial, sans-serif;
+    font-size: small;
     border-collapse: collapse;
     width: 100%;
 }
@@ -252,11 +253,14 @@ h2 {
   overflow-y: scroll;
   height: 500px;
 }
+
 #view-table {
-    height: 100%;
-    width: 100%;
-    overflow: auto;
+  margin-top: 10px;
+  max-height: 1000px;
+  width: 100%;
+  overflow: auto;
 }
+
 
 #app-name{
   padding-top: 0px !important;
