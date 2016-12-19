@@ -39,7 +39,7 @@ export default class View extends React.Component{
     run_name = 'S_2_O_CLAIMS_CL_CNTR_NRT';
     var run_status_code = runStatusCode;
     run_status_code = null;
-    
+
     if(runStatusCode == "") {
       run_status_code = null;
     }
@@ -70,7 +70,11 @@ export default class View extends React.Component{
         <div id="page-content-wrapper">
           <div className="container-fluid">
             <div className="row">
-              <div  id="view-table" onscroll="scrollFunction()"><Table result={this.state.result}/></div>
+              <div  id="view-table" onscroll="scrollFunction()">
+                <div id="content">
+                <Table result={this.state.result}/>
+                </div>
+              </div>
             </div>
             <div className="row">
               <div className= "col-lg-3"></div>
