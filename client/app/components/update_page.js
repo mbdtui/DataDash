@@ -10,7 +10,8 @@ export default class Update extends React.Component{
       selected_macro: '',
       emergency_check: true,
       macros_all_tables: null,
-      request_info: null
+      request_info: null,
+      result_message: null,
     };
     this.sendUpdate = this.sendUpdate.bind(this);
     this.handleTableSelected = this.handleTableSelected.bind(this);
@@ -18,6 +19,7 @@ export default class Update extends React.Component{
     this.handleParameterChanged = this.handleParameterChanged.bind(this);
     this.handleCheckboxClicked = this.handleCheckboxClicked.bind(this);
     this.handleConfirmation = this.handleConfirmation.bind(this);
+    this.handleReadResult = this.handleReadResult.bind(this);
   }
   componentDidMount(){
     console.log('Component Mounted');
@@ -80,11 +82,22 @@ export default class Update extends React.Component{
     console.log(JSON.stringify(proposed_macro));
     requestUpdateMacroExecution(request_type, proposed_macro, (result) => {
       if(result.status == 'error'){
-        alert('Query failed to execute! Check your input data!');
         console.log(JSON.stringify(result.error));
+        this.setState({
+          result_message: {
+            type:'error',
+            msg: 'Your requested macro has failed to execute! Check your input data!'
+          }
+        });
       }
       else {
-        console.log(JSON.stringify(result.result));        
+        console.log(JSON.stringify(result.result));
+        this.setState({
+          result_message: {
+            type:'success',
+            msg: 'Your requested macro has executed successfullly!'
+          }
+        })     
       }
     });
   }
@@ -112,9 +125,15 @@ export default class Update extends React.Component{
     var message = parameterNames.map((eachParam, i) => {
       var param = eachParam;
       var value = obj[eachParam];
-      return <div className="row"><div className="col-md-1"/><div key={i} className="col-md-11"><p><strong>{param}</strong>: {value}</p><br/></div></div>
+      return <div className="row" key={i}><div className="col-xs-1"/><div className="col-xs-11"><p><strong>{param}</strong>: {value}</p><br/></div></div>
     });
     return <div>{message}</div>;
+  }
+
+  handleReadResult(){
+    this.setState({
+      result_message: null
+    });
   }
 
   render(){
@@ -139,9 +158,37 @@ export default class Update extends React.Component{
         }
       }
     };
+    var execution_result = "No message";
+    if(this.state.result_message !== null) {
+      var result = this.state.result_message;
+      if(result.type == 'error') {
+        execution_result = <div className="alert alert-danger" role="alert"><img className="gordon" src="./img/gordon.jpg" height="40px" width="40px"/>{result.msg}</div>
+      }
+      else if(result.type == 'success') {
+        execution_result = <div className="alert alert-success" role="alert"><img className="gordon" src="./img/gordon.jpg" height="40px" width="40px"/>{result.msg}</div>
+      }
+      $("#execution-result").modal("show");
+    }
 
+        // <button type="button" className="btn btn-primary btn-lg" data-toggle="modal" data-target="#execution-result">Launch demo modal</button>
     return(
       <div id="wrapper">
+        <div className="modal fade" id="execution-result" role="dialog">
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 className="modal-title" id="myModalLabel">MACRO EXECUTION RESULT</h4>
+              </div>
+              <div className="modal-body">
+                {execution_result}
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-default" data-dismiss="modal" onClick={this.handleReadResult}>Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
         <div id="page-content-wrapper">
           <div className="container-fluid">
             <div className="row">

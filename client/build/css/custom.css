@@ -42,6 +42,11 @@ body {
   margin-top: 20px;
 }
 
+.gordon{
+  border-color: #FFF !important;
+  border: 3px solid;
+  margin-right: 20px;
+}
 
 #logo{
   width: 40%;
