@@ -3,8 +3,8 @@
  */
 
 var token = null;
-// User document for the currently logged-in user.
 var user = null;
+var group = null;
 
 /**
  * Get the token of the currently authenticated user.
@@ -16,22 +16,16 @@ export function getToken() {
   return null;
 }
 
-/**
- * Get the user ID of the currently authenticated user.
- */
-export function getUserId() {
+export function getUsername() {
   if (isUserLoggedIn()) {
-    return user._id;
+    return user;
   }
   return null;
 }
 
-/**
- * Get the full name of the currently authenticated user.
- */
-export function getUserFullName() {
+export function getGroup() {
   if (isUserLoggedIn()) {
-    return user.fullName;
+    return group;
   }
   return null;
 }
@@ -39,8 +33,9 @@ export function getUserFullName() {
 /**
  * Update the token and user document of the currently authenticated user.
  */
-export function updateCredentials(newUser, newToken) {
+export function updateCredentials(newUser, newGroup, newToken) {
   token = newToken;
+  group = newGroup;
   user = newUser;
 }
 
@@ -58,5 +53,6 @@ export function isUserLoggedIn() {
  */
 export function logout() {
   token = null;
+  group = null;
   user = null;
 }
