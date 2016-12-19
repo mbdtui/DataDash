@@ -1,5 +1,5 @@
 import React from 'react';
-import {Link} from 'react-router';
+import { Router } from 'react-router';
 import {login} from '../server';
 
 export default class Login extends React.Component{
@@ -10,6 +10,13 @@ export default class Login extends React.Component{
       submitted: false,
       username: "",
       password: ""
+    };
+  }
+
+  // Allow us to redirect after login
+  static get contextTypes() {
+    return {
+      router: React.PropTypes.object.isRequired,
     };
   }
 
@@ -32,24 +39,22 @@ export default class Login extends React.Component{
     this.setState({
       submitted: true
     });
-    login(this.state.username, this.state.password, (success) => {
-      if (success) {
+    login(this.state.username, this.state.password, (xhr) => {
+      if (!xhr.error) {
         this.setState({
           username: "",
           password: "",
           failedAttempt: false,
           submitted: false
         });
-        console.log("User login succeeded");
-        // User logged in: navigate to /
-        this.context.router.push({ pathname: "/" });
+        this.context.router.push('/m');
       } else {
         // Invalid password or email address. Display message to user.
-        console.log("User login failed");
         this.setState({
           failedAttempt: true,
           submitted: false
         });
+        alert(xhr.error);
       }
     })
   }
@@ -72,9 +77,7 @@ export default class Login extends React.Component{
                 <h3>Password:</h3>
                 <input type="password" className="form-control" id="pwd" value={this.state.password} onChange={(e) => this.handlePasswordChange(e)} />
                 <center>
-                  <Link to={"/m/"}>
-                    <button className = "btn btn-secondary btn-lg log-in-btn" onClick={(e) => this.handleSignIn(e)} >Login</button>
-                  </Link>
+                  <button className = "btn btn-secondary btn-lg log-in-btn" onClick={(e) => this.handleSignIn(e)} >Login</button>
                 </center>
               </div>
             </div>

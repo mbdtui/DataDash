@@ -70,11 +70,11 @@ export function login(username, password, cb) {
     // Success callback: Login succeeded.
     var authData = JSON.parse(xhr.responseText);
     // Update credentials and indicate success via the callback!
-    updateCredentials(authData.user, authData.token);
-    cb(true);
-  }, () => {
+    updateCredentials(authData.username, authData.group, authData.token);
+    cb(authData);
+  }, (xhr) => {
     // Error callback: Login failed.
-    cb(false);
+    cb(JSON.parse(xhr.responseText));
   });
 }
 
@@ -94,7 +94,7 @@ export function requestDeleteMacroExecution(request_type, table_macro_params, cb
 //Post requests - Macro requests (run/delete), View Macro Request (no approval needed)
 
 //send xml http request helper method
-function sendXHR(verb, resource, body, cb) {
+function sendXHR(verb, resource, body, cb, errorCb) {
   var xhr = new XMLHttpRequest();
   xhr.open(verb, resource);
   xhr.setRequestHeader('Authorization', 'Bearer ' + getToken());
@@ -108,6 +108,10 @@ function sendXHR(verb, resource, body, cb) {
       cb(xhr);
     } else {
       // Client/Server Error with potential response text
+      if (errorCb) {
+        // We were given a custom error handler.
+        errorCb(xhr); //pass the data back to the error callback
+      }
       var responseText = xhr.responseText;
       console.log('Could not ' + verb + " " + resource + ": Received " + statusCode + " " + statusText + ": " + responseText);
     }

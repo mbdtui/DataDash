@@ -19,27 +19,42 @@ app.use(bodyParser.json());
 app.use(express.static('../client/build'));
 
   app.post('/login', function(req, res) {
+    // TODO error handling for when ActiveDirectory is unreachable
+    // TODO check that the user is not already logged in
+    // TODO code cleanup. could make this into a series of if blocks instead of nested code
+    // TODO use user module instead of data accessor code
     var loginData = req.body;
-    var user = loginData.username;
+    var username = loginData.username;
     var pw = loginData.password;
-    console.log("POST to /login. user: " + user + " pass: " + pw);
-    // TODO return user group
-    // TODO remove console.log messages
-    if (auth.authenticate(user, pw)) {
-      // Successful login!
-      // Create a token that is valid for a week.
-      jwt.sign({ username: user }, secretKey, { expiresIn: "7 days" }, function(token) {
-        // We have the token.
-        console.log("Key generated");
-        // Send the user document and the token to the client.
-        res.send({
-          user: user,
-          token: token
+    var group = null;
+
+    if (auth.authenticate(username, pw)) {
+      // password and username were correct
+      group = auth.getUserGroup(username);
+      if (group != null) {
+        // authorized
+        jwt.sign({ username: username,
+                   group: group
+                 }, secretKey, { expiresIn: "7 days" }, function(token) {
+          // We have the token.
+          // Send the user, group and the token to the client.
+          res.send({
+            username: username,
+            group: group,
+            token: token
+          });
         });
-      });
+      }
+      else {
+        res.status(401).send({
+          error : 'User is not authorized to use DataDash'
+        });
+      }
     }
     else {
-      res.status(401).end();
+      res.status(401).send({
+        error : 'Credentials are incorrect'
+      });
     }
   });
 
@@ -199,7 +214,7 @@ app.post('/request_macro_execution/update/:request_type', function(req, res) {
 				// send raw error to client.
 				res.send({status:'error', error:err});
 			} else {
-				res.send({status:'success', result:result});				
+				res.send({status:'success', result:result});
 			}
 		});
 	}
@@ -221,7 +236,7 @@ app.post('/request_macro_execution/update/:request_type', function(req, res) {
 				// send raw error to client.
 				res.send({status:'error', error:err});
 			} else {
-				res.send({status:'success', result:result});				
+				res.send({status:'success', result:result});
 			}
 		});
   }
@@ -272,7 +287,7 @@ app.post('/request_macro_execution/delete/:request_type', function(req, res) {
 				// send raw error to client.
 				res.send({status:'error', error:err});
 			} else {
-				res.send({status:'success', result:result});				
+				res.send({status:'success', result:result});
 			}
 		});
 	}
@@ -291,7 +306,7 @@ app.post('/request_macro_execution/delete/:request_type', function(req, res) {
 				// send raw error to client.
 				res.send({status:'error', error:err});
 			} else {
-				res.send({status:'success', result:result});				
+				res.send({status:'success', result:result});
 			}
 		});
   }
