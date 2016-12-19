@@ -181,7 +181,7 @@ export default class Update extends React.Component{
                                             <p id= "ModalPopup"><strong>Parameters: </strong>{this.state.request_info===null?'':                                              this.addMacroDetails(this.state.request_info.params)}</p>
                                         </div>
                                         <div className="modal-footer">
-                                            <button type="button" onClick={this.sendUpdate} className="btn btn-default" data-dismiss="modal">Yes</button>
+                                            <button type="button" id="yes-btn" onClick={this.sendUpdate} className="btn btn-default" data-dismiss="modal">Yes</button>
                                             <button type="button" className="btn btn-default" aria-hidden="true" data-dismiss="modal">No</button>
                                         </div>
                                     </div>
