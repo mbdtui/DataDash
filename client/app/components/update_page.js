@@ -19,9 +19,6 @@ export default class Update extends React.Component{
     this.handleCheckboxClicked = this.handleCheckboxClicked.bind(this);
     this.handleConfirmation = this.handleConfirmation.bind(this);
   }
-
-
-
   componentDidMount(){
     console.log('Component Mounted');
     getMacrosAllTablesUpdate((macros_all_tables) => {
@@ -82,7 +79,13 @@ export default class Update extends React.Component{
     };
     console.log(JSON.stringify(proposed_macro));
     requestUpdateMacroExecution(request_type, proposed_macro, (result) => {
-      console.log(JSON.stringify(result));
+      if(result.status == 'error'){
+        alert('Query failed to execute! Check your input data!');
+        console.log(JSON.stringify(result.error));
+      }
+      else {
+        console.log(JSON.stringify(result.result));        
+      }
     });
   }
   handleConfirmation(){
@@ -129,7 +132,7 @@ export default class Update extends React.Component{
         if (this.state.selected_macro !== '') {
           var parameterNames = Object.getOwnPropertyNames(this.state.macros_all_tables[this.state.selected_table][this.state.selected_macro]);
           parameters = parameterNames.map((eachParameter, i) => {
-            return <input key={i} id={eachParameter} onChange={this.handleParameterChanged} type="text" name="by-two" className="form-control" placeholder={eachParameter} aria-describedby="basic-addon1" />
+            return <input key={i} id={eachParameter} className="param-input" onChange={this.handleParameterChanged} type="text" name="by-two" className="form-control" placeholder={eachParameter} aria-describedby="basic-addon1" />
           });
         }
       }
@@ -164,8 +167,8 @@ export default class Update extends React.Component{
                     </div>
                     <div className="col-lg-12">
                       <div className="bs-example">
-                        <button type="button" onClick={this.handleConfirmation} className="btn btn-secondary btn-lg go-btn" data-toggle="modal" data-target="#myModal">Go</button>
-                        <div id="myModal" className="modal fade">
+                        <button type="button" onClick={this.handleConfirmation} className="btn btn-secondary btn-lg go-btn" data-toggle="modal" data-target="#myMy">Go</button>
+                        <div id="myMy" className="modal fade">
                           <div className="modal-dialog" role="document">
                             <div className="modal-content">
                               <div className="modal-header">

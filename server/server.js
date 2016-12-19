@@ -197,9 +197,10 @@ app.post('/request_macro_execution/update/:request_type', function(req, res) {
 			// If error,
 			if(err) {
 				// send raw error to client.
-				res.send(err);
+				res.send({status:'error', error:err});
+			} else {
+				res.send({status:'success', result:result});				
 			}
-			res.send(result);
 		});
 	}
   else if(requestType === 'approved_peer_review'){
@@ -218,9 +219,10 @@ app.post('/request_macro_execution/update/:request_type', function(req, res) {
 			// If error,
 			if(err) {
 				// send raw error to client.
-				res.send(err);
+				res.send({status:'error', error:err});
+			} else {
+				res.send({status:'success', result:result});				
 			}
-			res.send(result);
 		});
   }
 	// else if it is a peer review one.
@@ -268,9 +270,10 @@ app.post('/request_macro_execution/delete/:request_type', function(req, res) {
 			// If error,
 			if(err) {
 				// send raw error to client.
-				res.send(err);
+				res.send({status:'error', error:err});
+			} else {
+				res.send({status:'success', result:result});				
 			}
-			res.send(result);
 		});
 	}
   else if(requestType === 'approved_peer_review'){
@@ -286,9 +289,10 @@ app.post('/request_macro_execution/delete/:request_type', function(req, res) {
 			// If error,
 			if(err) {
 				// send raw error to client.
-				res.send(err);
+				res.send({status:'error', error:err});
+			} else {
+				res.send({status:'success', result:result});				
 			}
-			res.send(result);
 		});
   }
 	// else if it is a peer review one.

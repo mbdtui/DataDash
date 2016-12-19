@@ -33,12 +33,15 @@ export default class View extends React.Component{
     // if(runStatusCode.length === 0){
     //   runStatusCode = null;
     // }
-    var app_name = 'EDW';//app_name,
-    //var app_name = appName;//app_name,
-    var run_name = 'S_2_O_CL_FA_ISO_NRT';//run_name,
-    //var run_name = runName;
-    var run_status_code = null;//run_status_code
-    //var run_status_code = runStatusCode;
+    // var app_name = 'EDW';//app_name,
+    var app_name = appName;//app_name,
+    // var run_name = 'S_2_O_CL_FA_ISO_NRT';//run_name,
+    var run_name = runName;
+    // var run_status_code = null;//run_status_code
+    var run_status_code = runStatusCode;
+    if(runStatusCode == "") {
+      run_status_code = null;
+    }
     getRunStatusCode(app_name, run_name, run_status_code, (result) => {
       // console.log(JSON.stringify(result));
       var headers = [];
@@ -66,11 +69,11 @@ export default class View extends React.Component{
         <div id="page-content-wrapper">
           <div className="container-fluid">
             <div className="row">
-            <div  id="view-table" onscroll="scrollFunction()"><Table result={this.state.result}/></div>
+              <div  id="view-table" onscroll="scrollFunction()"><Table result={this.state.result}/></div>
+            </div>
+            <div className="row">
               <div className= "col-lg-3"></div>
               <div className= "col-lg-6">
-
-
                   <div className="input-group">
                     <center>
                       <form action="" method="post" id="view-form">
@@ -84,8 +87,6 @@ export default class View extends React.Component{
                       </form>
                     </center>
                   </div>
-
-
               </div>
               <div className= "col-lg-3"></div>
             </div>

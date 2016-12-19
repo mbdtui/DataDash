@@ -4,7 +4,6 @@ body {
   padding-right: 15%;
   padding-left: 15%;
 }
-
 .input-group h3{
   text-align: left;
   padding-top: 45px;
@@ -170,12 +169,23 @@ body {
   color: black !important;
   width: 100%;
   margin-top: 45px;
+  font-size: 1.5em;
+  transition: border-color 2s;
 }
 
 .go-btn:hover{
-
+  border-color: #3F51B5 !important;
+  border: 5px solid;
   color: black !important;
+}
 
+input[type=text]{
+  transition: border-color 1.5s;
+}
+input[type=text]:focus{
+  border-color: #3F51B5 !important;
+  border: 3px solid;
+  border-left-width: 30px;
 }
 
 .update-view-panel{
@@ -210,9 +220,9 @@ td, th {
     padding: 8px;
 }
 
-tr:nth-child(even) {
+/*tr:nth-child(even) {
     background-color: #dddddd;
-}
+}*/
 
 h2 {
   font-weight: bold;
