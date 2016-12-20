@@ -9,7 +9,7 @@ export default class Update extends React.Component{
     this.state = {
       selected_table: '',
       selected_macro: '',
-      emergency_check: true,
+      emergency_check: false,
       macros_all_tables: null,
       request_info: null,
       result_message: null,
