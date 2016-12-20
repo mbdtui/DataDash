@@ -329,6 +329,7 @@ app.post('/request_macro_execution/delete/:request_type', function(req, res) {
     var macroTable = req.body.table;
     var macroName = req.body.name; //Later add to GUI macroName
     mongoAccessor.createPendingMacro(/*macroID,*/ macroName, macroType, macroTable, macroFunction, user, macroParams, emergency);
+    mailUtil.sendMail("SOME EMAIL GOES HERE", req.body, function(){});
 		res.status(200).end();
 	}
 	// else it is an invalid request.
