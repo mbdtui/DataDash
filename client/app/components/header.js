@@ -1,18 +1,18 @@
 import React from 'react';
 import { Link} from 'react-router';
-import {isUserLoggedIn, getUsername, getGroup} from '../credentials.js'
-import { IndexRoute, Router, Route, hashHistory, IndexRedirect } from 'react-router';
+import {isUserLoggedIn, getUsername, getGroup, logout} from '../credentials.js'
+import { hashHistory } from 'react-router';
 
 export default class Header extends React.Component{
 //consider putting col-lg-12 and header divs in app.js component
   // TODO add code to redirect user to login page if not logged in
 
-  /*constructor(props) {
+  constructor(props) {
     super();
     if (isUserLoggedIn() === false){
       hashHistory.push('/login');
     }
-  }*/
+  }
 
   handleLogoutClick(e) {
     logout();

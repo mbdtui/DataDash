@@ -8,10 +8,7 @@ export default class Pending extends React.Component{
 
   constructor(props) {
     super();
-    /*if (isUserLoggedIn() === false){
-      hashHistory.push('/login');
-      return;
-    }*/
+    
     this.state = {
       contents: [],
       result_message: null
