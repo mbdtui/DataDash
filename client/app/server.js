@@ -14,7 +14,6 @@ export function deletePendingMacro(objectID,cb){
 
 
 export function postJournalEntry(obj,cb){
-  obj.reviewer = "TemporaryUser"; //Replace temporaryUser with user from AD
   sendXHR('POST', '/journal_entry', obj, (xhr) => {
     // Call the callback with the data.
     cb();

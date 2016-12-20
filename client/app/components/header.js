@@ -13,7 +13,6 @@ export default class Header extends React.Component{
   render(){
     var username = getUsername();
     var group = getGroup();
-    
     return(
       <div className="col-lg-12">
         <div className="header">

@@ -9,6 +9,7 @@ var viewBusiness = require('./viewBusiness');
 var deleteBusiness = require('./deleteBusiness');
 var bcrypt = require('bcryptjs');
 var jwt = require('jsonwebtoken');
+var mailUtil = require('./api/mailUtil');
 var secretKey = "7d672134-7365-40d8-acd6-ca6a82728471";
 var app = express();
 
@@ -58,7 +59,7 @@ app.use(express.static('../client/build'));
     }
   });
 
-
+/*
 app.get('/macro', function (req, res){
     res.send(getMacroData());
 });
@@ -66,7 +67,7 @@ app.get('/macro', function (req, res){
 //get all macro ids. comma separated list.
 app.get('/macro/:macroid', function(req, res){
     res.send(getMacroData(req.params.macroid));
-});
+});*/
 
 app.get('/macros_all_tables/delete', function(req, res) {
 	var macros_delete = {
@@ -162,13 +163,13 @@ app.get('/pending_macro', function(req, res){
 });
 
 
-//Test functions for inserting mock data
+/*//Test functions for inserting mock data
 app.post('/create_pending/:pendinginfo', function(req, res){
   res.send(postMacroData(req.params.pendinginfo));
 });
 app.post('/create_journal/:journalinfo', function(req, res){
   res.send(postJournalEntry(req.params.journalinfo));
-});
+});*/
 
 //
 app.get('/journal_entry', function(req, res){
@@ -196,6 +197,8 @@ app.post('/view_run_status_code', function(req, res) {
 app.post('/request_macro_execution/update/:request_type', function(req, res) {
 	var requestType = req.params.request_type;
 	var proposed_macro = req.body;
+  var user = req.body.user;
+  var group = req.body.group;
 	// If the request is an emergency one.
 	if(requestType === 'emergency') {
 		console.log('Received:' + JSON.stringify(proposed_macro));
@@ -205,8 +208,7 @@ app.post('/request_macro_execution/update/:request_type', function(req, res) {
     var macroFunction = req.body.function_called;
     var macroTable = req.body.table;
     var macroName = "";//Remove this later
-    var created_at = new Date();
-    mongoAccessor.createJournalEntry(macroName, macroType, macroTable, macroFunction, macroParams, "testUser", "testReviewer", emergency, created_at);
+    mongoAccessor.createJournalEntry(macroName, macroType, macroTable, macroFunction, macroParams, user, "EMERGENCY OVERRIDE", emergency, new Date());
 		// Run update business.
 		updateBusiness.runUpdateMacro(proposed_macro, (err, result) => {
 			// If error,
@@ -227,8 +229,13 @@ app.post('/request_macro_execution/update/:request_type', function(req, res) {
     var macroFunction = req.body.function_called;
     var macroTable = req.body.table;
     var macroName = "";//Remove this later
-    var created_at = new Date();
-    mongoAccessor.createJournalEntry(macroName, macroType, macroTable, macroFunction, macroParams, "testUser", "testReviewer", emergency, created_at);
+    var created_at = new Date(req.body.created_at); //depends
+    var creator = req.body.creator;
+    console.log("Creator is " + creator);
+    console.log("Reviewer is " + user);
+    console.log("Date is " + created_at);
+                                                                                                  //creator, reviewer
+    mongoAccessor.createJournalEntry(macroName, macroType, macroTable, macroFunction, macroParams, creator, user, emergency, created_at);
 		// Run update business.
 		updateBusiness.runUpdateMacro(proposed_macro, (err, result) => {
 			// If error,
@@ -241,6 +248,7 @@ app.post('/request_macro_execution/update/:request_type', function(req, res) {
 		});
   }
 	// else if it is a peer review one.
+  //send email
 	else if(requestType === 'peer_review'){
 		// Peer review request.
     //Create entry in the pending macros table
@@ -250,8 +258,9 @@ app.post('/request_macro_execution/update/:request_type', function(req, res) {
     var macroFunction = req.body.function_called;
     var macroTable = req.body.table;
     var macroName = req.body.name; //Later add to GUI macroName
-    mongoAccessor.createPendingMacro(/*macroID,*/ macroName, macroType, macroTable, macroFunction, "TestUser", macroParams, emergency);
-		res.send({status:'wait', msg:'Macro Queued'});
+    mongoAccessor.createPendingMacro(/*macroID,*/ macroName, macroType, macroTable, macroFunction, user, macroParams, emergency);
+    mailUtil.sendMail("SOME EMAIL GOES HERE", req.body, function(){});
+    res.send({status:'wait', msg:'Macro Queued'});
 	}
 	// else it is an invalid request.
 	else {
@@ -261,10 +270,10 @@ app.post('/request_macro_execution/update/:request_type', function(req, res) {
 
 // Handle DELETE macro execution request.
 app.post('/request_macro_execution/delete/:request_type', function(req, res) {
-  console.log('Received:' + JSON.stringify(proposed_macro));
-  console.log("Running approved peer review");
 	var requestType = req.params.request_type;
 	var proposed_macro = req.body;
+  var user = req.body.user;
+  var group = req.body.group;
 	// If the request is an emergency one.
 	if(requestType === 'emergency') {
 		console.log('Received:' + JSON.stringify(proposed_macro));
@@ -275,12 +284,8 @@ app.post('/request_macro_execution/delete/:request_type', function(req, res) {
     var macroFunction = req.body.function_called;
     var macroTable = req.body.table;
     var macroName = ""; //Remove this later
-    if(typeof(req.body.created_at)===undefined){
-      created_at = new Date();
-    } else {
-      created_at = req.body.created_at;
-    }
-    mongoAccessor.createJournalEntry(macroName, macroType, macroTable, macroFunction, macroParams, "testUser", "testReviewer", emergency, created_at);
+
+    mongoAccessor.createJournalEntry(macroName, macroType, macroTable, macroFunction, macroParams, user, "EMERGENCY OVERRIDE", emergency, new Date());
 		deleteBusiness.runDeleteMacro(proposed_macro, (err, result) => {
 			// If error,
 			if(err) {
@@ -292,14 +297,16 @@ app.post('/request_macro_execution/delete/:request_type', function(req, res) {
 		});
 	}
   else if(requestType === 'approved_peer_review'){
+    console.log('Received:' + JSON.stringify(proposed_macro));
     var emergency = false;
     var macroType = req.body.macroType;
     var macroParams = req.body.params;
     var macroFunction = req.body.function_called;
     var macroTable = req.body.table;
     var macroName = ""; //Remove this later
-    var created_at = new Date();
-    mongoAccessor.createJournalEntry(macroName, macroType, macroTable, macroFunction, macroParams, "testUser", "testReviewer", emergency, created_at);
+    var created_at = new Date(req.body.created_at); //depends
+    var creator = req.body.creator;
+    mongoAccessor.createJournalEntry(macroName, macroType, macroTable, macroFunction, macroParams, creator, user, emergency, created_at);
 		deleteBusiness.runDeleteMacro(proposed_macro, (err, result) => {
 			// If error,
 			if(err) {
@@ -314,13 +321,14 @@ app.post('/request_macro_execution/delete/:request_type', function(req, res) {
 	else if(requestType === 'peer_review'){
     // Peer review request.
     //Create entry in the pending macros table
+    console.log('Received:' + JSON.stringify(proposed_macro));
     var emergency = false;
     var macroType = req.body.macroType;
     var macroParams = req.body.params;
     var macroFunction = req.body.function_called;
     var macroTable = req.body.table;
     var macroName = req.body.name; //Later add to GUI macroName
-    mongoAccessor.createPendingMacro(/*macroID,*/ macroName, macroType, macroTable, macroFunction, "TestUser", macroParams, emergency);
+    mongoAccessor.createPendingMacro(/*macroID,*/ macroName, macroType, macroTable, macroFunction, user, macroParams, emergency);
 		res.status(200).end();
 	}
 	// else it is an invalid request.
@@ -351,23 +359,21 @@ app.post('/journal_entry', function(req, res) {
 
 
 app.delete('/pending_macro/:macroID', function(req, res){
-  console.log("In server folder attempting macro deletion");
   var macroID = req.params.macroID;
   mongoAccessor.deletePendingMacro({ _id: macroID});
   //Blank for success
   res.send();
 });
 
-function postJournalEntry(data){
+/*function postJournalEntry(data){
   //Parse data and run mongo method
   mongoAccessor.createJournalEntry("1", "2", "3", "4", "5", {}, true);
 }
 function postMacroData(data){
   //parse data and run mongo method
   mongoAccessor.createPendingMacro("1", "2", "3", "4", {}, true);
-}
+}*/
 function getJournalEntry(cb){
-  console.log("Called get history in server");
   mongoAccessor.readJournalEntries(
     function(items){
       cb(items);

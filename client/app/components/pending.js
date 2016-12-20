@@ -1,6 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router';
 import {getPendingMacros, deletePendingMacro, postJournalEntry, requestDeleteMacroExecution, requestUpdateMacroExecution} from '../server';
+import { getUsername, getGroup } from '../credentials.js'
 
 export default class Pending extends React.Component{
 
@@ -23,35 +24,35 @@ export default class Pending extends React.Component{
 
   handleApprovePending(obj){
     var objectID = obj["_id"];
+    var user = getUsername();
+    var group = getGroup();
     deletePendingMacro(objectID, () => {
       //Make a second xmlhttprequest to update journal
-      postJournalEntry(obj, () => {
-        var request_type='approved_peer_review'
-        var proposed_macro = {
-          macroType: obj["macroType"],
-          request_type: obj["request_type"],
-          table: obj["macroTable"],
-          function_called: obj["macroFunction"],
-          params: obj["macroParams"]
-        };
-        console.log("Proposed macro in pending is of type " + obj["macroType"]);
-        console.log(JSON.stringify(proposed_macro));
-        if(obj["macroType"] === 'Delete'){
-          requestDeleteMacroExecution(request_type, proposed_macro, (result) => {
-            console.log(JSON.stringify(result));
-            this.handleResult(result);
-            this.refresh();
-          });
-        } else if (obj["macroType"] === 'Update'){
-          requestUpdateMacroExecution(request_type, proposed_macro, (result) => {
-            console.log(JSON.stringify(result));
-            this.handleResult(result);
-            this.refresh();
-          });
-        }
-
-
-      });
+      /*postJournalEntry(obj, () => {*/
+      var request_type='approved_peer_review'
+      var proposed_macro = {
+        macroType: obj["macroType"],
+        request_type: obj["request_type"],
+        table: obj["macroTable"],
+        function_called: obj["macroFunction"],
+        params: obj["macroParams"],
+        creator: obj["author"],
+        created_at: obj["created_at"],
+        user: user,
+        group: group
+      };
+      if(obj["macroType"] === 'Delete'){
+        requestDeleteMacroExecution(request_type, proposed_macro, (result) => {
+          this.handleResult(result);
+          this.refresh();
+        });
+      } else if (obj["macroType"] === 'Update'){
+        requestUpdateMacroExecution(request_type, proposed_macro, (result) => {
+          this.handleResult(result);
+          this.refresh();
+        });
+      }
+      //});
     });
   }
   handleResult(result){
@@ -73,19 +74,31 @@ export default class Pending extends React.Component{
                 }
               })
             }
+            else if (result.status == 'denial'){
+              this.setState({
+                result_message: {
+                  type:'deny',
+                  msg: 'The requested macro has been denied.'
+                }
+              })
+            }
             else{
               this.setState({
                 result_message: {
                   type:'wait',
                   msg: 'The approved macro has been sent to your peers for reviewing!'
                 }
-              })        
+              })
             }
   }
   handleDenyPending(obj){
     var objectID = obj["_id"];
     console.log(Object.keys(obj));
+    var result = {
+      status: 'denial'
+    };
     deletePendingMacro(objectID, () => {
+      this.handleResult(result);
       this.refresh();
     });
   }
@@ -151,7 +164,7 @@ export default class Pending extends React.Component{
         execution_result = <div className="alert alert-success" role="alert"><img className="gordon" src="./img/gordon.jpg" height="40px" width="40px"/>{result.msg}</div>
       }
       else {
-        execution_result = <div className="alert alert-info" role="alert"><img className="gordon" src="./img/gordon.jpg" height="40px" width="40px"/>{result.msg}</div>        
+        execution_result = <div className="alert alert-info" role="alert"><img className="gordon" src="./img/gordon.jpg" height="40px" width="40px"/>{result.msg}</div>
       }
       $("#execution-result").modal("show");
     }

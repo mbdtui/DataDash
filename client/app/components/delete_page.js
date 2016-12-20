@@ -1,6 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router';
 import {getMacrosAllTablesDelete, requestDeleteMacroExecution} from '../server.js';
+import { getUsername, getGroup } from '../credentials.js'
 
 export default class Delete extends React.Component{
   constructor(props){
@@ -67,6 +68,8 @@ export default class Delete extends React.Component{
   }
 
   sendUpdate(){
+    var user = getUsername();
+    var group = getGroup();
     var request_type;
     if(this.state.emergency_check) {
       request_type = 'emergency';
@@ -78,7 +81,9 @@ export default class Delete extends React.Component{
       request_type: request_type,
       table: this.state.selected_table,
       function_called: this.state.selected_macro,
-      params: this.state.macros_all_tables[this.state.selected_table][this.state.selected_macro]
+      params: this.state.macros_all_tables[this.state.selected_table][this.state.selected_macro],
+      user: user,
+      group: group
     };
     console.log(JSON.stringify(proposed_macro));
     requestDeleteMacroExecution(request_type, proposed_macro, (result) => {
@@ -106,7 +111,7 @@ export default class Delete extends React.Component{
             type:'wait',
             msg: 'Your requested macro has been sent to your peers for reviewing!'
           }
-        })        
+        })
       }
     });
   }
@@ -123,7 +128,7 @@ export default class Delete extends React.Component{
     if(hasEmptyParam) {
       alert('There are some params that are empty!');
     }
-    else {      
+    else {
       var request_type;
         if(this.state.emergency_check) {
           request_type = 'emergency';
@@ -138,7 +143,7 @@ export default class Delete extends React.Component{
         };
         this.setState({
           request_info: proposed_macro
-        });   
+        });
       $("#myMyDelete").modal('toggle');
     }
   }
@@ -192,7 +197,7 @@ export default class Delete extends React.Component{
         execution_result = <div className="alert alert-success" role="alert"><img className="gordon" src="./img/gordon.jpg" height="40px" width="40px"/>{result.msg}</div>
       }
       else {
-        execution_result = <div className="alert alert-info" role="alert"><img className="gordon" src="./img/gordon.jpg" height="40px" width="40px"/>{result.msg}</div>        
+        execution_result = <div className="alert alert-info" role="alert"><img className="gordon" src="./img/gordon.jpg" height="40px" width="40px"/>{result.msg}</div>
       }
       $("#execution-result").modal("show");
     }
