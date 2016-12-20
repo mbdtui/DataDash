@@ -233,7 +233,7 @@ export default class Delete extends React.Component{
                       <select name="table" value={this.state.table} onChange={this.handleTableSelected} className="selectpicker options btn btn-default" data-width="75%" title="Select a table">
                         {tables}
                       </select>
-                      <h3> Update: </h3>
+                      <h3> Delete: </h3>
                       <select name="update" value={this.state.macro} onChange={this.handleMacroSelected} className="selectpicker options btn btn-default" data-width="75%" title="Select a Run Name">
                         {available_macros}
                       </select>
