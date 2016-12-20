@@ -12,6 +12,8 @@ var journalEntrySchema = new Schema({
   macroParams: Object,
   reviewer: String,
   emergency: Boolean,
+  runStatus: String,
+  reviewStatus: String,
   created_at: Date,
   approved_at: Date
 });

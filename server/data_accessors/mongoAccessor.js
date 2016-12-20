@@ -11,7 +11,7 @@ db.on('error', console.error);
 var JournalEntry = require('../models/JournalEntry.js');
 var PendingMacro = require('../models/PendingMacro.js');
 
-var createJournalEntry = function(_macroName, _macroType, _macroTable, _macroFunction, _macroParams, _author, _reviewer, _emergency, _created_at){
+var createJournalEntry = function(_macroName, _macroType, _macroTable, _macroFunction, _macroParams, _author, _reviewer, _emergency, _created_at, _runStatus, _reviewStatus){
   var journalEntry = new JournalEntry({
     //macroID : _macroID,
     macroName : _macroName,
@@ -23,6 +23,8 @@ var createJournalEntry = function(_macroName, _macroType, _macroTable, _macroFun
     author : _author,
     reviewer: _reviewer,
     emergency : _emergency,
+    runStatus: _runStatus,
+    reviewStatus: _reviewStatus,
     created_at: _created_at
   });
 
