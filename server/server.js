@@ -9,7 +9,7 @@ var viewBusiness = require('./viewBusiness');
 var deleteBusiness = require('./deleteBusiness');
 var bcrypt = require('bcryptjs');
 var jwt = require('jsonwebtoken');
-var mailUtil = require('./api/mailUtil');
+var mailUtil = require('./api/mailUtil.js');
 var secretKey = "7d672134-7365-40d8-acd6-ca6a82728471";
 var app = express();
 
@@ -77,6 +77,7 @@ app.get('/macro/:macroid', function(req, res){
     res.send(getMacroData(req.params.macroid));
 });*/
 
+// Get all DELETE macros for all tables and their schemas.
 app.get('/macros_all_tables/delete', function(req, res) {
 	var macros_delete = {
 			'c_driver_schedule': {
@@ -103,7 +104,7 @@ app.get('/macros_all_tables/delete', function(req, res) {
 		};
 	res.send(macros_delete);
 })
-
+// Get all UPDATE macros for all tables and their schemas.
 app.get('/macros_all_tables/update', function(req, res) {
 	var macros_update = {
 			'c_driver_schedule': {
