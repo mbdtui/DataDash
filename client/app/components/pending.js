@@ -1,14 +1,16 @@
 import React from 'react';
 import {Link} from 'react-router';
-import {getPendingMacros, deletePendingMacro, postJournalEntry} from '../server';
+import {getPendingMacros, deletePendingMacro, postJournalEntry, requestDeleteMacroExecution, requestUpdateMacroExecution} from '../server';
 
 export default class Pending extends React.Component{
 
   constructor(props) {
     super();
     this.state = {
-      contents: []
+      contents: [],
+      result_message: null
     };
+    this.handleResult = this.handleResult.bind(this);
   }
   refresh(){
     getPendingMacros((data) => {
@@ -24,11 +26,62 @@ export default class Pending extends React.Component{
     deletePendingMacro(objectID, () => {
       //Make a second xmlhttprequest to update journal
       postJournalEntry(obj, () => {
-        this.refresh();
+        var request_type='approved_peer_review'
+        var proposed_macro = {
+          macroType: obj["macroType"],
+          request_type: obj["request_type"],
+          table: obj["macroTable"],
+          function_called: obj["macroFunction"],
+          params: obj["macroParams"]
+        };
+        console.log("Proposed macro in pending is of type " + obj["macroType"]);
+        console.log(JSON.stringify(proposed_macro));
+        if(obj["macroType"] === 'Delete'){
+          requestDeleteMacroExecution(request_type, proposed_macro, (result) => {
+            console.log(JSON.stringify(result));
+            this.handleResult(result);
+            this.refresh();
+          });
+        } else if (obj["macroType"] === 'Update'){
+          requestUpdateMacroExecution(request_type, proposed_macro, (result) => {
+            console.log(JSON.stringify(result));
+            this.handleResult(result);
+            this.refresh();
+          });
+        }
+
+
       });
     });
   }
-
+  handleResult(result){
+            if(result.status == 'error'){
+              console.log(JSON.stringify(result.error));
+              this.setState({
+                result_message: {
+                  type:'error',
+                  msg: 'The approved macro has failed to execute! Check the input data!'
+                }
+              });
+            }
+            else if(result.status == 'success'){
+              console.log(JSON.stringify(result.result));
+              this.setState({
+                result_message: {
+                  type:'success',
+                  msg: 'The approved macro has executed successfullly!'
+                }
+              })
+            }
+            else{
+              this.setState({
+                result_message: {
+                  type:'wait',
+                  msg: 'The approved macro has been sent to your peers for reviewing!'
+                }
+              })        
+            }
+  }
   handleDenyPending(obj){
     var objectID = obj["_id"];
     console.log(Object.keys(obj));
@@ -49,33 +102,77 @@ export default class Pending extends React.Component{
       return splitTime[1];
     }
   }
+  showMacroDetails(macroObj){
+    var message = ("Function : " + macroObj["macroFunction"] + "\n");
+    var params = macroObj["macroParams"];
+    var keys = Object.keys(params);
+    for(var i =0; i<keys.length; i++){
+      message = (message + keys[i] + ": " + params[keys[i]] + "\n");
+    }
+    alert(message);
+  }
   render(){
     var self = this;
     //Render rows before we put them in (some weird stuff happens if we do it inline)
+    //Probably want to change dialog of the show details
     var rows = [];
     this.state.contents.map(function(macroObj) {
       rows.push(
         <tr key={macroObj["_id"]}>
           <td>
-            {macroObj["macroName"]}
+            {macroObj["macroType"]}
           </td>
           <td>
-            {self.getDateFormat(macroObj["created_at"], "date")}
+            {macroObj["macroTable"]}
           </td>
           <td>
-            {self.getDateFormat(macroObj["created_at"], "time")}
+            <a onClick ={() => self.showMacroDetails(macroObj)}> Show Details </a>
+          </td>
+          <td>
+            <p>{self.getDateFormat(macroObj["created_at"], "date")}</p>
+            <p>{self.getDateFormat(macroObj["created_at"], "time")}</p>
           </td>
           <td>
             {macroObj["author"]}
           </td>
-          <td>
+          <td id = "MacroReviewTableCell">
             <button onClick={() => self.handleApprovePending(macroObj)}> Approve </button> <button onClick={() => self.handleDenyPending(macroObj)}> Deny </button>
           </td>
         </tr>
       );
     });
+    var execution_result = "No message";
+    if(this.state.result_message !== null) {
+      var result = this.state.result_message;
+      if(result.type == 'error') {
+        execution_result = <div className="alert alert-danger" role="alert"><img className="gordon" src="./img/gordon.jpg" height="40px" width="40px"/>{result.msg}</div>
+      }
+      else if(result.type == 'success') {
+        execution_result = <div className="alert alert-success" role="alert"><img className="gordon" src="./img/gordon.jpg" height="40px" width="40px"/>{result.msg}</div>
+      }
+      else {
+        execution_result = <div className="alert alert-info" role="alert"><img className="gordon" src="./img/gordon.jpg" height="40px" width="40px"/>{result.msg}</div>        
+      }
+      $("#execution-result").modal("show");
+    }
     return(
       <div id="wrapper">
+        <div className="modal fade" id="execution-result" role="dialog">
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 className="modal-title" id="myModalLabel">MACRO OPERATION INFORMATION</h4>
+              </div>
+              <div className="modal-body">
+                {execution_result}
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-default" data-dismiss="modal" onClick={this.handleReadResult}>Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
     <div id="page-content-wrapper">
       <div className="container-fluid">
         <div className="row">
@@ -90,11 +187,11 @@ export default class Pending extends React.Component{
                 <table className="sortable">
                   <thead>
                     <tr>
-                      <th>Macro</th>
+                      <th>Type</th>
+                      <th>Table</th>
+                      <th>Details</th>
                       <th>Date</th>
-                      <th>Time</th>
                       <th>Employee</th>
-                      <th>Approve/Deny</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -107,7 +204,7 @@ export default class Pending extends React.Component{
             <div className="col-lg-12">
               <center>
                 <Link to={"/m/view/"}>
-                  <button className="btn btn-secondary btn-lg go-btn">
+                  <button className="btn btn-secondary btn-lg history-pending-go-back-btn">
                     Go Back
                   </button>
                 </Link>

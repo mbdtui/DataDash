@@ -3,9 +3,9 @@
 var config = require('config');
 var ActiveDirectory = require('activedirectory');
 
-const ADMIN-GROUP      = config.get('AD.admin-group');
-const DEVELOPER-GROUP  = config.get('AD.developer-group');
-const MANAGER-GROUP    = config.get('AD.manager-group');
+const ADMIN_GROUP      = config.get('AD.ADMIN_GROUP');
+const DEVELOPER_GROUP  = config.get('AD.DEVELOPER_GROUP');
+const MANAGER_GROUP    = config.get('AD.MANAGER_GROUP');
 
 var ActiveDirectoryModuleConfig = {
   url:      config.get('AD.url'),
@@ -24,7 +24,7 @@ var ad = new ActiveDirectory(ActiveDirectoryModuleConfig);
  * @throws an Error if there is a problem authenticating the user
  * @return {boolean} True if the user was successfully authenticated. False otherwise.
  */
-function authenticate(username, password) {
+var authenticate = function(username, password) {
   ad.authenticate(username, password, function(err, auth) {
     if (err) {
       throw new Error('Failed to authenticate \'' + username + '\' : '
@@ -95,8 +95,8 @@ function getGroupMembershipForUser(username) {
  * @throws an Error if there was an issue looking up the group membership.
  * @return {boolean} True if the user is a member of the admin group. False otherwise.
  */
-function isUserAdmin(username) {
-  isUserMemberOf(username, ADMIN-GROUP);
+var isUserAdmin = function(username) {
+  return isUserMemberOf(username, ADMIN_GROUP);
 }
 
 /**
@@ -106,8 +106,8 @@ function isUserAdmin(username) {
  * @throws an Error if there was an issue looking up the group membership.
  * @return {type} True if the user is a member of the developer group. False otherwise.
  */
-function isUserDeveloper(username) {
-  return isUserMemberOf(username, DEVELOPER-GROUP;
+var isUserDeveloper = function(username) {
+  return isUserMemberOf(username, DEVELOPER_GROUP;
 }
 
 /**
@@ -117,6 +117,32 @@ function isUserDeveloper(username) {
  * @throws an Error if there was an issue looking up the group membership
  * @return {type} True if the user is a member of the manager group. False otherwise.
  */
-function isUserManager(username) {
-  isUserMemberOf(username, MANAGER-GROUP);
+var isUserManager = function(username) {
+  return isUserMemberOf(username, MANAGER_GROUP);
+}
+
+var getUserGroup = function(username) {
+  if (isUserAdmin(username)){
+    return ADMIN_GROUP;
+  }
+  else if (isUserManager(username)) {
+    return MANAGER_GROUP;
+  }
+  else if (isUserDeveloper(username)) {
+    return DEVELOPER_GROUP;
+  }
+  else {
+    return null;
+  }
+}
+
+module.exports = {
+  ADMIN_GROUP : ADMIN_GROUP,
+  DEVELOPER_GROUP : DEVELOPER_GROUP,
+  MANAGER_GROUP : MANAGER_GROUP,
+  authenticate: authenticate,
+  isUserAdmin: isUserAdmin,
+  isUserDeveloper: isUserDeveloper,
+  isUserManager: isUserManager,
+  getUserGroup : getUserGroup
 }

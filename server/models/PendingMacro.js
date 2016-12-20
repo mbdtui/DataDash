@@ -2,11 +2,14 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var pendingMacroSchema = new Schema({
-  macroID: String,
+//macroID: String,
   macroName: String,
-  macroGroup: String,
+  macroType: String,
+  macroTable: String,
+  macroFunction: String,
+  //macroGroup: String,
   author: String,
-  params: Object,
+  macroParams: Object,
   emergency: Boolean,
   created_at: Date
 });
