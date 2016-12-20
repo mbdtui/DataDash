@@ -66,7 +66,7 @@ var deleteJournalEntry = function(query){
   });
 }
 
-var createPendingMacro = function(/*_macroID,*/ _macroName, _macroType, _macroTable, _macroFunction, /*_macroGroup, */_author, _macroParams, _emergency){
+var createPendingMacro = function(/*_macroID,*/ _macroName, _macroType, _macroTable, _macroFunction, /*_macroGroup, */_author, _macroParams){
   var pendingMacro = new PendingMacro({
     //macroID : _macroID,
     macroName : _macroName,
@@ -75,8 +75,7 @@ var createPendingMacro = function(/*_macroID,*/ _macroName, _macroType, _macroTa
     macroFunction: _macroFunction,
     //macroGroup: _macroGroup,
     author : _author,
-    macroParams : _macroParams,
-    emergency : _emergency
+    macroParams : _macroParams
   });
 
   pendingMacro.save(function(err, item){

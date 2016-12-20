@@ -70,6 +70,12 @@ export default class History extends React.Component{
           <td>
             {journalObj["reviewer"]}
           </td>
+          <td>
+            {journalObj["runStatus"]}
+          </td>
+          <td>
+            {journalObj["reviewStatus"]}
+          </td>
         </tr>
       );
     });
@@ -94,6 +100,8 @@ export default class History extends React.Component{
                       <th>Reviewed Date</th>
                       <th>Employee</th>
                       <th>Reviewer</th>
+                      <th>Run Status</th>
+                      <th>Review Status</th>
                     </tr>
                     {rows}
                   </tbody>

@@ -216,14 +216,16 @@ app.post('/request_macro_execution/update/:request_type', function(req, res) {
     var macroFunction = req.body.function_called;
     var macroTable = req.body.table;
     var macroName = "";//Remove this later
-    mongoAccessor.createJournalEntry(macroName, macroType, macroTable, macroFunction, macroParams, user, "EMERGENCY OVERRIDE", emergency, new Date());
+
 		// Run update business.
 		updateBusiness.runUpdateMacro(proposed_macro, (err, result) => {
 			// If error,
 			if(err) {
 				// send raw error to client.
+        mongoAccessor.createJournalEntry(macroName, macroType, macroTable, macroFunction, macroParams, user, "", emergency, new Date(), "Failure", "Emergency");
 				res.send({status:'error', error:err});
 			} else {
+        mongoAccessor.createJournalEntry(macroName, macroType, macroTable, macroFunction, macroParams, user, "", emergency, new Date(), "Success", "Emergency");
 				res.send({status:'success', result:result});
 			}
 		});
@@ -242,15 +244,15 @@ app.post('/request_macro_execution/update/:request_type', function(req, res) {
     console.log("Creator is " + creator);
     console.log("Reviewer is " + user);
     console.log("Date is " + created_at);
-                                                                                                  //creator, reviewer
-    mongoAccessor.createJournalEntry(macroName, macroType, macroTable, macroFunction, macroParams, creator, user, emergency, created_at);
 		// Run update business.
 		updateBusiness.runUpdateMacro(proposed_macro, (err, result) => {
 			// If error,
 			if(err) {
 				// send raw error to client.
+        mongoAccessor.createJournalEntry(macroName, macroType, macroTable, macroFunction, macroParams, creator, user, emergency, created_at, "Failure", "Approved");
 				res.send({status:'error', error:err});
 			} else {
+        mongoAccessor.createJournalEntry(macroName, macroType, macroTable, macroFunction, macroParams, creator, user, emergency, created_at, "Success", "Approved");
 				res.send({status:'success', result:result});
 			}
 		});
@@ -266,8 +268,9 @@ app.post('/request_macro_execution/update/:request_type', function(req, res) {
     var macroFunction = req.body.function_called;
     var macroTable = req.body.table;
     var macroName = req.body.name; //Later add to GUI macroName
-    mongoAccessor.createPendingMacro(/*macroID,*/ macroName, macroType, macroTable, macroFunction, user, macroParams, emergency);
-    mailUtil.sendMail("SOME EMAIL GOES HERE", req.body, function(){});
+    var email = auth.getUserEmail(user);
+    mongoAccessor.createPendingMacro(macroName, macroType, macroTable, macroFunction, user, macroParams);
+    mailUtil.sendMail(email, req.body, function(){});
     res.send({status:'wait', msg:'Macro Queued'});
 	}
 	// else it is an invalid request.
@@ -292,14 +295,14 @@ app.post('/request_macro_execution/delete/:request_type', function(req, res) {
     var macroFunction = req.body.function_called;
     var macroTable = req.body.table;
     var macroName = ""; //Remove this later
-
-    mongoAccessor.createJournalEntry(macroName, macroType, macroTable, macroFunction, macroParams, user, "EMERGENCY OVERRIDE", emergency, new Date());
 		deleteBusiness.runDeleteMacro(proposed_macro, (err, result) => {
 			// If error,
 			if(err) {
 				// send raw error to client.
+        mongoAccessor.createJournalEntry(macroName, macroType, macroTable, macroFunction, macroParams, user, "", emergency, new Date(), "Failure", "Emergency");
 				res.send({status:'error', error:err});
 			} else {
+        mongoAccessor.createJournalEntry(macroName, macroType, macroTable, macroFunction, macroParams, user, "", emergency, new Date(), "Success", "Emergency");
 				res.send({status:'success', result:result});
 			}
 		});
@@ -314,13 +317,14 @@ app.post('/request_macro_execution/delete/:request_type', function(req, res) {
     var macroName = ""; //Remove this later
     var created_at = new Date(req.body.created_at); //depends
     var creator = req.body.creator;
-    mongoAccessor.createJournalEntry(macroName, macroType, macroTable, macroFunction, macroParams, creator, user, emergency, created_at);
 		deleteBusiness.runDeleteMacro(proposed_macro, (err, result) => {
 			// If error,
 			if(err) {
 				// send raw error to client.
+        mongoAccessor.createJournalEntry(macroName, macroType, macroTable, macroFunction, macroParams, creator, user, emergency, created_at, "Failure", "Approved");
 				res.send({status:'error', error:err});
 			} else {
+        mongoAccessor.createJournalEntry(macroName, macroType, macroTable, macroFunction, macroParams, creator, user, emergency, created_at, "Success", "Approved");
 				res.send({status:'success', result:result});
 			}
 		});
@@ -336,7 +340,7 @@ app.post('/request_macro_execution/delete/:request_type', function(req, res) {
     var macroFunction = req.body.function_called;
     var macroTable = req.body.table;
     var macroName = req.body.name; //Later add to GUI macroName
-    mongoAccessor.createPendingMacro(/*macroID,*/ macroName, macroType, macroTable, macroFunction, user, macroParams, emergency);
+    mongoAccessor.createPendingMacro(/*macroID,*/ macroName, macroType, macroTable, macroFunction, user, macroParams);
     mailUtil.sendMail("SOME EMAIL GOES HERE", req.body, function(){});
 		res.status(200).end();
 	}
@@ -346,6 +350,7 @@ app.post('/request_macro_execution/delete/:request_type', function(req, res) {
 	}
 });
 
+//don't call this
 app.post('/journal_entry', function(req, res) {
   //req.body is a JSON object holding macroID, macroName, macroGroup, author, emergency, reviewer
   //at the very least. (mongodb should handle creation time and unique obj ids)
@@ -360,7 +365,9 @@ app.post('/journal_entry', function(req, res) {
     req.body.author,
     req.body.reviewer,
     req.body.emergency,
-    req.body.created_at
+    req.body.created_at,
+    req.body.runStatus,
+    req.body.reviewStatus
   );
   res.send();
 });

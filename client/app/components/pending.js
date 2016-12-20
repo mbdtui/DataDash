@@ -8,7 +8,7 @@ export default class Pending extends React.Component{
 
   constructor(props) {
     super();
-    
+
     this.state = {
       contents: [],
       result_message: null
@@ -29,7 +29,7 @@ export default class Pending extends React.Component{
     var user = getUsername();
     var group = getGroup();
     deletePendingMacro(objectID, () => {
-      //Make a second xmlhttprequest to update journal
+      //nvm not necessary
       /*postJournalEntry(obj, () => {*/
       var request_type='approved_peer_review'
       var proposed_macro = {

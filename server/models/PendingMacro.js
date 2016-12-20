@@ -10,7 +10,6 @@ var pendingMacroSchema = new Schema({
   //macroGroup: String,
   author: String,
   macroParams: Object,
-  emergency: Boolean,
   created_at: Date
 });
 
