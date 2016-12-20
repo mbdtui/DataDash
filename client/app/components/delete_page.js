@@ -262,6 +262,7 @@ export default class Delete extends React.Component{
                                 <p><strong>Marco:</strong> {this.state.selected_macro}</p>
                                 <p id="ModalPopup"><strong>Parameters: </strong></p><br/>
                                 {this.state.request_info===null?'':this.addMacroDetails(this.state.request_info.params)}
+                                {this.state.emergency_check?<div className="alert alert-danger" role="alert"><center><h1>EMERGENCY</h1></center></div>: <div className="alert alert-info peer-revision" role="alert">This change will be peer reviewed</div>}
                               </div>
                               <div className="modal-footer">
                                 <button type="button" id="yes-btn" onClick={this.sendUpdate} className="btn btn-default" data-dismiss="modal">Yes</button>

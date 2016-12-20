@@ -23,22 +23,22 @@ export default class View extends React.Component{
     var runName = formData[1].value;
     var runStatusCode = formData[2].value;
     console.log(formData);
-    //
-    // if(appName.length === 0){
-    //   runStatusCode = null;
-    // }
-    // if(runName.length === 0){
-    //   runStatusCode = null;
-    // }
-    // if(runStatusCode.length === 0){
-    //   runStatusCode = null;
-    // }
+
+     if(appName.length === 0){
+       runStatusCode = null;
+     }
+     if(runName.length === 0){
+       runStatusCode = null;
+     }
+     if(runStatusCode.length === 0){
+       runStatusCode = null;
+     }
     var app_name = appName;
-    app_name = 'EDW';
+  //  app_name = 'EDW';
     var run_name = runName;
-    run_name = 'S_2_O_CLAIMS_CL_CNTR_NRT';
+    //run_name = 'S_2_O_CLAIMS_CL_CNTR_NRT';
     var run_status_code = runStatusCode;
-    run_status_code = null;
+    //run_status_code = null;
 
     if(runStatusCode == "") {
       run_status_code = null;
@@ -83,9 +83,9 @@ export default class View extends React.Component{
                     <center>
                       <form action="" method="post" id="view-form">
                         <h3 id="app-name"> App Name: </h3>
-                        <input type="text" name="app_name" className="form-control" placeholder="Enter App Name here" aria-describedby="basic-addon1" />
+                        <input type="text" name="app_name" className="form-control" placeholder="Enter App Name here" defaultValue="EDW" aria-describedby="basic-addon1" />
                         <h3> Run Name: </h3>
-                        <input type="text" name="run_name" className="form-control" placeholder="Enter Run Name here" aria-describedby="basic-addon1" />
+                        <input type="text" name="run_name" className="form-control" placeholder="Enter Run Name here" defaultValue="S_2_O_CLAIMS_CL_CNTR_NRT"  aria-describedby="basic-addon1" />
                         <h3> Run Status Code: </h3>
                         <input type="text" name="run_status_code" className="form-control" placeholder="Enter Run Status Code here" aria-describedby="basic-addon1" />
                         <button type="button" onClick={this.sendView} className="btn btn-secondary btn-lg go-btn">Go</button>

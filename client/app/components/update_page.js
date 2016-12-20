@@ -82,7 +82,7 @@ export default class Update extends React.Component{
       function_called: this.state.selected_macro,
       params: this.state.macros_all_tables[this.state.selected_table][this.state.selected_macro],
       user: user,
-      group: group      
+      group: group
     };
     console.log(JSON.stringify(proposed_macro));
     requestUpdateMacroExecution(request_type, proposed_macro, (result) => {
@@ -261,6 +261,7 @@ export default class Update extends React.Component{
                                 <p><strong>Marco:</strong> {this.state.selected_macro}</p>
                                 <p id="ModalPopup"><strong>Parameters: </strong></p><br/>
                                 {this.state.request_info===null?'':this.addMacroDetails(this.state.request_info.params)}
+                                {this.state.emergency_check?<div className="alert alert-danger" role="alert"><center><h1>EMERGENCY</h1></center></div>: <div className="alert alert-info peer-revision" role="alert">This change will be peer reviewed</div>}
                               </div>
                               <div className="modal-footer">
                                 <button type="button" id="yes-btn" onClick={this.sendUpdate} className="btn btn-default" data-dismiss="modal">Yes</button>

@@ -293,3 +293,8 @@ h2 {
 #yes-btn{
       margin-bottom: 10px;
 }
+
+.peer-revision{
+  background-color: #EEEEEE !important;
+  color: black;
+}
