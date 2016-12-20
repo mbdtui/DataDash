@@ -11,7 +11,7 @@ var util = require('util');
 var resetPostgreDB = require('../lib_mockDB_loader/LibDBLoader.js').loadMockDB;
 
 // Reset database.
-// resetPostgreDB('../lib_mockDB_loader/LibDataLogs');
+//resetPostgreDB('../lib_mockDB_loader/LibDataLogs');
 
 var PostgreSQL_config = {
 	user: 'postgres',

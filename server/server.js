@@ -56,23 +56,23 @@ app.get('/macros_all_tables/update', function(req, res) {
 	var macros_update = {
 			'c_driver_schedule': {
 				'update_schedule_starttime_by_runname_auditid': {
-					'run_name': '', 
+					'run_name': '',
 					'audit_id': '',
 					'schedule_start_time': ''
 				},
 				'update_status_code_by_runname_auditid': {
-					'run_name':'', 
-					'audit_id':'', 
+					'run_name':'',
+					'audit_id':'',
 					'status_code':''
 				},
 				'update_valuation_enddate_by_runname_auditid': {
-					'run_name':'', 
-					'audit_id':'', 
+					'run_name':'',
+					'audit_id':'',
 					'valuation_end_date':''
 				},
 				'update_valuation_startdate_by_runname_auditid': {
-					'run_name':'', 
-					'audit_id':'', 
+					'run_name':'',
+					'audit_id':'',
 					'valuation_start_date':''
 				},
 				'update_sla_date_time_by_auditid': {
@@ -83,7 +83,7 @@ app.get('/macros_all_tables/update', function(req, res) {
 				},
 				'update_historical_sla_date_time_by_runname': {
 					'run_name':'', 'date':'', 'time':''
-				}	
+				}
 			},
 			'c_driver_step': {
 				'update_active_step_indicator_by_driverstepid': {
@@ -244,15 +244,6 @@ function getJournalEntry(cb){
     function(items){
       cb(items);
   });
-}
-function getMacroData(macroIDs){
-    //macroIDs=comma separated list of ids
-    //return macroIDs;
-    //Parse list of ids
-    //Make call to DB methods and get data
-    //Maybe need a sync to get references
-		//return data
-    return macroIDs;
 }
 function getPendingMacroData(cb){
     mongoAccessor.readPendingMacros(
