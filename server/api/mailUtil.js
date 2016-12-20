@@ -131,7 +131,7 @@ exports.sendMail = function(toNames, jsonObject, callback){
 
    //Attach a link to the pending macros page of the website.
    paramString = paramString + ".  Click this link to review pending macros.";
-   paramString = paramString.link("http://www.w3schools.com"); //Currently a test link.
+   paramString = paramString.link("http://localhost:3000/#/pending/"); //Currently a test link.
 
   mailOptions.html = paramString;
   transporter.sendMail(mailOptions, function(error, info){
