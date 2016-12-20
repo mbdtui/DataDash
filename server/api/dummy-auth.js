@@ -80,6 +80,10 @@ var getUserGroup = function(username) {
   }
 }
 
+var getUserEmail = function(username) {
+  return 'Wyliao@umass.edu';
+}
+
 module.exports = {
   ADMIN_GROUP : ADMIN_GROUP,
   DEVELOPER_GROUP : DEVELOPER_GROUP,
@@ -88,5 +92,6 @@ module.exports = {
   isUserAdmin: isUserAdmin,
   isUserDeveloper: isUserDeveloper,
   isUserManager: isUserManager,
-  getUserGroup : getUserGroup
+  getUserGroup : getUserGroup,
+  getUserEmail : getUserEmail
 }
