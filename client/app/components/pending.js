@@ -7,8 +7,10 @@ export default class Pending extends React.Component{
   constructor(props) {
     super();
     this.state = {
-      contents: []
+      contents: [],
+      result_message: null
     };
+    this.handleResult = this.handleResult.bind(this);
   }
   refresh(){
     getPendingMacros((data) => {
@@ -37,11 +39,13 @@ export default class Pending extends React.Component{
         if(obj["macroType"] === 'Delete'){
           requestDeleteMacroExecution(request_type, proposed_macro, (result) => {
             console.log(JSON.stringify(result));
+            this.handleResult(result);
             this.refresh();
           });
         } else if (obj["macroType"] === 'Update'){
           requestUpdateMacroExecution(request_type, proposed_macro, (result) => {
             console.log(JSON.stringify(result));
+            this.handleResult(result);
             this.refresh();
           });
         }
@@ -50,7 +54,34 @@ export default class Pending extends React.Component{
       });
     });
   }
-
+  handleResult(result){
+            if(result.status == 'error'){
+              console.log(JSON.stringify(result.error));
+              this.setState({
+                result_message: {
+                  type:'error',
+                  msg: 'The approved macro has failed to execute! Check the input data!'
+                }
+              });
+            }
+            else if(result.status == 'success'){
+              console.log(JSON.stringify(result.result));
+              this.setState({
+                result_message: {
+                  type:'success',
+                  msg: 'The approved macro has executed successfullly!'
+                }
+              })
+            }
+            else{
+              this.setState({
+                result_message: {
+                  type:'wait',
+                  msg: 'The approved macro has been sent to your peers for reviewing!'
+                }
+              })        
+            }
+  }
   handleDenyPending(obj){
     var objectID = obj["_id"];
     console.log(Object.keys(obj));
@@ -110,8 +141,38 @@ export default class Pending extends React.Component{
         </tr>
       );
     });
+    var execution_result = "No message";
+    if(this.state.result_message !== null) {
+      var result = this.state.result_message;
+      if(result.type == 'error') {
+        execution_result = <div className="alert alert-danger" role="alert"><img className="gordon" src="./img/gordon.jpg" height="40px" width="40px"/>{result.msg}</div>
+      }
+      else if(result.type == 'success') {
+        execution_result = <div className="alert alert-success" role="alert"><img className="gordon" src="./img/gordon.jpg" height="40px" width="40px"/>{result.msg}</div>
+      }
+      else {
+        execution_result = <div className="alert alert-info" role="alert"><img className="gordon" src="./img/gordon.jpg" height="40px" width="40px"/>{result.msg}</div>        
+      }
+      $("#execution-result").modal("show");
+    }
     return(
       <div id="wrapper">
+        <div className="modal fade" id="execution-result" role="dialog">
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 className="modal-title" id="myModalLabel">MACRO OPERATION INFORMATION</h4>
+              </div>
+              <div className="modal-body">
+                {execution_result}
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-default" data-dismiss="modal" onClick={this.handleReadResult}>Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
     <div id="page-content-wrapper">
       <div className="container-fluid">
         <div className="row">

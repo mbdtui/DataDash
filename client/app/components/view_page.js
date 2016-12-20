@@ -70,7 +70,7 @@ export default class View extends React.Component{
         <div id="page-content-wrapper">
           <div className="container-fluid">
             <div className="row">
-              <div  id="view-table" onscroll="scrollFunction()">
+              <div className="col-xs-12" id="view-table" onscroll="scrollFunction()">
                 <div id="content">
                 <Table result={this.state.result}/>
                 </div>

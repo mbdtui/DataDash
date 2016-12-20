@@ -251,7 +251,7 @@ app.post('/request_macro_execution/update/:request_type', function(req, res) {
     var macroTable = req.body.table;
     var macroName = req.body.name; //Later add to GUI macroName
     mongoAccessor.createPendingMacro(/*macroID,*/ macroName, macroType, macroTable, macroFunction, "TestUser", macroParams, emergency);
-		res.status(200).end();
+		res.send({status:'wait', msg:'Macro Queued'});
 	}
 	// else it is an invalid request.
 	else {

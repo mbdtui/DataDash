@@ -90,7 +90,7 @@ export default class Update extends React.Component{
           }
         });
       }
-      else {
+      else if(result.status == 'success'){
         console.log(JSON.stringify(result.result));
         this.setState({
           result_message: {
@@ -99,24 +99,46 @@ export default class Update extends React.Component{
           }
         })
       }
+      else{
+        this.setState({
+          result_message: {
+            type:'wait',
+            msg: 'Your requested macro has been sent to your peers for reviewing!'
+          }
+        })        
+      }
     });
   }
   handleConfirmation(){
-    var request_type;
-    if(this.state.emergency_check) {
-      request_type = 'emergency';
-    } else {
-      request_type = 'peer_review';
-    }
-    var proposed_macro = {
-      request_type: request_type,
-      table: this.state.selected_table,
-      function_called: this.state.selected_macro,
-      params: this.state.macros_all_tables[this.state.selected_table][this.state.selected_macro]
-    };
-    this.setState({
-      request_info: proposed_macro
+    var params = this.state.macros_all_tables[this.state.selected_table][this.state.selected_macro];
+    var parameterNames = Object.getOwnPropertyNames(params);
+    var hasEmptyParam = false;
+    parameterNames.forEach((paramName, i) => {
+      if(params[paramName] == '') {
+        hasEmptyParam = true;
+      }
     });
+    if(hasEmptyParam) {
+      alert('There are some params that are empty!');
+    }
+    else {      
+      var request_type;
+        if(this.state.emergency_check) {
+          request_type = 'emergency';
+        } else {
+          request_type = 'peer_review';
+        }
+        var proposed_macro = {
+          request_type: request_type,
+          table: this.state.selected_table,
+          function_called: this.state.selected_macro,
+          params: this.state.macros_all_tables[this.state.selected_table][this.state.selected_macro]
+        };
+        this.setState({
+          request_info: proposed_macro
+        });   
+      $("#myMy").modal('toggle');
+    }
   }
 
   addMacroDetails(obj){
@@ -153,7 +175,8 @@ export default class Update extends React.Component{
         if (this.state.selected_macro !== '') {
           var parameterNames = Object.getOwnPropertyNames(this.state.macros_all_tables[this.state.selected_table][this.state.selected_macro]);
           parameters = parameterNames.map((eachParameter, i) => {
-            return <input key={i} id={eachParameter} className="param-input" onChange={this.handleParameterChanged} type="text" name="by-two" className="form-control" placeholder={eachParameter} aria-describedby="basic-addon1" />
+            return <input key={i} id={eachParameter} className="form-control param-input" onChange={this.handleParameterChanged}
+             type="text" name="by-two" placeholder={eachParameter} aria-describedby="basic-addon1" />
           });
         }
       }
@@ -167,6 +190,9 @@ export default class Update extends React.Component{
       else if(result.type == 'success') {
         execution_result = <div className="alert alert-success" role="alert"><img className="gordon" src="./img/gordon.jpg" height="40px" width="40px"/>{result.msg}</div>
       }
+      else {
+        execution_result = <div className="alert alert-info" role="alert"><img className="gordon" src="./img/gordon.jpg" height="40px" width="40px"/>{result.msg}</div>        
+      }
       $("#execution-result").modal("show");
     }
 
@@ -178,7 +204,7 @@ export default class Update extends React.Component{
             <div className="modal-content">
               <div className="modal-header">
                 <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 className="modal-title" id="myModalLabel">MACRO EXECUTION RESULT</h4>
+                <h4 className="modal-title" id="myModalLabel">MACRO OPERATION INFORMATION</h4>
               </div>
               <div className="modal-body">
                 {execution_result}
@@ -216,7 +242,7 @@ export default class Update extends React.Component{
                     </div>
                     <div className="col-lg-12">
                       <div className="bs-example">
-                        <button type="button" onClick={this.handleConfirmation} className="btn btn-secondary btn-lg go-btn" data-toggle="modal" data-target="#myMy">Go</button>
+                        <button type="button" onClick={this.handleConfirmation} className="btn btn-secondary btn-lg go-btn">Go</button>
                         <div id="myMy" className="modal fade">
                           <div className="modal-dialog" role="document">
                             <div className="modal-content">
