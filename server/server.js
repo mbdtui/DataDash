@@ -3,7 +3,6 @@ var express = require('express');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoAccessor = require('./data_accessors/mongoAccessor');
-var mongoDummyData = require('./mongoDummyData');
 var updateBusiness = require('./updateBusiness');
 var viewBusiness = require('./viewBusiness');
 var deleteBusiness = require('./deleteBusiness');
