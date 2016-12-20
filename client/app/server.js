@@ -90,7 +90,15 @@ export function requestDeleteMacroExecution(request_type, table_macro_params, cb
     cb(JSON.parse(xhr.responseText));
   });
 }
-//Post requests - Macro requests (run/delete), View Macro Request (no approval needed)
+
+// Send request to reset the mongoDB
+export function resetMongoDB(cb) {
+  sendXHR('DELETE','/resetDB', undefined, (xhr) => {
+    cb();
+  });
+}
+
+
 
 //send xml http request helper method
 function sendXHR(verb, resource, body, cb, errorCb) {

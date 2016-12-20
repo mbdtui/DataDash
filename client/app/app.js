@@ -88,7 +88,7 @@ ReactDOM.render((
   <Router history={hashHistory}>
     <Route path="/" component={App}>
       <IndexRedirect to="/login"/>
-      <Route path="m" component={ModificationPage} > //RENAME ROUTE PATH
+      <Route path="m" component={ModificationPage} >
         <IndexRedirect to="/m/view" component={ViewPage} />
         <Route path="view" component={ViewPage} />
         <Route path="update" component={UpdatePage} />

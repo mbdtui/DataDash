@@ -19,6 +19,14 @@ app.use(bodyParser.json());
 // Serve files in the client/build directory.
 app.use(express.static('../client/build'));
 
+
+  app.delete('/resetDB', function(req, res) {
+    console.log("Received request to reset mongoDB");
+    mongoAccessor.deletePendingMacro({});
+    mongoAccessor.deleteJournalEntry({});
+    res.send();
+  });
+
   app.post('/login', function(req, res) {
     // TODO error handling for when ActiveDirectory is unreachable
     // TODO check that the user is not already logged in

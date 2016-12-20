@@ -1,12 +1,17 @@
 import React from 'react';
 import {Link} from 'react-router';
-import {getPendingMacros, deletePendingMacro, postJournalEntry, requestDeleteMacroExecution, requestUpdateMacroExecution} from '../server';
-import { getUsername, getGroup } from '../credentials.js'
+import {getPendingMacros, deletePendingMacro, postJournalEntry, requestDeleteMacroExecution, requestUpdateMacroExecution, resetMongoDB} from '../server';
+import { getUsername, getGroup, isUserLoggedIn } from '../credentials.js'
+import { IndexRoute, Router, Route, hashHistory, IndexRedirect } from 'react-router';
 
 export default class Pending extends React.Component{
 
   constructor(props) {
     super();
+    /*if (isUserLoggedIn() === false){
+      hashHistory.push('/login');
+      return;
+    }*/
     this.state = {
       contents: [],
       result_message: null
@@ -124,6 +129,13 @@ export default class Pending extends React.Component{
     }
     alert(message);
   }
+  resetDB(){
+    resetMongoDB(() => {
+      this.refresh();
+    });
+  }
+
+
   render(){
     var self = this;
     //Render rows before we put them in (some weird stuff happens if we do it inline)
@@ -222,6 +234,11 @@ export default class Pending extends React.Component{
                   </button>
                 </Link>
               </center>
+            </div>
+              <button onClick={() => self.resetDB()}>
+                Reset DB
+              </button>
+            <div>
             </div>
           </div>
         </div>
