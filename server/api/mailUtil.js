@@ -127,14 +127,16 @@ exports.sendMail = function(toNames, jsonObject, callback){
       paramString = "Macro with unknown table, function, or parameters is pending approval";
   }
 
-
-
    //Attach a link to the pending macros page of the website.
    paramString = paramString + ".  Click this link to review pending macros.";
    paramString = paramString.link("http://localhost:3000/#/pending/"); //Currently a test link.
 
   mailOptions.html = paramString;
   transporter.sendMail(mailOptions, function(error, info){
+    if(error){
+      return console.log(error);
+    }
+    console.log('Message sent: ' + info.response);
     assert(error,null);
     callback(info);
   });

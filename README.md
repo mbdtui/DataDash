@@ -27,6 +27,10 @@
 ## Configuration
 The configuration files are located in the `config` folder. The library for configuration, `node-config`, provides several advance options for deployment, which Liberty Mutual can customize for their deployment. Details about configuration file setup and options can be found [here](https://github.com/lorenwest/node-config/wiki/Configuration-Files) and general information about `node-config` [here](https://github.com/lorenwest/node-config).
 
+There are several configuration parameters for PostgreSQL and Mongo that are hard coded that should be moved into the config file.
+
 ### Authentication
 Parameters for authentication are located under the `AD` JSON object. If you are familiar with ActiveDirectory and LDAP then configuration should be relatively straightforward. The `default.json` file is also commented to aid understanding.
 One best practice is to create a "managed service account" with no password expiration and limited domain access for performing LDAP queries.
+
+There is a dummy-auth.js file that provides simple functionality for testing. Changing the import in server/server.js to auth.js instead of dummy-auth will use real authentication against ActiveDirectory.
