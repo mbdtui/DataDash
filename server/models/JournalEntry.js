@@ -2,13 +2,18 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var journalEntrySchema = new Schema({
-  macroID: String,
+  //macroID: String,
   macroName: String,
-  macroGroup: String,
+  macroType: String,
+  macroTable: String,
+  macroFunction: String,
+  //macroGroup: String,
   author: String,
+  macroParams: Object,
   reviewer: String,
-  params: Object,
   emergency: Boolean,
+  runStatus: String,
+  reviewStatus: String,
   created_at: Date,
   approved_at: Date
 });

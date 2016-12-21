@@ -11,7 +11,7 @@ var util = require('util');
 var resetPostgreDB = require('../lib_mockDB_loader/LibDBLoader.js').loadMockDB;
 
 // Reset database.
-// resetPostgreDB('../lib_mockDB_loader/LibDataLogs');
+//resetPostgreDB('../lib_mockDB_loader/LibDataLogs');
 
 var PostgreSQL_config = {
 	user: 'postgres',
@@ -140,7 +140,7 @@ var driver_step_detail = {
 function viewRunStatusCode(app_name, run_name, run_status_code, cb) {
 	var query = `SELECT run_stts_cd, b.STEP_NME, b.PRMTR_TXT, a.run_nme, a.grp_nbr, a.run_order_nbr, a.run_stts_cd, a.run_start_dtm, a.run_end_dtm,a.run_end_dtm - a.run_start_dtm As run_time_diff, b.STEP_NME
 FROM c_driver_step_detail a, c_driver_step b
- WHERE a.DRVR_STEP_ID = b.DRVR_STEP_ID AND a.app_nme = '${'EDW'}' and a.RUN_NME = '${'S_2_O_CL_FA_ISO_NRT'}'
+ WHERE a.DRVR_STEP_ID = b.DRVR_STEP_ID AND a.app_nme = '${'EDW'}' and a.RUN_NME = '${'S_2_O_CLAIMS_CL_CNTR_NRT'}'
  --AND a.run_stts_cd <> 'S'
  --AND a.RUN_STTS_CD = 'R'
  order by a.run_nme, a.grp_nbr, a.run_order_nbr;`;

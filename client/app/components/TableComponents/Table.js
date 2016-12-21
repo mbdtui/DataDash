@@ -16,7 +16,7 @@ export default class Table extends React.Component {
 			tableHeader.push(<th key={i}>{head}</th>);
 		});
 		return (
-			<table className="table table-condensed">
+			<table className="table table-bordered">
 				<thead><tr>{tableHeader}</tr></thead>
 				<tbody>{rows}</tbody>
 			</table>
