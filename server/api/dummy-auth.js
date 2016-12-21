@@ -1,5 +1,11 @@
 "use strict"
 
+var config = require('config');
+
+const ADMIN_GROUP      = config.get('AD.ADMIN_GROUP');
+const DEVELOPER_GROUP  = config.get('AD.DEVELOPER_GROUP');
+const MANAGER_GROUP    = config.get('AD.MANAGER_GROUP');
+
 /**
  * authenticate - Authenticates a users based on the provided credentials
  *
@@ -16,6 +22,9 @@ var authenticate = function(username, password) {
     return true;
   }
   else if (username == 'manager' && password == 'manager') {
+    return true;
+  }
+  else if (username == 'unauthorized' && password == 'unauthorized') {
     return true;
   }
   else {
@@ -56,9 +65,33 @@ var isUserManager = function(username) {
   return username == 'manager';
 }
 
+var getUserGroup = function(username) {
+  if (isUserAdmin(username)){
+    return ADMIN_GROUP;
+  }
+  else if (isUserManager(username)) {
+    return MANAGER_GROUP;
+  }
+  else if (isUserDeveloper(username)) {
+    return DEVELOPER_GROUP;
+  }
+  else {
+    return null;
+  }
+}
+
+var getUserEmail = function(username) {
+  return 'Wyliao@umass.edu';
+}
+
 module.exports = {
+  ADMIN_GROUP : ADMIN_GROUP,
+  DEVELOPER_GROUP : DEVELOPER_GROUP,
+  MANAGER_GROUP : MANAGER_GROUP,
   authenticate: authenticate,
   isUserAdmin: isUserAdmin,
   isUserDeveloper: isUserDeveloper,
-  isUserManager: isUserManager
+  isUserManager: isUserManager,
+  getUserGroup : getUserGroup,
+  getUserEmail : getUserEmail
 }

@@ -87,8 +87,8 @@ class App extends React.Component {
 ReactDOM.render((
   <Router history={hashHistory}>
     <Route path="/" component={App}>
-      <IndexRedirect to="/m/view"/>
-      <Route path="m" component={ModificationPage} > //RENAME ROUTE PATH
+      <IndexRedirect to="/login"/>
+      <Route path="m" component={ModificationPage} >
         <IndexRedirect to="/m/view" component={ViewPage} />
         <Route path="view" component={ViewPage} />
         <Route path="update" component={UpdatePage} />

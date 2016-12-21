@@ -1,3 +1,4 @@
+import {getToken, updateCredentials} from './credentials';
 
 //Tentative get request emulation (test)
 //Get requests - get list of macro names, get macro history info, get pending macro info
@@ -13,34 +14,10 @@ export function deletePendingMacro(objectID,cb){
 
 
 export function postJournalEntry(obj,cb){
-  obj.reviewer = "TemporaryUser"; //Replace temporaryUser with user from AD
   sendXHR('POST', '/journal_entry', obj, (xhr) => {
     // Call the callback with the data.
     cb();
   });
-}
-
-//tentative - this does nothing
-export function getMacroData(macroIDs, cb){
-    var xhr = new XMLHttpRequest();
-    if(true/*macroIDs is empty*/){
-	xhr.open('GET', '/macro');
-	xhr.setRequestHeader('Authorization', 'Bearer ' + token);
-	xhr.addEventListener('load', function() {
-	   cb(JSON.parse(xhr.responseText));
-	});
-    } else {
-	xhr.open('GET', '/macro/' + macroIDs);
-	xhr.setRequestHeader('Authorization', 'Bearer ' + token);
-	xhr.addEventListener('load', function() {
-	    cb(JSON.parse(xhr.responseText));
-	});
-    }
-    xhr.send();
-    /*sendXHR('GET', '/macro', undefined, (xhr) =>{
-    //Handle the callback with xhr return
-    cb(JSON.parse(xhr.responseText));
-    });*/
 }
 
 // Get available UPDATE macros.
@@ -84,6 +61,22 @@ export function getRunStatusCode(app_name, run_name, run_status_code, cb){
   });
 }
 
+/**
+ * Authenticates the user with the server.
+ */
+export function login(username, password, cb) {
+  sendXHR('POST', '/login', { username: username, password: password}, (xhr) => {
+    // Success callback: Login succeeded.
+    var authData = JSON.parse(xhr.responseText);
+    // Update credentials and indicate success via the callback!
+    updateCredentials(authData.username, authData.group, authData.token);
+    cb(authData);
+  }, (xhr) => {
+    // Error callback: Login failed.
+    cb(JSON.parse(xhr.responseText));
+  });
+}
+
 // Send UPDATE macro request to the server.
 export function requestUpdateMacroExecution(request_type, table_macro_params, cb) {
   sendXHR('POST','/request_macro_execution/update/'+request_type, table_macro_params, (xhr) => {
@@ -97,14 +90,21 @@ export function requestDeleteMacroExecution(request_type, table_macro_params, cb
     cb(JSON.parse(xhr.responseText));
   });
 }
-//Post requests - Macro requests (run/delete), View Macro Request (no approval needed)
 
-var token = 'eyJpZCI6NH0'; // <-- Put your base64'd JSON token here
+// Send request to reset the mongoDB
+export function resetMongoDB(cb) {
+  sendXHR('DELETE','/resetDB', undefined, (xhr) => {
+    cb();
+  });
+}
+
+
+
 //send xml http request helper method
-function sendXHR(verb, resource, body, cb) {
+function sendXHR(verb, resource, body, cb, errorCb) {
   var xhr = new XMLHttpRequest();
   xhr.open(verb, resource);
-  xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+  xhr.setRequestHeader('Authorization', 'Bearer ' + getToken());
 
   //Server response
   xhr.addEventListener('load', function() {
@@ -115,8 +115,12 @@ function sendXHR(verb, resource, body, cb) {
       cb(xhr);
     } else {
       // Client/Server Error with potential response text
+      if (errorCb) {
+        // We were given a custom error handler.
+        errorCb(xhr); //pass the data back to the error callback
+      }
       var responseText = xhr.responseText;
-      DDError('Could not ' + verb + " " + resource + ": Received " + statusCode + " " + statusText + ": " + responseText);
+      console.log('Could not ' + verb + " " + resource + ": Received " + statusCode + " " + statusText + ": " + responseText);
     }
   });
 
@@ -124,11 +128,11 @@ function sendXHR(verb, resource, body, cb) {
   xhr.timeout = 10000;
 
   xhr.addEventListener('error', function() {
-    DDError('Could not ' + verb + " " + resource + ": Could not connect to the server.");
+    console.log('Could not ' + verb + " " + resource + ": Could not connect to the server.");
   });
 
   xhr.addEventListener('timeout', function() {
-    DDError('Could not ' + verb + " " + resource + ": Request timed out.");
+    console.log('Could not ' + verb + " " + resource + ": Request timed out.");
   });
 
   switch (typeof(body)) {

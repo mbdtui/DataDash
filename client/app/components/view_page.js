@@ -23,22 +23,26 @@ export default class View extends React.Component{
     var runName = formData[1].value;
     var runStatusCode = formData[2].value;
     console.log(formData);
-    //
-    // if(appName.length === 0){
-    //   runStatusCode = null;
-    // }
-    // if(runName.length === 0){
-    //   runStatusCode = null;
-    // }
-    // if(runStatusCode.length === 0){
-    //   runStatusCode = null;
-    // }
-    var app_name = 'EDW';//app_name,
-    //var app_name = appName;//app_name,
-    var run_name = 'S_2_O_CL_FA_ISO_NRT';//run_name,
-    //var run_name = runName;
-    var run_status_code = null;//run_status_code
-    //var run_status_code = runStatusCode;
+
+     if(appName.length === 0){
+       runStatusCode = null;
+     }
+     if(runName.length === 0){
+       runStatusCode = null;
+     }
+     if(runStatusCode.length === 0){
+       runStatusCode = null;
+     }
+    var app_name = appName;
+  //  app_name = 'EDW';
+    var run_name = runName;
+    //run_name = 'S_2_O_CLAIMS_CL_CNTR_NRT';
+    var run_status_code = runStatusCode;
+    //run_status_code = null;
+
+    if(runStatusCode == "") {
+      run_status_code = null;
+    }
     getRunStatusCode(app_name, run_name, run_status_code, (result) => {
       // console.log(JSON.stringify(result));
       var headers = [];
@@ -66,26 +70,28 @@ export default class View extends React.Component{
         <div id="page-content-wrapper">
           <div className="container-fluid">
             <div className="row">
-            <div  id="view-table" onscroll="scrollFunction()"><Table result={this.state.result}/></div>
+              <div className="col-xs-12" id="view-table" onscroll="scrollFunction()">
+                <div id="content">
+                <Table result={this.state.result}/>
+                </div>
+              </div>
+            </div>
+            <div className="row">
               <div className= "col-lg-3"></div>
               <div className= "col-lg-6">
-
-
                   <div className="input-group">
                     <center>
                       <form action="" method="post" id="view-form">
                         <h3 id="app-name"> App Name: </h3>
-                        <input type="text" name="app_name" className="form-control" placeholder="Enter App Name here" aria-describedby="basic-addon1" />
+                        <input type="text" name="app_name" className="form-control" placeholder="Enter App Name here" defaultValue="EDW" aria-describedby="basic-addon1" />
                         <h3> Run Name: </h3>
-                        <input type="text" name="run_name" className="form-control" placeholder="Enter Run Name here" aria-describedby="basic-addon1" />
+                        <input type="text" name="run_name" className="form-control" placeholder="Enter Run Name here" defaultValue="S_2_O_CLAIMS_CL_CNTR_NRT"  aria-describedby="basic-addon1" />
                         <h3> Run Status Code: </h3>
                         <input type="text" name="run_status_code" className="form-control" placeholder="Enter Run Status Code here" aria-describedby="basic-addon1" />
-                        <a href="#" role="button" onClick={this.sendView} className="btn btn-secondary btn-lg go-btn">Go</a>
+                        <button type="button" onClick={this.sendView} className="btn btn-secondary btn-lg go-btn">Go</button>
                       </form>
                     </center>
                   </div>
-
-
               </div>
               <div className= "col-lg-3"></div>
             </div>

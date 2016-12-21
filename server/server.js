@@ -3,11 +3,13 @@ var express = require('express');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoAccessor = require('./data_accessors/mongoAccessor');
-var mongoDummyData = require('./mongoDummyData');
 var updateBusiness = require('./updateBusiness');
 var viewBusiness = require('./viewBusiness');
 var deleteBusiness = require('./deleteBusiness');
-
+var bcrypt = require('bcryptjs');
+var jwt = require('jsonwebtoken');
+var mailUtil = require('./api/mailUtil.js');
+var secretKey = "7d672134-7365-40d8-acd6-ca6a82728471";
 var app = express();
 
 // Use text parser functionality of bodyParser.
@@ -17,6 +19,54 @@ app.use(bodyParser.json());
 app.use(express.static('../client/build'));
 
 
+  app.delete('/resetDB', function(req, res) {
+    console.log("Received request to reset mongoDB");
+    mongoAccessor.deletePendingMacro({});
+    mongoAccessor.deleteJournalEntry({});
+    res.send();
+  });
+
+  app.post('/login', function(req, res) {
+    // TODO error handling for when ActiveDirectory is unreachable
+    // TODO check that the user is not already logged in
+    // TODO code cleanup. could make this into a series of if blocks instead of nested code
+    // TODO use user module instead of data accessor code
+    var loginData = req.body;
+    var username = loginData.username;
+    var pw = loginData.password;
+    var group = null;
+
+    if (auth.authenticate(username, pw)) {
+      // password and username were correct
+      group = auth.getUserGroup(username);
+      if (group != null) {
+        // authorized
+        jwt.sign({ username: username,
+                   group: group
+                 }, secretKey, { expiresIn: "7 days" }, function(token) {
+          // We have the token.
+          // Send the user, group and the token to the client.
+          res.send({
+            username: username,
+            group: group,
+            token: token
+          });
+        });
+      }
+      else {
+        res.status(401).send({
+          error : 'User is not authorized to use DataDash'
+        });
+      }
+    }
+    else {
+      res.status(401).send({
+        error : 'Credentials are incorrect'
+      });
+    }
+  });
+
+/*
 app.get('/macro', function (req, res){
     res.send(getMacroData());
 });
@@ -24,8 +74,9 @@ app.get('/macro', function (req, res){
 //get all macro ids. comma separated list.
 app.get('/macro/:macroid', function(req, res){
     res.send(getMacroData(req.params.macroid));
-});
+});*/
 
+// Get all DELETE macros for all tables and their schemas.
 app.get('/macros_all_tables/delete', function(req, res) {
 	var macros_delete = {
 			'c_driver_schedule': {
@@ -52,28 +103,28 @@ app.get('/macros_all_tables/delete', function(req, res) {
 		};
 	res.send(macros_delete);
 })
-
+// Get all UPDATE macros for all tables and their schemas.
 app.get('/macros_all_tables/update', function(req, res) {
 	var macros_update = {
 			'c_driver_schedule': {
 				'update_schedule_starttime_by_runname_auditid': {
-					'run_name': '', 
+					'run_name': '',
 					'audit_id': '',
 					'schedule_start_time': ''
 				},
 				'update_status_code_by_runname_auditid': {
-					'run_name':'', 
-					'audit_id':'', 
+					'run_name':'',
+					'audit_id':'',
 					'status_code':''
 				},
 				'update_valuation_enddate_by_runname_auditid': {
-					'run_name':'', 
-					'audit_id':'', 
+					'run_name':'',
+					'audit_id':'',
 					'valuation_end_date':''
 				},
 				'update_valuation_startdate_by_runname_auditid': {
-					'run_name':'', 
-					'audit_id':'', 
+					'run_name':'',
+					'audit_id':'',
 					'valuation_start_date':''
 				},
 				'update_sla_date_time_by_auditid': {
@@ -84,7 +135,7 @@ app.get('/macros_all_tables/update', function(req, res) {
 				},
 				'update_historical_sla_date_time_by_runname': {
 					'run_name':'', 'date':'', 'time':''
-				}	
+				}
 			},
 			'c_driver_step': {
 				'update_active_step_indicator_by_driverstepid': {
@@ -120,13 +171,13 @@ app.get('/pending_macro', function(req, res){
 });
 
 
-//Test functions for inserting mock data
+/*//Test functions for inserting mock data
 app.post('/create_pending/:pendinginfo', function(req, res){
   res.send(postMacroData(req.params.pendinginfo));
 });
 app.post('/create_journal/:journalinfo', function(req, res){
   res.send(postJournalEntry(req.params.journalinfo));
-});
+});*/
 
 //
 app.get('/journal_entry', function(req, res){
@@ -154,23 +205,73 @@ app.post('/view_run_status_code', function(req, res) {
 app.post('/request_macro_execution/update/:request_type', function(req, res) {
 	var requestType = req.params.request_type;
 	var proposed_macro = req.body;
+  var user = req.body.user;
+  var group = req.body.group;
 	// If the request is an emergency one.
 	if(requestType === 'emergency') {
 		console.log('Received:' + JSON.stringify(proposed_macro));
+    var emergency = false;
+    var macroType = req.body.macroType;
+    var macroParams = req.body.params;
+    var macroFunction = req.body.function_called;
+    var macroTable = req.body.table;
+    var macroName = "";//Remove this later
+
 		// Run update business.
 		updateBusiness.runUpdateMacro(proposed_macro, (err, result) => {
 			// If error,
 			if(err) {
 				// send raw error to client.
-				res.send(err);
+        mongoAccessor.createJournalEntry(macroName, macroType, macroTable, macroFunction, macroParams, user, "", emergency, new Date(), "Failure", "Emergency");
+				res.send({status:'error', error:err});
+			} else {
+        mongoAccessor.createJournalEntry(macroName, macroType, macroTable, macroFunction, macroParams, user, "", emergency, new Date(), "Success", "Emergency");
+				res.send({status:'success', result:result});
 			}
-			res.send(result);
 		});
 	}
+  else if(requestType === 'approved_peer_review'){
+  	console.log('Received:' + JSON.stringify(proposed_macro));
+    console.log("Running approved peer review");
+    var emergency = false;
+    var macroType = req.body.macroType;
+    var macroParams = req.body.params;
+    var macroFunction = req.body.function_called;
+    var macroTable = req.body.table;
+    var macroName = "";//Remove this later
+    var created_at = new Date(req.body.created_at); //depends
+    var creator = req.body.creator;
+    console.log("Creator is " + creator);
+    console.log("Reviewer is " + user);
+    console.log("Date is " + created_at);
+		// Run update business.
+		updateBusiness.runUpdateMacro(proposed_macro, (err, result) => {
+			// If error,
+			if(err) {
+				// send raw error to client.
+        mongoAccessor.createJournalEntry(macroName, macroType, macroTable, macroFunction, macroParams, creator, user, emergency, created_at, "Failure", "Approved");
+				res.send({status:'error', error:err});
+			} else {
+        mongoAccessor.createJournalEntry(macroName, macroType, macroTable, macroFunction, macroParams, creator, user, emergency, created_at, "Success", "Approved");
+				res.send({status:'success', result:result});
+			}
+		});
+  }
 	// else if it is a peer review one.
+  //send email
 	else if(requestType === 'peer_review'){
 		// Peer review request.
-		res.status(200).end();
+    //Create entry in the pending macros table
+    var emergency = false;
+    var macroType = req.body.macroType;
+    var macroParams = req.body.params;
+    var macroFunction = req.body.function_called;
+    var macroTable = req.body.table;
+    var macroName = req.body.name; //Later add to GUI macroName
+    var email = auth.getUserEmail(user);
+    mongoAccessor.createPendingMacro(macroName, macroType, macroTable, macroFunction, user, macroParams);
+    mailUtil.sendMail(email, req.body, function(){});
+    res.send({status:'wait', msg:'Macro Queued'});
 	}
 	// else it is an invalid request.
 	else {
@@ -182,21 +283,65 @@ app.post('/request_macro_execution/update/:request_type', function(req, res) {
 app.post('/request_macro_execution/delete/:request_type', function(req, res) {
 	var requestType = req.params.request_type;
 	var proposed_macro = req.body;
+  var user = req.body.user;
+  var group = req.body.group;
 	// If the request is an emergency one.
 	if(requestType === 'emergency') {
 		console.log('Received:' + JSON.stringify(proposed_macro));
+
+    var emergency = false;
+    var macroType = req.body.macroType;
+    var macroParams = req.body.params;
+    var macroFunction = req.body.function_called;
+    var macroTable = req.body.table;
+    var macroName = ""; //Remove this later
 		deleteBusiness.runDeleteMacro(proposed_macro, (err, result) => {
 			// If error,
 			if(err) {
 				// send raw error to client.
-				res.send(err);
+        mongoAccessor.createJournalEntry(macroName, macroType, macroTable, macroFunction, macroParams, user, "", emergency, new Date(), "Failure", "Emergency");
+				res.send({status:'error', error:err});
+			} else {
+        mongoAccessor.createJournalEntry(macroName, macroType, macroTable, macroFunction, macroParams, user, "", emergency, new Date(), "Success", "Emergency");
+				res.send({status:'success', result:result});
 			}
-			res.send(result);
 		});
 	}
+  else if(requestType === 'approved_peer_review'){
+    console.log('Received:' + JSON.stringify(proposed_macro));
+    var emergency = false;
+    var macroType = req.body.macroType;
+    var macroParams = req.body.params;
+    var macroFunction = req.body.function_called;
+    var macroTable = req.body.table;
+    var macroName = ""; //Remove this later
+    var created_at = new Date(req.body.created_at); //depends
+    var creator = req.body.creator;
+		deleteBusiness.runDeleteMacro(proposed_macro, (err, result) => {
+			// If error,
+			if(err) {
+				// send raw error to client.
+        mongoAccessor.createJournalEntry(macroName, macroType, macroTable, macroFunction, macroParams, creator, user, emergency, created_at, "Failure", "Approved");
+				res.send({status:'error', error:err});
+			} else {
+        mongoAccessor.createJournalEntry(macroName, macroType, macroTable, macroFunction, macroParams, creator, user, emergency, created_at, "Success", "Approved");
+				res.send({status:'success', result:result});
+			}
+		});
+  }
 	// else if it is a peer review one.
 	else if(requestType === 'peer_review'){
-		// Peer review request.
+    // Peer review request.
+    //Create entry in the pending macros table
+    console.log('Received:' + JSON.stringify(proposed_macro));
+    var emergency = false;
+    var macroType = req.body.macroType;
+    var macroParams = req.body.params;
+    var macroFunction = req.body.function_called;
+    var macroTable = req.body.table;
+    var macroName = req.body.name; //Later add to GUI macroName
+    mongoAccessor.createPendingMacro(/*macroID,*/ macroName, macroType, macroTable, macroFunction, user, macroParams);
+    mailUtil.sendMail("SOME EMAIL GOES HERE", req.body, function(){});
 		res.status(200).end();
 	}
 	// else it is an invalid request.
@@ -205,56 +350,52 @@ app.post('/request_macro_execution/delete/:request_type', function(req, res) {
 	}
 });
 
+//don't call this
 app.post('/journal_entry', function(req, res) {
   //req.body is a JSON object holding macroID, macroName, macroGroup, author, emergency, reviewer
   //at the very least. (mongodb should handle creation time and unique obj ids)
   mongoAccessor.createJournalEntry(
-    req.body.macroID,
+    //req.body.macroID,
     req.body.macroName,
-    req.body.macroGroup,
+    req.body.macroType,
+    req.body.macroTable,
+    req.body.macroFunction,
+    //req.body.macroGroup,
+    req.body.macroParams,
     req.body.author,
     req.body.reviewer,
-    /**/{},
-    req.body.emergency
+    req.body.emergency,
+    req.body.created_at,
+    req.body.runStatus,
+    req.body.reviewStatus
   );
-  //Blank for success
   res.send();
 });
 
 
 
 app.delete('/pending_macro/:macroID', function(req, res){
-  console.log("In server folder attempting macro deletion");
   var macroID = req.params.macroID;
   mongoAccessor.deletePendingMacro({ _id: macroID});
   //Blank for success
   res.send();
 });
 
-function postJournalEntry(data){
+/*function postJournalEntry(data){
   //Parse data and run mongo method
   mongoAccessor.createJournalEntry("1", "2", "3", "4", "5", {}, true);
 }
 function postMacroData(data){
   //parse data and run mongo method
   mongoAccessor.createPendingMacro("1", "2", "3", "4", {}, true);
-}
+}*/
 function getJournalEntry(cb){
-  console.log("Called get history in server");
   mongoAccessor.readJournalEntries(
     function(items){
       cb(items);
   });
 }
-function getMacroData(macroIDs){
-    //macroIDs=comma separated list of ids
-    //return macroIDs;
-    //Parse list of ids
-    //Make call to DB methods and get data
-    //Maybe need a sync to get references
-		//return data
-    return macroIDs;
-}
+
 function getPendingMacroData(cb){
     mongoAccessor.readPendingMacros(
       function(items){

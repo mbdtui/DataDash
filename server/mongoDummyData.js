@@ -1,3 +1,4 @@
+/*
 // Populates the mongoDB database with dummy data
 var dummyJournal = [{"macroID":"395","macroName":"Daltfresh","macroGroup":"Feedbug","author":"Elizabeth","reviewer":"Jeffrey","emergency":true},
 {"macroID":"04","macroName":"Domainer","macroGroup":"Ntags","author":"Russell","reviewer":"Debra","emergency":false},
@@ -404,3 +405,4 @@ var dummyPending = [{"macroID":"6160","macroName":"Fintone","macroGroup":"Feedfi
 var mongoAccessor = require('./data_accessors/mongoAccessor');
 
 mongoAccessor.loadDummyData(dummyJournal, dummyPending);
+*/

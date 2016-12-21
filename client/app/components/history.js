@@ -34,26 +34,47 @@ export default class History extends React.Component{
       return splitTime[1];
     }
   }
+  showMacroDetails(journalObj){
+    var message = ("Function : " + journalObj["macroFunction"] + "\n");
+    var params = journalObj["macroParams"];
+    var keys = Object.keys(params);
+    for(var i =0; i<keys.length; i++){
+      message = (message + keys[i] + ": " + params[keys[i]] + "\n");
+    }
+    alert(message);
+  }
   render(){
     var self = this;
     var rows = [];
     this.state.contents.map(function(journalObj) {
       rows.push(
         <tr key={journalObj["_id"]}>
+          <td> {journalObj["macroType"]}</td>
           <td>
-            {journalObj["macroName"]}
+            {journalObj["macroTable"]}
           </td>
           <td>
-            {self.getDateFormat(journalObj["created_at"], "date")}
+            <a onClick ={() => self.showMacroDetails(journalObj)}> Show Details </a>
           </td>
           <td>
-            {self.getDateFormat(journalObj["created_at"], "time")}
+            <p>{self.getDateFormat(journalObj["created_at"], "date")}</p>
+            <p>{self.getDateFormat(journalObj["created_at"], "time")}</p>
+          </td>
+          <td>
+            <p>{self.getDateFormat(journalObj["approved_at"], "date")}</p>
+            <p>{self.getDateFormat(journalObj["approved_at"], "time")}</p>
           </td>
           <td>
             {journalObj["author"]}
           </td>
           <td>
             {journalObj["reviewer"]}
+          </td>
+          <td>
+            {journalObj["runStatus"]}
+          </td>
+          <td>
+            {journalObj["reviewStatus"]}
           </td>
         </tr>
       );
@@ -72,11 +93,15 @@ export default class History extends React.Component{
                 <table className="sortable">
                   <tbody>
                     <tr>
-                      <th>Macro</th>
-                      <th>Date</th>
-                      <th>Time</th>
+                      <th>Type</th>
+                      <th>Table</th>
+                      <th>Details</th>
+                      <th>Created Date</th>
+                      <th>Reviewed Date</th>
                       <th>Employee</th>
                       <th>Reviewer</th>
+                      <th>Run Status</th>
+                      <th>Review Status</th>
                     </tr>
                     {rows}
                   </tbody>
@@ -87,7 +112,7 @@ export default class History extends React.Component{
             <div className="col-lg-12">
               <center>
                 <Link to={"/m/view/"}>
-                  <button className="btn btn-secondary btn-lg go-btn">
+                  <button className="btn btn-secondary btn-lg history-pending-go-back-btn">
                     Go Back
                   </button>
                 </Link>
