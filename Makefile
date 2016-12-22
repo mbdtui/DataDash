@@ -5,6 +5,7 @@ client: client_dependency
 	cd client && npm run watch &
 server: server_dependency
 	cd server && node server.js &
+
 test: 
 	bash ./test/testDriver.sh
 appDB: 

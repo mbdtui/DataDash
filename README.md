@@ -1,7 +1,7 @@
 # DataDash
 ## Liberty Mutual Capstone
 
-## Test Account
+## Test Accounts
 ID: admin 
 PASSWORD: admin
 
