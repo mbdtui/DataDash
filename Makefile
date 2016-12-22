@@ -1,15 +1,17 @@
 .PHONY: test client server
-all: libDB appDB client server
+all: demo
 
 client: client_dependency
-	cd client && npm run watch
+	cd client && npm run watch &
 server: server_dependency
-	cd server && node server.js
+	cd server && node server.js &
+
 test: 
 	bash ./test/testDriver.sh
 appDB: 
 	mongod --dbpath=./server/data &
 kill:
+	pkill node
 	pgrep mongod | xargs kill -2
 	pg_ctl -D server/data2 stop -s -m fast
 
@@ -29,14 +31,11 @@ createDB:
 populate:
 	cd ./server/data_accessors && node populatelibDB.js
 
-client_dependency: client/package.json
-
-client/package.json:
+client_dependency: 
 	npm --prefix ./client install ./client
 
-server_dependency: server/package.json
-
-server/package.json:
+server_dependency: 
 	npm --prefix ./server install ./server
 
-demo: createDB libDB appDB populate server client
+demo: client_dependency server_dependency createDB libDB appDB populate server client
+	echo "Don't forget to shut down databases, server and client!"
